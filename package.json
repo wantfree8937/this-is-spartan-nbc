@@ -1,0 +1,25 @@
+{
+  "name": "this-is-spartan-nbc",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "nodemon": "^3.1.4",
+    "prettier": "^3.3.3"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "lodash": "^4.17.21",
+    "long": "^5.2.3",
+    "mysql2": "^3.10.3",
+    "protobufjs": "^7.3.2",
+    "uuid": "^10.0.0"
+  }
+}
