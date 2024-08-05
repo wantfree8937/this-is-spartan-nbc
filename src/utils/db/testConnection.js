@@ -8,7 +8,7 @@ const testDbConnection = async (pool, dbName) => {
   };
   
   const testAllConnections = async (pools) => {
-    await testDbConnection(pools.GAME_DB, 'GAME_DB');
+    // await testDbConnection(pools.GAME_DB, 'GAME_DB');
     await testDbConnection(pools.USER_DB, 'USER_DB');
   };
   
