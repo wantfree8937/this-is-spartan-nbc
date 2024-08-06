@@ -15,7 +15,6 @@ export const createResponse = (packageType, packetId, data = null) => {
     0,
   );
 
-  console.log();
   const packetType = Buffer.alloc(config.packet.typeLength);
 
   packetType.writeUInt8(PACKET_TYPE[packetId.toUpperCase()], 0); // 요기에서 packetType 1 을 받아야함
