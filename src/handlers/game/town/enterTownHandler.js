@@ -1,5 +1,7 @@
+import Stat from '../../../classes/models/stat.class.js';
 import { addUserDB, findUserByNickname } from '../../../db/user/user.db.js';
 import { loadGameAssets } from '../../../init/assets.js';
+import { userSessions } from '../../../session/sessions.js';
 import { addUser } from '../../../session/user.session.js';
 import { createResponse } from '../../../utils/response/createResponse.js';
 import { v4 as uuidv4 } from 'uuid';
@@ -24,16 +26,15 @@ const enterTownHandler = async ({ socket, payload }) => {
   //궁금한점, socket을 이용한 탐색..
 
   const existUser = await findUserByNickname(nickname);
-  console.log(`existUser : `, existUser);
   if (!existUser) {
     addUserDB(nickname, userClass, 1);
   }
 
   const playerId = uuidv4();
 
-  const currentUserData = await findUserByNickname(nickname);
-
   const classStats = getClassStats(userClass);
+  const stat = new Stat(classStats);
+
   const statInfo = {
     level: 1,
     hp: classStats.maxHp,
@@ -61,9 +62,10 @@ const enterTownHandler = async ({ socket, payload }) => {
     statInfo: statInfo,
   };
 
-  addUser(playerId, nickname, socket);
+  addUser(playerId, nickname, userClass, stat, socket);
+  console.log(`userSessions :`, userSessions);
 
-  console.log(player);
+  // console.log(`player :`, player);
   const enterTownResponse = createResponse('responseTown', 'S_Enter', { player });
 
   socket.write(enterTownResponse);
