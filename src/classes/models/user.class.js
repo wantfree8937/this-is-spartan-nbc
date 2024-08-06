@@ -1,18 +1,21 @@
 import { createPingPacket } from '../../utils/notification/game.notification.js';
 
 class User {
-  constructor(id, socket) {
-    this.id = id;
+  constructor(playerId, nickname, socket) {
+    this.playerId = playerId;
+    this.nickname = nickname;
     this.socket = socket;
     this.x = 0;
-    this.y = 0;
-    this.sequence = 0;
+    this.y = 1;
+    this.z = 0;
+    // this.statInfo = [ ];
     this.lastUpdateTime = Date.now();
   }
 
-  updatePosition(x, y) {
+  updatePosition(x, y, z) {
     this.x = x;
     this.y = y;
+    this.z = z;
     this.lastUpdateTime = Date.now();
   }
 

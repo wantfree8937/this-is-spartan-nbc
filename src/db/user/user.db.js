@@ -9,7 +9,7 @@ export const findUserByNickname = async (nickname) => {
   return toCamelCase(rows[0]);
 };
 
-export const addUser = async (nickname, userClass, userLevel) => {
+export const addUserDB = async (nickname, userClass, userLevel) => {
   await pools.USER_DB.query(SQL_QUERIES.ADD_USER, [nickname, userClass, userLevel]);
 };
 
