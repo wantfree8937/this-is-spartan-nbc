@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+package responseTown;
+
+message S_Enter {
+  PlayerInfo player = 1;
+}

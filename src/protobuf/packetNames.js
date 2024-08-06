@@ -2,7 +2,7 @@ export const packetNames = {
   town: {
     C_Enter: 'town.C_Enter',
   },
-  response: {
-    Response: 'response.Response',
+  responseTown: {
+    S_Enter: 'responseTown.S_Enter',
   },
 };
