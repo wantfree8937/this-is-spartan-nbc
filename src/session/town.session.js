@@ -1,23 +1,31 @@
-import { townSessions } from './sessions.js';
-import Game from '../classes/models/game.class.js';
+import { userSessions } from './sessions.js';
+import User from '../classes/models/user.class.js';
 
-export const addTownSession = (id) => {
-  const session = new Game(id);
-  townSessions.push(session);
-  return session;
+export const addUserTown = (playerId, nickname, userClass, statInfo, socket) => {
+  const user = new User(playerId, nickname, userClass, statInfo, socket);
+  userSessions.push(user);
+  return user;
 };
 
-export const removeTownSession = (id) => {
-  const index = townSessions.findIndex((session) => session.id === id);
+export const removeUser = (socket) => {
+  const index = userSessions.findIndex((user) => user.socket === socket);
   if (index !== -1) {
-    return townSessions.splice(index, 1)[0];
+    return userSessions.splice(index, 1)[0];
   }
 };
 
-export const getTownSession = (id) => {
-  return townSessions.find((session) => session.id === id);
+export const getUserById = (id) => {
+  return userSessions.find((user) => user.id === id);
 };
 
-export const getAllTownSessions = () => {
-  return townSessions;
+export const getUserBySocket = (socket) => {
+  return userSessions.find((user) => user.socket === socket);
+};
+
+export const getNextSequence = (id) => {
+  const user = getUserById(id);
+  if (user) {
+    return user.getNextSequence();
+  }
+  return null;
 };
