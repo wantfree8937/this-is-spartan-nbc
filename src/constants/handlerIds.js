@@ -4,8 +4,7 @@ export const HANDLER_IDS = {
   C_ENTER : 0,
   S_ENTER : 1,
   S_SPAWN : 2,
-  C_LEAVE : 3,
-  S_LEAVE : 4,
+
   S_DESPAWN : 5,
   C_MOVE : 6,
   S_MOVE : 7,

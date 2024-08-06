@@ -6,10 +6,11 @@ import { getProtoTypeNameByHandlerId } from '../../handlers/index.js';
 
 export const packetParser = (data, packetId) => {
   const protoMessages = getProtoMessages();
-  const protoTypeNames = getProtoTypeNameByHandlerId(packetId);
+  const protoTypeName = getProtoTypeNameByHandlerId(packetId);
 
   try {
     payload = Packet.decode(data);
+    console.log(payload);
   } catch (e) {
     throw new CustomError(ErrorCodes.PACKET_STRUCTURE_MISMATCH, '패킷 구조가 일치 x');
   }
@@ -23,7 +24,6 @@ export const packetParser = (data, packetId) => {
   }
 
   // 핸들러 ID에 따라 적절한 payload 구조를 디코딩
-  const protoTypeName = getProtoTypeNameByHandlerId(handlerId);
   if (!protoTypeName) {
     throw new CustomError(ErrorCodes.UNKNOWN_HANDLER_ID, `알 수 없는 핸들러 ID: ${handlerId}`);
   }

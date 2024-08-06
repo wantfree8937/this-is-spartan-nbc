@@ -2,10 +2,21 @@ import { HANDLER_IDS } from '../constants/handlerIds.js';
 import CustomError from '../utils/error/customError.js';
 import { ErrorCodes } from '../utils/error/errorCodes.js';
 import enterTownHandler from './game/town/enterTownHandler.js';
+import avatarMoveHandler from './game/town/avatarHandler.js';
+import avatarAnimationHandler from './game/town/avatarHandler.js';
+
 const handlers = {
   [HANDLER_IDS.C_ENTER]: {
     handler: enterTownHandler,
     protoType: 'town.C_Enter',
+  },
+  [HANDLER_IDS.C_MOVE]: {
+    handler: avatarMoveHandler,
+    protoType: 'town.C_Move',
+  },
+  [HANDLER_IDS.C_ANIMATION]: {
+    handler: avatarAnimationHandler,
+    protoType: 'town.C_Animation',
   },
   // 다른 핸들러들을 추가
 };
