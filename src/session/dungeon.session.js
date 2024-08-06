@@ -7,13 +7,9 @@ export const createDungeonSession = (id) => {
 };
 
 export const enterDungeonSession = (user) => {
-  const USER = user;
-  dungeonSessions.push(USER);
-  return session;
+  
 };
 
 export const leaveDungeonSession = (user) => {
-  const USER = user;
-  dungeonSessions.push(USER);
-  return session;
+  
 };

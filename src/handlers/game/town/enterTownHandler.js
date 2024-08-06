@@ -13,6 +13,7 @@ const getClassStats = (classId) => {
   }
   return null; //에러 코드 추가?
 };
+
 const enterTownHandler = async ({ socket, payload }) => {
   const { nickname } = payload;
   const classId = payload.class;
@@ -52,7 +53,7 @@ const enterTownHandler = async ({ socket, payload }) => {
     statInfo: statInfo,
   };
 
-  console.log(player);
+  //console.log(player);
   const enterTownResponse = createResponse('responseTown', 'S_Enter', { player });
 
   socket.write(enterTownResponse);

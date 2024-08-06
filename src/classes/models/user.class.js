@@ -1,8 +1,9 @@
 import { createPingPacket } from '../../utils/notification/game.notification.js';
 
 class User {
-  constructor(id, socket) {
-    this.id = id;
+  constructor(playerId, nickname, socket) {
+    this.playerId = playerId;
+    this.nickname = nickname;
     this.socket = socket;
     this.x = 0;
     this.y = 0;
@@ -15,6 +16,17 @@ class User {
     this.y = y;
     this.z = z;
     this.lastUpdateTime = Date.now();
+  }
+
+  getPosition() {
+    const X = this.x;
+    const Y = this.y;
+    const Z = this.z;
+    
+    this.lastUpdateTime = Date.now();
+    const updateTime = this.lastUpdateTime;
+
+    return { X, Y, Z, updateTime };
   }
 
   // 추측항법을 사용하여 위치를 추정하는 메서드

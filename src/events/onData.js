@@ -9,7 +9,7 @@ export const onData = (socket) => async (data) => {
 
   while (socket.buffer.length >= totalHeaderLength) {
     const length = socket.buffer.readUInt32LE(0);
-    const handlerId = socket.buffer.readUInt8(config.packet.totalLength);
+    const packetId = socket.buffer.readUInt8(config.packet.totalLength);
 
     if (socket.buffer.length >= length) {
       const packet = socket.buffer.slice(totalHeaderLength, length);
@@ -20,10 +20,8 @@ export const onData = (socket) => async (data) => {
 
         packetId;
         const handler = getHandlerById(packetId);
-        await handler({
-          socket,
-          payload,
-        });
+        await handler({ socket, payload, });
+        
       } catch (error) {
         handleError(socket, error);
       }
