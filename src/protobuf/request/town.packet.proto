@@ -6,3 +6,8 @@ message C_Enter{
     string nickname=1;
     int32 class = 2;
 }
+
+message C_Move {
+  TransformInfo transform = 1;
+}
+

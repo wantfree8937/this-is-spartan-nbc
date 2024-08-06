@@ -3,9 +3,9 @@ import { getProtoMessages } from '../../init/loadProtos.js';
 import { config } from '../../config/config.js';
 import { PACKET_TYPE } from '../../constants/header.js';
 
-export const createResponse = (packageType, responseCode, data = null) => {
+export const createResponse = (packageType, packetId, data = null) => {
   const protoMessages = getProtoMessages();
-  const Response = protoMessages[packageType][responseCode];
+  const Response = protoMessages[packageType][packetId];
 
   const buffer = Response.encode(data).finish();
 
@@ -16,7 +16,7 @@ export const createResponse = (packageType, responseCode, data = null) => {
   );
 
   const packetType = Buffer.alloc(config.packet.typeLength);
-  packetType.writeUInt8(PACKET_TYPE.NORMAL, 0);
+  packetType.writeUInt8(PACKET_TYPE[packetId.toUpperCase()], 0);
 
   // 길이 정보와 메시지를 함께 전송
   return Buffer.concat([packetLength, packetType, buffer]);

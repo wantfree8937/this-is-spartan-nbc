@@ -5,3 +5,7 @@ package responseTown;
 message S_Enter {
   PlayerInfo player = 1;
 }
+
+message S_Despawn {
+  repeated int32 playerIds = 1;
+}
