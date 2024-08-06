@@ -16,7 +16,7 @@ export const createResponse = (packageType, responseCode, data = null) => {
   );
 
   const packetType = Buffer.alloc(config.packet.typeLength);
-  packetType.writeUInt8(PACKET_TYPE.NORMAL, 0);
+  packetType.writeUInt8(packageType, 0);
 
   // 길이 정보와 메시지를 함께 전송
   return Buffer.concat([packetLength, packetType, buffer]);

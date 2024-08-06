@@ -6,31 +6,15 @@ class User {
     this.socket = socket;
     this.x = 0;
     this.y = 0;
-    this.sequence = 0;
+    this.z = 0;
     this.lastUpdateTime = Date.now();
   }
 
-  updatePosition(x, y) {
+  updatePosition(x, y, z) {
     this.x = x;
     this.y = y;
+    this.z = z;
     this.lastUpdateTime = Date.now();
-  }
-
-  getNextSequence() {
-    return ++this.sequence;
-  }
-
-  ping() {
-    const now = Date.now();
-
-    // console.log(`${this.id}: ping`);
-    this.socket.write(createPingPacket(now));
-  }
-
-  handlePong(data) {
-    const now = Date.now();
-    this.latency = (now - data.timestamp) / 2;
-    console.log(`Received pong from user ${this.id} at ${now} with latency ${this.latency}ms`);
   }
 
   // 추측항법을 사용하여 위치를 추정하는 메서드
@@ -42,7 +26,8 @@ class User {
     // x, y 축에서 이동한 거리 계산
     return {
       x: this.x + distance,
-      y: this.y,
+      y: this.y + distance,
+      z: this.z + distance,
     };
   }
 }

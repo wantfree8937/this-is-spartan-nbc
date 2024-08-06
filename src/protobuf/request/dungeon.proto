@@ -6,11 +6,3 @@ package dungeon;
 message C_EnterDungeon {
   int64 timestamp = 1;       // 던전 생성시각
 }
-
-message C_EnterDungeon {
-  int64 timestamp = 1;       // 던전 생성시각
-}
-
-message C_EnterDungeon {
-  int64 timestamp = 1;       // 던전 생성시각
-}

@@ -8,6 +8,8 @@ const enterTownHandler = async ({ socket, payload }) => {
   const enterTownResponse = createResponse('responseTown', 'S_Enter', {
     player: playerInfo,
   });
+
+  socket.write(enterTownResponse);
 };
 
 export default enterTownHandler;
