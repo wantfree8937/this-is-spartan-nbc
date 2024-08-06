@@ -1,5 +1,5 @@
+import { addUser, findUserByNickname } from '../../../db/user/user.db.js';
 import { loadGameAssets } from '../../../init/assets.js';
-import { getUserBySocket } from '../../../session/user.session.js';
 import { createResponse } from '../../../utils/response/createResponse.js';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -15,16 +15,22 @@ const getClassStats = (classId) => {
 };
 const enterTownHandler = async ({ socket, payload }) => {
   const { nickname } = payload;
-  const classId = payload.class;
+  const userClass = payload.class;
 
   //현재 상태는 로그인 할때마다 초기화..nickename으로 playerData 탐색 먼저..DB 레츠고
   //TownSession, userSession 계속 접근할 플레이어 데이터 추가 레츠고
   //참조 데이터는 우선 nickname(userId)으로? userData탐색
   //궁금한점, socket을 이용한 탐색..
 
+  const existUser = await findUserByNickname(nickname);
+  console.log(`existUser : `, existUser);
+  if (!existUser) {
+    addUser(nickname, userClass, 1);
+  }
+
   const playerId = uuidv4();
 
-  const classStats = getClassStats(classId);
+  const classStats = getClassStats(userClass);
   const statInfo = {
     level: 1,
     hp: classStats.maxHp,
