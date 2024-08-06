@@ -1,51 +1,51 @@
 {
-    "name": "classStat",
-    "version": "1.0.0",
-    "data": [
-      {
-        "class": 1001,
-        "maxHp": 100,
-        "maxMp": 40,
-        "atk": 50,
-        "def": 80,
-        "magic": 40,
-        "speed": 3
-      },
-      {
-        "class": 1002,
-        "maxHp": 50,
-        "maxMp": 60,
-        "atk": 80,
-        "def": 40,
-        "magic": 60,
-        "speed": 3
-      },
-      {
-        "class": 1003,
-        "maxHp": 60,
-        "maxMp": 90,
-        "atk": 40,
-        "def": 60,
-        "magic": 90,
-        "speed": 3
-      },
-      {
-        "class": 1004,
-        "maxHp": 80,
-        "maxMp": 80,
-        "atk": 30,
-        "def": 70,
-        "magic": 80,
-        "speed": 3
-      },
-      {
-        "class": 1005,
-        "maxHp": 65,
-        "maxMp": 80,
-        "atk": 50,
-        "def": 60,
-        "magic": 80,
-        "speed": 3
-      }
-    ]
-  }
+  "name": "classStat",
+  "version": "1.0.0",
+  "data": [
+    {
+      "class": 1001,
+      "maxHp": 100,
+      "maxMp": 40,
+      "atk": 50,
+      "def": 80,
+      "magic": 40,
+      "speed": 3
+    },
+    {
+      "class": 1002,
+      "maxHp": 50,
+      "maxMp": 60,
+      "atk": 80,
+      "def": 40,
+      "magic": 60,
+      "speed": 3
+    },
+    {
+      "class": 1003,
+      "maxHp": 60,
+      "maxMp": 90,
+      "atk": 40,
+      "def": 60,
+      "magic": 90,
+      "speed": 3
+    },
+    {
+      "class": 1004,
+      "maxHp": 80,
+      "maxMp": 80,
+      "atk": 30,
+      "def": 70,
+      "magic": 80,
+      "speed": 3
+    },
+    {
+      "class": 1005,
+      "maxHp": 65,
+      "maxMp": 80,
+      "atk": 50,
+      "def": 60,
+      "magic": 80,
+      "speed": 3
+    }
+  ]
+}
