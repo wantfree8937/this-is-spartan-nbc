@@ -11,17 +11,20 @@ const getClassStats = (classId) => {
       return stat;
     }
   }
-  return null; //에러?
+  return null; //에러 코드 추가?
 };
 const enterTownHandler = async ({ socket, payload }) => {
   const { nickname } = payload;
   const classId = payload.class;
 
-  const playerId = uuidv4(); //<= 요걸 어디 저장해놓고 특정할 수 있어야할텐데..userSession? userClass?
+  //현재 상태는 로그인 할때마다 초기화..nickename으로 playerData 탐색 먼저..DB 레츠고
+  //TownSession, userSession 계속 접근할 플레이어 데이터 추가 레츠고
+  //참조 데이터는 우선 nickname(userId)으로? userData탐색
+  //궁금한점, socket을 이용한 탐색..
 
-  //classCategory에 맞는 클래스 데이터를 class.json에서 불러오기
+  const playerId = uuidv4();
+
   const classStats = getClassStats(classId);
-
   const statInfo = {
     level: 1,
     hp: classStats.maxHp,
@@ -45,12 +48,12 @@ const enterTownHandler = async ({ socket, payload }) => {
     playerId: playerId,
     nickname: nickname,
     class: classStats.class,
-    transformInfo: transformInfo,
+    transform: transformInfo,
     statInfo: statInfo,
   };
 
   console.log(player);
-  const enterTownResponse = createResponse('responseTown', 'S_Enter', player);
+  const enterTownResponse = createResponse('responseTown', 'S_Enter', { player });
 
   socket.write(enterTownResponse);
 };
