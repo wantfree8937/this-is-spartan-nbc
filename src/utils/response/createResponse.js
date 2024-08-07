@@ -7,7 +7,7 @@ export const createResponse = (packageType, packetId, data = null) => {
   const protoMessages = getProtoMessages();
   const Response = protoMessages[packageType][packetId];
   const buffer = Response.encode(data).finish();
-  console.log('buffer:', buffer);
+  console.log('datas:', data);
 
   const packetLength = Buffer.alloc(config.packet.totalLength);
   packetLength.writeUInt32BE(

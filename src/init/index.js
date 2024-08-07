@@ -3,7 +3,7 @@
 import { loadProtos } from './loadProtos.js';
 import { testAllConnections } from '../utils/db/testConnection.js';
 import pools from '../db/database.js';
-import { addTownSession } from '../session/town.session.js';
+import { addUserTown } from '../session/town.session.js';
 import { addUser } from '../session/user.session.js';
 
 const initServer = async () => {
@@ -15,8 +15,6 @@ const initServer = async () => {
 
       // 유저세션, 타운세션 생성
       // 접소과 동시에 양쪽 세션에 유저추가
-    addTownSession();
-    addUser();
 
   } catch (e) {
     console.error(e);

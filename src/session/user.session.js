@@ -1,9 +1,11 @@
 import { userSessions } from './sessions.js';
 import User from '../classes/models/user.class.js';
 
-export const addUser = (playerId, nickname, userClass, statInfo, socket) => {
-  const user = new User(playerId, nickname, userClass, statInfo, socket);
+export const addUser = (playerId, nickname, userClass, statInfo, transformInfo, socket) => {
+  console.log('In_addUser_socket:', socket);
+  const user = new User(playerId, nickname, userClass, statInfo, transformInfo, socket);
   userSessions.push(user);
+  console.log('user.socket:', user.socket);
   return user;
 };
 
@@ -20,6 +22,10 @@ export const getUserById = (id) => {
 
 export const getUserBySocket = (socket) => {
   return userSessions.find((user) => user.socket === socket);
+};
+
+export const getUserByNickname = (nickname) => {
+  return userSessions.find((user) => user.nickname === nickname);
 };
 
 export const getNextSequence = (id) => {
