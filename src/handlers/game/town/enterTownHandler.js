@@ -8,14 +8,15 @@ import { v4 as uuidv4 } from 'uuid';
 
 const gameAssets = await loadGameAssets();
 
-const getClassStats = (classId) => {
+const getClassStats = (userClass) => {
   for (let stat of gameAssets.classStat.data) {
-    if (stat.class === classId) {
+    if (stat.class === userClass) {
       return stat;
     }
   }
   return null; //에러 코드 추가?
 };
+
 const enterTownHandler = async ({ socket, payload }) => {
   const { nickname } = payload;
   const userClass = payload.class;
@@ -33,7 +34,9 @@ const enterTownHandler = async ({ socket, payload }) => {
   const playerId = uuidv4();
 
   const classStats = getClassStats(userClass);
+  console.log(`classStats : `, classStats);
   const stat = new Stat(classStats);
+  console.log(`stat : `, stat);
 
   const statInfo = {
     level: 1,
@@ -62,7 +65,8 @@ const enterTownHandler = async ({ socket, payload }) => {
     statInfo: statInfo,
   };
 
-  addUser(playerId, nickname, userClass, stat, socket);
+  addUser(playerId, nickname, userClass, socket);
+
   console.log(`userSessions :`, userSessions);
 
   // console.log(`player :`, player);
