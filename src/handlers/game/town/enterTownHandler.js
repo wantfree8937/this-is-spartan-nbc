@@ -1,7 +1,6 @@
-import Stat from '../../../classes/models/stat.class.js';
 import { addUserDB, findUserByNickname } from '../../../db/user/user.db.js';
 import { loadGameAssets } from '../../../init/assets.js';
-import { userSessions } from '../../../session/sessions.js';
+import { addUserTown, getFilteredList } from '../../../session/town.session.js';
 import { addUser } from '../../../session/user.session.js';
 import { createResponse } from '../../../utils/response/createResponse.js';
 import { v4 as uuidv4 } from 'uuid';
@@ -21,11 +20,6 @@ const enterTownHandler = async ({ socket, payload }) => {
   const { nickname } = payload;
   const userClass = payload.class;
 
-  //현재 상태는 로그인 할때마다 초기화..nickename으로 playerData 탐색 먼저..DB 레츠고
-  //TownSession, userSession 계속 접근할 플레이어 데이터 추가 레츠고
-  //참조 데이터는 우선 nickname(userId)으로? userData탐색
-  //궁금한점, socket을 이용한 탐색..
-
   const existUser = await findUserByNickname(nickname);
   if (!existUser) {
     addUserDB(nickname, userClass, 1);
@@ -34,10 +28,8 @@ const enterTownHandler = async ({ socket, payload }) => {
   const playerId = uuidv4();
 
   const classStats = getClassStats(userClass);
-  console.log(`classStats : `, classStats);
-  const stat = new Stat(classStats);
-  console.log(`stat : `, stat);
 
+  //level = 1 : 초기 데이터 (우찬님이 바로 쓸 수 있는 배열 만들어 주신다고 함)
   const statInfo = {
     level: 1,
     hp: classStats.maxHp,
@@ -65,14 +57,27 @@ const enterTownHandler = async ({ socket, payload }) => {
     statInfo: statInfo,
   };
 
-  addUser(playerId, nickname, userClass, socket);
+  //유저를 유저 세션에 더하며 타운세션에도 추가...?그럼 게임 세션에 있는 타운 세션에는? 통합해야함;
+  const user = addUser(playerId, nickname, userClass, socket);
+  addUserTown(user);
 
-  console.log(`userSessions :`, userSessions);
-
-  // console.log(`player :`, player);
   const enterTownResponse = createResponse('responseTown', 'S_Enter', { player });
 
   socket.write(enterTownResponse);
+  //플레이어를 타운 세션에서 가져와야함.
+
+  const players = []; //??player 배열? TownSession.users에 들어가는 유저들, 본인 빼고
+  const filteredUserList = getFilteredList(playerId);
+  console.log('필터된 정보', filteredUserList);
+
+  //1. foreach 작성 로직은 완성
+  filteredUserList.forEach((user) => {
+    const { playerId, nickname, class: userClass, transform, statInfo } = user;
+    players.push({ playerId, nickname, class: userClass, transform, statInfo });
+  });
+
+  const spawnUserResponse = createResponse('responseTown', 'S_Spawn', { players });
+  socket.write(spawnUserResponse);
 };
 
 export default enterTownHandler;

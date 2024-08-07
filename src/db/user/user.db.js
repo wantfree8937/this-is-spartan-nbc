@@ -5,7 +5,7 @@ import { toCamelCase } from '../../utils/transformCase.js';
 
 export const findUserByNickname = async (nickname) => {
   const [rows] = await pools.USER_DB.query(SQL_QUERIES.FIND_USER_BY_NICKNAME, [nickname]);
-  console.log(`11111111111111111111111111111111111111111`);
+
   return toCamelCase(rows[0]);
 };
 

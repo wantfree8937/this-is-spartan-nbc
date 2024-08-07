@@ -4,14 +4,12 @@ import {
   gameStartNotification,
 } from '../../utils/notification/game.notification.js';
 
-const MAX_PLAYERS = 2;
+const MAX_PLAYERS = 100;
 
-class Game {
-  constructor(id) {
-    this.id = id;
+class Town {
+  constructor() {
     this.users = [];
     this.intervalManager = new IntervalManager();
-    this.state = 'waiting'; // 'waiting', 'inProgress'
   }
 
   addUser(user) {
@@ -70,4 +68,4 @@ class Game {
   }
 }
 
-export default Game;
+export default Town;
