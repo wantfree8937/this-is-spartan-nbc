@@ -1,3 +1,5 @@
+import Stat from '../../../classes/models/stat.class.js';
+import Transform from '../../../classes/models/transfrom.class.js';
 import { addUserDB, findUserByNickname } from '../../../db/user/user.db.js';
 import { loadGameAssets } from '../../../init/assets.js';
 import { addUserTown, getFilteredList } from '../../../session/town.session.js';
@@ -28,6 +30,7 @@ const enterTownHandler = async ({ socket, payload }) => {
   const playerId = uuidv4();
 
   const classStats = getClassStats(userClass);
+  const transform = new Transform();
 
   //level = 1 : 초기 데이터 (우찬님이 바로 쓸 수 있는 배열 만들어 주신다고 함)
   const statInfo = {
@@ -42,27 +45,18 @@ const enterTownHandler = async ({ socket, payload }) => {
     speed: classStats.speed,
   };
 
-  const transformInfo = {
-    posX: 0,
-    posY: 1,
-    posZ: 0,
-    rot: 0,
-  };
-
   const player = {
     playerId: playerId,
     nickname: nickname,
     class: classStats.class,
-    transform: transformInfo,
+    transform: transform,
     statInfo: statInfo,
   };
 
-  //유저를 유저 세션에 더하며 타운세션에도 추가...?그럼 게임 세션에 있는 타운 세션에는? 통합해야함;
-  const user = addUser(playerId, nickname, userClass, socket);
+  addUser(playerId, nickname, userClass, transform, socket);
   addUserTown(user);
 
   const enterTownResponse = createResponse('responseTown', 'S_Enter', { player });
-
   socket.write(enterTownResponse);
   //플레이어를 타운 세션에서 가져와야함.
 
