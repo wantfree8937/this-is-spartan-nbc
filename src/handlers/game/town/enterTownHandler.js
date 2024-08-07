@@ -22,10 +22,10 @@ const enterTownHandler = async ({ socket, payload }) => {
   const { nickname } = payload;
   const userClass = payload.class;
 
-  const existUser = await findUserByNickname(nickname);
-  if (!existUser) {
-    addUserDB(nickname, userClass, 1);
-  }
+  // const existUser = await findUserByNickname(nickname);
+  // if (!existUser) {
+  // addUserDB(nickname, userClass, 1);
+  // }
 
   const playerId = uuidv4();
 
@@ -53,7 +53,7 @@ const enterTownHandler = async ({ socket, payload }) => {
     statInfo: statInfo,
   };
 
-  addUser(playerId, nickname, userClass, transform, socket);
+  const user = addUser(playerId, nickname, userClass, transform, socket);
   addUserTown(user);
 
   const enterTownResponse = createResponse('responseTown', 'S_Enter', { player });
@@ -62,15 +62,15 @@ const enterTownHandler = async ({ socket, payload }) => {
 
   const players = []; //??player 배열? TownSession.users에 들어가는 유저들, 본인 빼고
   const filteredUserList = getFilteredList(playerId);
-  console.log('필터된 정보', filteredUserList);
 
-  //1. foreach 작성 로직은 완성
   filteredUserList.forEach((user) => {
-    const { playerId, nickname, class: userClass, transform, statInfo } = user;
-    players.push({ playerId, nickname, class: userClass, transform, statInfo });
+    const { playerId, nickname, transformInfo, statInfo } = user;
+    const userClass = user.userClass;
+    players.push({ playerId, nickname, class: userClass, transform: transformInfo, statInfo });
   });
 
   const spawnUserResponse = createResponse('responseTown', 'S_Spawn', { players });
+
   socket.write(spawnUserResponse);
 };
 
