@@ -1,12 +1,23 @@
 import { userSessions } from './sessions.js';
 import User from '../classes/models/user.class.js';
+import { loadGameAssets } from '../init/assets.js';
 
-export const addUser = (playerId, nickname, userClass, statInfo, transformInfo, socket) => {
-  console.log('In_addUser_socket:', socket);
-  const user = new User(playerId, nickname, userClass, statInfo, transformInfo, socket);
+export const addUser = (playerId, nickname, userClass, socket) => {
+  const statInfo = getClassStats(userClass);
+  const user = new User(playerId, nickname, userClass, statInfo, socket);
   userSessions.push(user);
-  console.log('user.socket:', user.socket);
+  
   return user;
+};
+
+const gameAssets = await loadGameAssets();
+const getClassStats = (userClass) => {
+  for (let stat of gameAssets.classStat.data) {
+    if (stat.class === userClass) {
+      return stat;
+    }
+  }
+  return null; //에러 코드 추가?
 };
 
 export const removeUser = (socket) => {

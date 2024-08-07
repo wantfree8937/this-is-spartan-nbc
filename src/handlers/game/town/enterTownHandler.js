@@ -9,9 +9,9 @@ import { v4 as uuidv4 } from 'uuid';
 
 const gameAssets = await loadGameAssets();
 
-const getClassStats = (classId) => {
+const getClassStats = (userClass) => {
   for (let stat of gameAssets.classStat.data) {
-    if (stat.class === classId) {
+    if (stat.class === userClass) {
       return stat;
     }
   }
@@ -35,9 +35,9 @@ const enterTownHandler = async ({ socket, payload }) => {
   const playerId = uuidv4();
 
   const classStats = getClassStats(userClass);
+  console.log(`classStats : `, classStats);
   const stat = new Stat(classStats);
   const transform = new Transform();
-  console.log('transform:', transform);
 
   const statInfo = {
     level: 1,
