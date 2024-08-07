@@ -1,10 +1,6 @@
-// 서버 초기화 작업
-//  import { loadGameAssets } from './assets.js';
 import { loadProtos } from './loadProtos.js';
 import { testAllConnections } from '../utils/db/testConnection.js';
 import pools from '../db/database.js';
-import { addUserTown } from '../session/town.session.js';
-import { addUser } from '../session/user.session.js';
 import { initializeTownSession } from '../session/town.session.js';
 
 const initServer = async () => {
