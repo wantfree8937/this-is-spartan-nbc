@@ -46,8 +46,9 @@ export const getFilteredList = (playerId) => {
   const filteredUserList = townSessions[0].users.filter((user) => user.playerId !== playerId);
   return filteredUserList;
 };
+
 export const getAllList = () => {
-  return townSessions[0].users;
+  return townSessions[0].getUsers();
 };
 
 //??

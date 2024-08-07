@@ -26,6 +26,11 @@ class User {
     this.transformInfo.rot = Rot;
     this.lastUpdateTime = Date.now();
   }
+  getSocket() {
+    const socket = this.socket;
+
+    return socket;
+  }
 
   getPosition() {
     const transform = this.transformInfo;

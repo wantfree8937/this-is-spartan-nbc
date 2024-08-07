@@ -30,6 +30,10 @@ class Town {
     return this.users.find((user) => user.id === userId);
   }
 
+  getUsers() {
+    return this.users;
+  }
+
   removeUser(userId) {
     this.users = this.users.filter((user) => user.id !== userId);
     this.intervalManager.removePlayer(userId);
