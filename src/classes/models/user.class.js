@@ -1,5 +1,6 @@
 import { createPingPacket } from '../../utils/notification/game.notification.js';
 import Stat from './stat.class.js';
+import Transform from './transfrom.class.js';
 
 class User {
   constructor(playerId, nickname, userClass, statInfo, transformInfo, socket) {
@@ -31,6 +32,10 @@ class User {
 
     return transform;
   }
+  getStatInfo() {
+    const statInfo = this.statInfo;
+    return statInfo;
+  }
 
   // 추측항법을 사용하여 위치를 추정하는 메서드
   calculatePosition(latency) {
@@ -44,6 +49,20 @@ class User {
       y: this.y + distance,
       z: this.z + distance,
     };
+  }
+
+  buildPlayerInfo() {
+    const transform = this.getPosition();
+    const statInfo = this.getStatInfo();
+
+    const player = {
+      playerId: this.playerId,
+      nickname: this.nickname,
+      class: this.userClass,
+      transform: transform,
+      statInfo: statInfo,
+    };
+    return player;
   }
 }
 

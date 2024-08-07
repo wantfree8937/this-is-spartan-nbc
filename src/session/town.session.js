@@ -33,18 +33,21 @@ export const addUserTown = (user) => {
 //   }
 // };
 
-// export const getUserById = (id) => {
-//   return userSessions.find((user) => user.id === id);
-// };
+export const getUserByPlayerId = (playerId) => {
+  return userSessions.find((user) => user.playerId === playerId);
+};
 
-export const getUserBySocket = (socket) => {
-  return userSessions.find((user) => user.socket === socket);
+export const getTownUserBySocket = (socket) => {
+  return townSessions[0].users.find((user) => user.socket === socket);
 };
 
 //현재 작업 중
 export const getFilteredList = (playerId) => {
   const filteredUserList = townSessions[0].users.filter((user) => user.playerId !== playerId);
   return filteredUserList;
+};
+export const getAllList = () => {
+  return townSessions[0].users;
 };
 
 //??
