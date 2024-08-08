@@ -5,6 +5,7 @@ import { userSessions } from '../../../session/sessions.js';
 import { addUser } from '../../../session/user.session.js';
 import { createResponse } from '../../../utils/response/createResponse.js';
 import { v4 as uuidv4 } from 'uuid';
+import { getGameSession } from '../../../session/game.session.js';
 
 const gameAssets = await loadGameAssets();
 
@@ -31,12 +32,16 @@ const enterTownHandler = async ({ socket, payload }) => {
     addUserDB(nickname, userClass, 1);
   }
 
-  const playerId = uuidv4();
+  const playerId = nickname;
 
   const classStats = getClassStats(userClass);
   console.log(`classStats : `, classStats);
   const stat = new Stat(classStats);
   console.log(`stat : `, stat);
+
+  const user = addUser(playerId, nickname, userClass, stat, socket);
+  const gameSession = getGameSession(1);
+  gameSession.addUser(user);
 
   const statInfo = {
     level: 1,
@@ -64,10 +69,6 @@ const enterTownHandler = async ({ socket, payload }) => {
     transform: transformInfo,
     statInfo: statInfo,
   };
-
-  addUser(playerId, nickname, userClass, socket);
-
-  console.log(`userSessions :`, userSessions);
 
   // console.log(`player :`, player);
   const enterTownResponse = createResponse('responseTown', 'S_Enter', { player });

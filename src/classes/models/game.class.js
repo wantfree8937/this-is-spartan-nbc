@@ -1,6 +1,7 @@
 import IntervalManager from '../managers/interval.manager.js';
 import {
   createLocationPacket,
+  townOutNotification,
 } from '../../utils/notification/game.notification.js';
 
 const MAX_PLAYERS = 2;
@@ -9,34 +10,50 @@ class Game {
   constructor(id) {
     this.id = id;
     this.users = [];
+    this.leaveUsers = [];
     this.intervalManager = new IntervalManager();
     this.state = 'waiting'; // 'waiting', 'inProgress'
   }
 
   addUser(user) {
-    if (this.users.length >= MAX_PLAYERS) {
-      throw new Error('Game session is full');
-    }
     this.users.push(user);
-
-    this.intervalManager.addPlayer(user.id, user.ping.bind(user), 1000);
-    if (this.users.length === MAX_PLAYERS) {
-      setTimeout(() => {
-        this.startGame();
-      }, 3000);
-    }
   }
 
   getUser(userId) {
     return this.users.find((user) => user.id === userId);
   }
 
-  removeUser(userId) {
-    this.users = this.users.filter((user) => user.id !== userId);
-    this.intervalManager.removePlayer(userId);
+  removeUser(socket) {
+    const index = this.users.findIndex((user) => user.socket === socket);
 
-    if (this.users.length < MAX_PLAYERS) {
-      this.state = 'waiting';
+    if (index !== -1) {
+      return this.users.splice(index, 1)[0];
+    }
+  }
+
+  addLeaveUsers(socket) {
+    const index = this.users.findIndex((user) => user.socket === socket);
+    this.leaveUsers.push(this.users[index]);
+  }
+
+  townOut() {
+    if (this.leaveUsers.length > 0) {
+      const removedUserIds = [];
+      this.leaveUsers.forEach((leaveUser) => {
+        const index = this.users.findIndex((user) => user.playerId === leaveUser.playerId);
+        if (index !== -1) {
+          this.users.splice(index, 1);
+          removedUserIds.push(leaveUser.playerId);
+        }
+      });
+
+      this.leaveUsers = [];
+
+      const despawnPacket = townOutNotification(removedUserIds);
+
+      this.users.forEach((user) => {
+        user.socket.write(despawnPacket);
+      });
     }
   }
 
@@ -46,16 +63,6 @@ class Game {
       maxLatency = Math.max(maxLatency, user.latency);
     });
     return maxLatency;
-  }
-
-  startGame() {
-    this.state = 'inProgress';
-    const startPacket = gameStartNotification(this.id, Date.now());
-    console.log(this.getMaxLatency());
-
-    this.users.forEach((user) => {
-      user.socket.write(startPacket);
-    });
   }
 
   getAllLocation() {

@@ -5,6 +5,8 @@ export const packetNames = {
   },
   responseTown: {
     S_Enter: 'responseTown.S_Enter',
-    S_Despawn: 'responseTown.S_Despawn',
+  },
+  gameNotification: {
+    S_Despawn: 'gameNotification.S_Despawn',
   },
 };

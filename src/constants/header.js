@@ -3,5 +3,5 @@ export const PACKET_TYPE_LENGTH = 1; // 패킷타입을 나타내는 1바이트 
 
 export const PACKET_TYPE = {
   S_ENTER: 1,
-  S_Despawn: 5,
+  S_DESPAWN: 5,
 };
