@@ -4,7 +4,7 @@ import {
   townOutNotification,
 } from '../../utils/notification/game.notification.js';
 
-const MAX_PLAYERS = 2;
+const MAX_PLAYERS = 100;
 
 class Game {
   constructor(id) {

@@ -5,6 +5,7 @@ import { loadGameAssets } from '../init/assets.js';
 export const addUser = (playerId, nickname, userClass, statInfo, socket) => {
   const user = new User(playerId, nickname, userClass, statInfo, socket);
   userSessions.push(user);
+  
   return user;
 };
 
@@ -31,6 +32,10 @@ export const getUserById = (id) => {
 
 export const getUserBySocket = (socket) => {
   return userSessions.find((user) => user.socket === socket);
+};
+
+export const getUserByNickname = (nickname) => {
+  return userSessions.find((user) => user.nickname === nickname);
 };
 
 export const getNextSequence = (id) => {

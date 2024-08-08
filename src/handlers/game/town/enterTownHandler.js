@@ -1,4 +1,5 @@
 import Stat from '../../../classes/models/stat.class.js';
+import Transform from '../../../classes/models/transfrom.class.js';
 import { addUserDB, findUserByNickname } from '../../../db/user/user.db.js';
 import { loadGameAssets } from '../../../init/assets.js';
 import { userSessions } from '../../../session/sessions.js';
@@ -37,11 +38,7 @@ const enterTownHandler = async ({ socket, payload }) => {
   const classStats = getClassStats(userClass);
   console.log(`classStats : `, classStats);
   const stat = new Stat(classStats);
-  console.log(`stat : `, stat);
-
-  const user = addUser(playerId, nickname, userClass, stat, socket);
-  const gameSession = getGameSession(1);
-  gameSession.addUser(user);
+  const transform = new Transform();
 
   const statInfo = {
     level: 1,
@@ -55,25 +52,25 @@ const enterTownHandler = async ({ socket, payload }) => {
     speed: classStats.speed,
   };
 
-  const transformInfo = {
-    posX: 0,
-    posY: 1,
-    posZ: 0,
-    rot: 0,
-  };
-
   const player = {
     playerId: playerId,
     nickname: nickname,
     class: classStats.class,
-    transform: transformInfo,
+    transform: transform,
     statInfo: statInfo,
   };
 
-  // console.log(`player :`, player);
-  const enterTownResponse = createResponse('responseTown', 'S_Enter', { player });
+  addUser(playerId, nickname, userClass, stat, transform, socket);
 
+  const enterTownResponse = createResponse('responseTown', 'S_Enter', { player });
   socket.write(enterTownResponse);
+};
+
+export const spawnTownHandler = async ({ socket, payload }) => {
+  const user = getUserBySocket(socket);
+  const {  } = payload;
+
+
 };
 
 export default enterTownHandler;
