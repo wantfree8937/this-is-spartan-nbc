@@ -23,6 +23,8 @@ const chatHandler = ({ socket, payload }) => {
     //     const sockets = getAllDungeonSocket();
     // 8. socket 별로 응답 패킷을 전송
     //     sockets.forEach((socket) => socket.write(chatResponse));
+
+    // aaa
   }
 };
 
