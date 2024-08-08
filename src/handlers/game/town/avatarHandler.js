@@ -20,6 +20,7 @@ export const avatarMoveHandler = async ({ socket, payload }) => {
 
     const cmoveResponse = createResponse('responseTown', 'S_Move', { playerId, transform });
     socket.write(cmoveResponse);
+  
   });
 };
 
