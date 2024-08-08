@@ -10,5 +10,9 @@ export const packetNames = {
     S_Move: 'responseTown.S_Move',
     S_Animation: 'responseTown.S_Animation',
     S_Despawn: 'responseTown.S_Despawn',
+    S_Chat: 'responseTown.S_Chat',
+  },
+  chat: {
+    C_Chat: 'chat.C_Chat',
   },
 };
