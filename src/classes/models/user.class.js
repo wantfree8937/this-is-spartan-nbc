@@ -1,4 +1,3 @@
-import { createPingPacket } from '../../utils/notification/game.notification.js';
 import Stat from './stat.class.js';
 import Transform from './transfrom.class.js';
 
