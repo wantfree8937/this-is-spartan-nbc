@@ -7,17 +7,18 @@ import { ErrorCodes } from '../error/errorCodes.js';
 
 export const createResponse = (packageType, packetId, data = null) => {
   const protoMessages = getProtoMessages();
+  console.log(packageType);
+  console.log(packetId);
+
   const Response = protoMessages[packageType][packetId];
   const buffer = Response.encode(data).finish();
+  console.log(data);
 
   const packetLength = Buffer.alloc(config.packet.totalLength);
-  console.log('packetId:', packetId);
-  console.log('packetLength_before:', packetLength);
   packetLength.writeUInt32BE(
     buffer.length + config.packet.typeLength + config.packet.totalLength,
     0,
   );
-  console.log('packetLength_after:', packetLength);
 
   const packetType = Buffer.alloc(config.packet.typeLength);
 
@@ -31,9 +32,6 @@ export const createResponse = (packageType, packetId, data = null) => {
   }
 
   packetType.writeUInt8(packetCode, 0); // 요기에서 packetType 1 을 받아야함
-
-  console.log('packetType:', packetType);
-  console.log('buffer:', buffer);
 
   // 길이 정보와 메시지를 함께 전송
   return Buffer.concat([packetLength, packetType, buffer]);

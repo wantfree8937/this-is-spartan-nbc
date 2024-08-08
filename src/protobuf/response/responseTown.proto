@@ -34,3 +34,11 @@ message S_Chat{
   int32 playerId = 1;
   string chatMsg = 2;
 }
+
+// 자신
+message S_EnterDungeon{
+  DungeonInfo dungeonInfo = 1;
+  PlayerStatus player = 2;
+  ScreenText screenText = 3; // Option
+  BattleLog battleLog = 4;
+}

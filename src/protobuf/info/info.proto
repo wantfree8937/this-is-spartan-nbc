@@ -28,3 +28,55 @@ message StatInfo {
   float magic = 8;
   float speed = 9; 
 }
+
+message DungeonInfo {
+  int32 dungeonCode = 1;
+  repeated MonsterStatus monsters = 2;
+}
+
+message MonsterStatus {
+  int32 monsterIdx = 1;
+  int32 monsterModel = 2;
+  string monsterName = 3;
+  float monsterHp = 4;
+}
+
+message PlayerStatus {
+  int32 playerClass = 1;
+  int32 playerLevel = 2;
+  string playerName = 3;
+  float playerFullHp = 4;
+  float playerFullMp = 5;
+  float playerCurHp = 6;
+  float playerCurMp = 7;
+}
+
+message ScreenText{
+  string msg = 1;
+  bool typingAnimation = 2;
+  optional ScreenTextAlignment alignment = 3;
+  optional Color textColor = 4;
+  optional Color screenColor = 5;
+}
+
+message ScreenTextAlignment {
+  int32 x = 1;
+  int32 y = 2;
+}
+
+message Color {
+  int32 r = 1;
+  int32 g = 2;
+  int32 b = 3;
+}
+
+message BattleLog {
+  string msg = 1;
+  bool typingAnimation = 2;
+  repeated BtnInfo btns = 3; // Optional
+}
+
+message BtnInfo {
+  string msg = 1;
+  bool enable = 2;
+}

@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+package responseBattle;
+
+message S_ScreenDone { }

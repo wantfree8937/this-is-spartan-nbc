@@ -45,4 +45,66 @@ const enterTownHandler = async ({ socket, payload }) => {
   });
 };
 
-export default enterTownHandler;
+const enterDungeonHandler = ({ socket, payload }) => {
+  console.log(payload);
+
+  const dungeonPayload = {
+    dungeonInfo: {
+      dungeonCode: 5001,
+      monsters: [
+        {
+          monsterIdx: 0,
+          monsterModel: 2001,
+          monsterName: '11',
+          monsterHp: 150,
+        },
+      ],
+    },
+    player: {
+      playerClass: 1001,
+      playerLevel: 1,
+      playerName: 'mush',
+      playerFullHp: 100,
+      playerFullMp: 40,
+      playerCurHp: 100,
+      playerCurMp: 40,
+    },
+    screenText: {
+      msg: 'Welcome!',
+      typingAnimation: false,
+      alignment: {
+        x: 0,
+        y: 0,
+      },
+      textColor: {
+        r: 255,
+        g: 255,
+        b: 255,
+      },
+      screenColor: {
+        r: 0,
+        g: 0,
+        b: 0,
+      },
+    },
+    battleLog: {
+      msg: 'Battle started',
+      typingAnimation: false,
+      btns: [
+        {
+          msg: 'Attack',
+          enable: true,
+        },
+        {
+          msg: 'Defend',
+          enable: true,
+        },
+      ],
+    },
+  };
+
+  const enterDungeonResponse = createResponse('responseTown', 'S_Enter_Dungeon', dungeonPayload);
+  socket.write(enterDungeonResponse);
+};
+
+export { enterTownHandler, enterDungeonHandler };
