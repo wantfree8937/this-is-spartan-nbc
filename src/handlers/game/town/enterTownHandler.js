@@ -11,9 +11,9 @@ const enterTownHandler = async ({ socket, payload }) => {
   const playerId = nickname;
 
   const transform = new Transform();
-
   const user = addUser(playerId, nickname, userClass, transform, socket);
   const townUser = addUserTown(user);
+
   const player = townUser.buildPlayerInfo();
 
   const enterTownResponse = createResponse('responseTown', 'S_Enter', { player });
@@ -22,8 +22,12 @@ const enterTownHandler = async ({ socket, payload }) => {
   /*---------Spawn--------*/
 
   //towerSession에서 가져온 유저
+  const X = -4.5;
+  const Y = 0.8;
+  const Z = 136;
+  const ROT = 0;
+  townUser.updatePosition(X, Y, Z, ROT);
   const allList = getAllList();
-
   allList.forEach((user) => {
     //user에서 소켓을 뽑아내서, 그 socket.write를 실행
     const userSocket = user.getSocket();
