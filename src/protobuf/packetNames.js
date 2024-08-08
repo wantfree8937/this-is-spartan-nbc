@@ -6,6 +6,7 @@ export const packetNames = {
   },
   responseTown: {
     S_Enter: 'responseTown.S_Enter',
+    S_Spawn: 'responseTown.S_Spawn',
     S_Move: 'responseTown.S_Move',
     S_Animation: 'responseTown.S_Animation',
     S_Despawn: 'responseTown.S_Despawn',

@@ -2,6 +2,8 @@ import { getProtoMessages } from '../../init/loadProtos.js';
 // import { getNextSequence } from '../../session/user.session.js';
 import { config } from '../../config/config.js';
 import { PACKET_TYPE } from '../../constants/header.js';
+import CustomError from './../error/customError.js';
+import { ErrorCodes } from '../error/errorCodes.js';
 
 export const createResponse = (packageType, packetId, data = null) => {
   const protoMessages = getProtoMessages();
@@ -17,7 +19,16 @@ export const createResponse = (packageType, packetId, data = null) => {
 
   const packetType = Buffer.alloc(config.packet.typeLength);
 
-  packetType.writeUInt8(PACKET_TYPE[packetId.toUpperCase()], 0); // 요기에서 packetType 1 을 받아야함
+  const packetCode = PACKET_TYPE[packetId.toUpperCase()];
+
+  if (!packetCode) {
+    throw new CustomError(
+      ErrorCodes.PACKET_ID_NOT_FOUND,
+      '리스폰스 생성 중, packetId 참조에 실패했습니다',
+    );
+  }
+
+  packetType.writeUInt8(packetCode, 0); // 요기에서 packetType 1 을 받아야함
 
   // 길이 정보와 메시지를 함께 전송
   return Buffer.concat([packetLength, packetType, buffer]);
