@@ -20,8 +20,7 @@ export const onData = (socket) => async (data) => {
 
         packetId;
         const handler = getHandlerById(packetId);
-        await handler({ socket, payload, });
-        
+        await handler({ socket, payload });
       } catch (error) {
         handleError(socket, error);
       }

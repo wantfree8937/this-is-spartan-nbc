@@ -1,9 +1,9 @@
-import { getUserBySocket } from "../../../session/user.session.js";
-import { createResponse } from "../../../utils/response/createResponse.js";
+import { getTownUserBySocket } from '../../../session/town.session.js';
+import { createResponse } from '../../../utils/response/createResponse.js';
 
 export const avatarMoveHandler = async ({ socket, payload }) => {
-  const user = getUserBySocket(socket);
-  
+  const user = getTownUserBySocket(socket);
+
   const { posX, posY, posZ, rot } = payload.transform;
 
   const X = posX;
@@ -19,7 +19,7 @@ export const avatarMoveHandler = async ({ socket, payload }) => {
 };
 
 export const avatarAnimationHandler = async ({ socket, payload }) => {
-  const user = getUserBySocket(socket);
+  const user = getTownUserBySocket(socket);
   const playerId = user.getPlayerId();
   const { animCode } = payload;
 

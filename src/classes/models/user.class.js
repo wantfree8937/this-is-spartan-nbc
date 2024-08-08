@@ -1,4 +1,5 @@
 import Stat from './stat.class.js';
+import Transform from './transfrom.class.js';
 
 class User {
   constructor(playerId, nickname, userClass, statInfo, transformInfo, socket) {
@@ -24,11 +25,20 @@ class User {
     this.transformInfo.rot = Rot;
     this.lastUpdateTime = Date.now();
   }
+  getSocket() {
+    const socket = this.socket;
+
+    return socket;
+  }
 
   getPosition() {
     const transform = this.transformInfo;
 
     return transform;
+  }
+  getStatInfo() {
+    const statInfo = this.statInfo;
+    return statInfo;
   }
 
   // 추측항법을 사용하여 위치를 추정하는 메서드
@@ -43,6 +53,20 @@ class User {
       y: this.y + distance,
       z: this.z + distance,
     };
+  }
+
+  buildPlayerInfo() {
+    const transform = this.getPosition();
+    const statInfo = this.getStatInfo();
+
+    const player = {
+      playerId: this.playerId,
+      nickname: this.nickname,
+      class: this.userClass,
+      transform: transform,
+      statInfo: statInfo,
+    };
+    return player;
   }
 }
 

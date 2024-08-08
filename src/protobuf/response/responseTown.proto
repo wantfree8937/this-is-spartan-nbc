@@ -29,7 +29,7 @@ message S_Animation {
   int32 animCode = 2;
 }
 
-// 채팅메시지 발신
+// 채팅메시지 다른 유저에게 발신
 message S_Chat{
   int32 playerId = 1;
   string chatMsg = 2;

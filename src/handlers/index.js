@@ -3,6 +3,7 @@ import CustomError from '../utils/error/customError.js';
 import { ErrorCodes } from '../utils/error/errorCodes.js';
 import enterTownHandler from './game/town/enterTownHandler.js';
 import { avatarMoveHandler, avatarAnimationHandler } from './game/town/avatarHandler.js';
+import chatHandler from './game/chatHandler.js';
 
 const handlers = {
   [HANDLER_IDS.C_ENTER]: {
@@ -16,6 +17,10 @@ const handlers = {
   [HANDLER_IDS.C_ANIMATION]: {
     handler: avatarAnimationHandler,
     protoType: 'town.C_Animation',
+  },
+  [HANDLER_IDS.C_CHAT]: {
+    handler: chatHandler,
+    protoType: 'chat.C_Chat',
   },
   // 다른 핸들러들을 추가
 };

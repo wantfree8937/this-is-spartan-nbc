@@ -2,10 +2,11 @@ import { userSessions } from './sessions.js';
 import User from '../classes/models/user.class.js';
 import { loadGameAssets } from '../init/assets.js';
 
-export const addUser = (playerId, nickname, userClass, statInfo, socket) => {
-  const user = new User(playerId, nickname, userClass, statInfo, socket);
+export const addUser = (playerId, nickname, userClass, transform, socket) => {
+  const statInfo = getClassStats(userClass);
+  const user = new User(playerId, nickname, userClass, statInfo, transform, socket);
   userSessions.push(user);
-  
+
   return user;
 };
 
