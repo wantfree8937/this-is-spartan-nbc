@@ -1,20 +1,17 @@
 import { loadProtos } from './loadProtos.js';
-import { addGameSession, getGameSession } from '../session/game.session.js';
 import { testAllConnections } from '../utils/db/testConnection.js';
 import pools from '../db/database.js';
-import { initializeTownSession } from '../session/town.session.js';
+import { getTownSession, initializeTownSession } from '../session/town.session.js';
 
 const initServer = async () => {
   try {
     //  await loadGameAssets();
     initializeTownSession();
     await loadProtos();
-    addGameSession(1);
-    const townSession = getGameSession(1);
+    const townSession = getTownSession();
     setInterval(() => {
       townSession.townOut();
-      console.log('작동중');
-    }, 5000);
+    }, 1000);
     await testAllConnections(pools);
     // 다음 작업
 
