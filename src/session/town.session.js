@@ -26,13 +26,6 @@ export const addUserTown = (user) => {
   return user;
 };
 
-// export const removeUser = (socket) => {
-//   const index = userSessions.findIndex((user) => user.socket === socket);
-//   if (index !== -1) {
-//     return userSessions.splice(index, 1)[0];
-//   }
-// };
-
 export const getTownUserByPlayerId = (playerId) => {
   return townSessions.find((user) => user.playerId === playerId);
 };
@@ -61,12 +54,3 @@ export const getFilteredList = (playerId) => {
 export const getAllList = () => {
   return townSessions[0].getUsers();
 };
-
-//??
-// export const getNextSequence = (id) => {
-//   const user = getUserById(id);
-//   if (user) {
-//     return user.getNextSequence();
-//   }
-//   return null;
-// };
