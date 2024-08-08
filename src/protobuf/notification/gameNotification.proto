@@ -5,4 +5,3 @@ package gameNotification;
 message S_Despawn {
   repeated int32 playerIds = 1;
 }
-

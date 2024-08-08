@@ -23,7 +23,7 @@ class Town {
     if (this.users.length === MAX_PLAYERS) {
       setTimeout(() => {
         this.startGame();
-      }, 3000);
+      }, 1000);
     }
   }
 

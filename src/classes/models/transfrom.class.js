@@ -1,4 +1,5 @@
 class Transform {
+  // 초기 좌표 설정
   constructor() {
     this.posX = 0;
     this.posY = 1;

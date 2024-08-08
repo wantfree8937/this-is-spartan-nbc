@@ -18,13 +18,6 @@ class User {
     return PlayerId;
   }
 
-  updatePosition(x, y, z, Rot) {
-    this.transformInfo.posX = x;
-    this.transformInfo.posY = y;
-    this.transformInfo.posZ = z;
-    this.transformInfo.rot = Rot;
-    this.lastUpdateTime = Date.now();
-  }
   getSocket() {
     const socket = this.socket;
 
@@ -39,6 +32,15 @@ class User {
   getStatInfo() {
     const statInfo = this.statInfo;
     return statInfo;
+  }
+
+  // 위치-좌표 업데이트 메서드
+  updatePosition(x, y, z, Rot) {
+    this.transformInfo.posX = x;
+    this.transformInfo.posY = y;
+    this.transformInfo.posZ = z;
+    this.transformInfo.rot = Rot;
+    this.lastUpdateTime = Date.now();
   }
 
   // 추측항법을 사용하여 위치를 추정하는 메서드
