@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package town;
+
+// 마을 입장 payload
+message C_Enter {
+  string nickname = 1;
+  int32 class = 2;
+}
+
+message C_Move {
+  TransformInfo transform = 1;
+}
+
+message C_Animation {
+  int32 animCode = 1;
+}
+
+message C_Chat {
+  int32 playerId = 1;
+  string senderName = 2;
+  string chatMsg = 3;
+}
+
+message C_EnterDungeon {
+  int32 dungeonCode = 1;
+}
+
+message C_PlayerResponse {
+  int32 responseCode = 1;
+}

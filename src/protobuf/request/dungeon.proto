@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+package dungeon;
+
+// 던전 생성 payload
+message C_EnterDungeon {
+  int64 timestamp = 1;       // 던전 생성시각
+}
