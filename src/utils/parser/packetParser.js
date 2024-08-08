@@ -7,14 +7,15 @@ import { getProtoTypeNameByHandlerId } from '../../handlers/index.js';
 export const packetParser = (data, packetId) => {
   const protoMessages = getProtoMessages();
   const protoTypeName = getProtoTypeNameByHandlerId(packetId);
-
+  console.log(protoTypeName);
+  
   if (!protoTypeName) {
     throw new CustomError(ErrorCodes.UNKNOWN_HANDLER_ID, `알 수 없는 핸들러 ID: ${handlerId}`);
   }
 
   const [namespace, typeName] = protoTypeName.split('.');
   const PayloadType = protoMessages[namespace][typeName];
-
+  
   let payload;
   try {
     payload = PayloadType.decode(data);

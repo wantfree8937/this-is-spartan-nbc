@@ -33,4 +33,3 @@ export default chatHandler;
 /*
 추후 dungeonClass, dungeonSession을 만들면 주석(4,7,8) 제거
 */
-up;
