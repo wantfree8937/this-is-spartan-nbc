@@ -18,7 +18,7 @@ export const createResponse = (packageType, packetId, data = null) => {
   );
 
   const packetType = Buffer.alloc(config.packet.typeLength);
-
+  
   const packetCode = PACKET_TYPE[packetId.toUpperCase()];
 
   if (!packetCode) {
