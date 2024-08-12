@@ -3,6 +3,8 @@ import { DungeonInfo } from './dugeonInfo.class.js';
 import Player from './player.class.js';
 import { ScreenText } from './screenText.class.js';
 
+const MAX_PLAYERS = 2;
+
 class Dungeon {
   constructor(id, dungeonInfo, user, textInfo, battleLogInfo) {
     this.id = id;
@@ -11,6 +13,13 @@ class Dungeon {
     this.player = new Player(user);
     this.screenText = new ScreenText(textInfo);
     this.battleLog = new BattleLog(battleLogInfo);
+  }
+
+  addUser(user) {
+    if (this.users.length >= MAX_PLAYERS) {
+      throw new Error('Dungeon session is full');
+    }
+    this.users.push(user);
   }
 
   getDungeonInfo() {

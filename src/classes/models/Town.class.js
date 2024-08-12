@@ -15,7 +15,7 @@ class Town {
 
   addUser(user) {
     if (this.users.length >= MAX_PLAYERS) {
-      throw new Error('Game session is full');
+      throw new Error('Town session is full');
     }
     this.users.push(user);
 

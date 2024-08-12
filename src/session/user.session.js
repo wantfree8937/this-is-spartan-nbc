@@ -1,17 +1,17 @@
 import { userSessions } from './sessions.js';
 import User from '../classes/models/user.class.js';
-import { loadGameAssets } from '../init/assets.js';
+import { getGameAssets } from '../init/assets.js';
 
 export const addUser = (playerId, nickname, userClass, transform, socket) => {
-  const statInfo = getClassStats(userClass);
+  const gameAssets = getGameAssets();
+  const statInfo = getClassStats(userClass, gameAssets);
   const user = new User(playerId, nickname, userClass, statInfo, transform, socket);
   userSessions.push(user);
 
   return user;
 };
 
-const gameAssets = await loadGameAssets();
-const getClassStats = (userClass) => {
+const getClassStats = (userClass, gameAssets) => {
   for (let stat of gameAssets.classStat.data) {
     if (stat.class === userClass) {
       return stat;
