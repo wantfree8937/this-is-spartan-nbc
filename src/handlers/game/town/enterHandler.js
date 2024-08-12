@@ -1,7 +1,10 @@
 import Transform from '../../../classes/models/transfrom.class.js';
 import { addUserTown, getAllList, getFilteredList } from '../../../session/town.session.js';
-import { addUser } from '../../../session/user.session.js';
+import { addUser, getUserBySocket } from '../../../session/user.session.js';
 import { createResponse } from '../../../utils/response/createResponse.js';
+import { loadGameAssets } from '../../../init/assets.js';
+import { v4 as uuidv4 } from 'uuid';
+import { createDungeonSession } from '../../../session/dungeon.session.js';
 
 const enterTownHandler = async ({ socket, payload }) => {
   /*---------Enter--------*/
@@ -45,4 +48,16 @@ const enterTownHandler = async ({ socket, payload }) => {
   });
 };
 
-export default enterTownHandler;
+const enterDungeonHandler = ({ socket, payload }) => {
+  console.log(payload); // 던전 난이도 코드
+  const user = getUserBySocket(socket);
+
+  const dungeonId = uuidv4(); // 던전 임시 id
+  const dungeonSession = createDungeonSession(dungeonId, user);
+  const dungeon = dungeonSession.buildDungeonInfo();
+
+  const enterDungeonResponse = createResponse('responseTown', 'S_Enter_Dungeon', dungeon );
+  socket.write(enterDungeonResponse);
+};
+
+export { enterTownHandler, enterDungeonHandler };
