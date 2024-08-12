@@ -58,15 +58,12 @@ class User {
   }
 
   buildPlayerInfo() {
-    const transform = this.getPosition();
-    const statInfo = this.getStatInfo();
-
     const player = {
       playerId: this.playerId,
       nickname: this.nickname,
       class: this.userClass,
-      transform: transform,
-      statInfo: statInfo,
+      transform: this.transformInfo,
+      statInfo: this.statInfo,
     };
     return player;
   }
