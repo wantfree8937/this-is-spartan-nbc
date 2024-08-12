@@ -7,11 +7,14 @@ import { ErrorCodes } from '../error/errorCodes.js';
 
 export const createResponse = (packageType, packetId, data = null) => {
   const protoMessages = getProtoMessages();
+  console.log(packageType);
+  console.log(packetId);
+
   const Response = protoMessages[packageType][packetId];
   const buffer = Response.encode(data).finish();
+  console.log(data);
 
   const packetLength = Buffer.alloc(config.packet.totalLength);
-
   packetLength.writeUInt32BE(
     buffer.length + config.packet.typeLength + config.packet.totalLength,
     0,
