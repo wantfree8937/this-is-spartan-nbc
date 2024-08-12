@@ -9,7 +9,7 @@ message S_Enter {
 
 // 다른 사람들
 message S_Spawn {
-  optional repeated PlayerInfo players = 1;
+  repeated PlayerInfo players = 1;
 }
 
 // 접속상태를 서버에서 판단해서 끊기면 다른 플레이어들에게 정보 전달
