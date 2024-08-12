@@ -80,3 +80,8 @@ message BtnInfo {
   string msg = 1;
   bool enable = 2;
 }
+
+message ActionSet {
+  int32 animCode = 1;
+  int32 effectCode = 2;
+}
