@@ -30,3 +30,7 @@ const getBattleLogInfo = (gameAssets) => {
 export const enterDungeonSession = (user) => {};
 
 export const leaveDungeonSession = (user) => {};
+
+export const getDungeonSession = () => {
+  return dungeonSessions;
+};

@@ -17,9 +17,8 @@ export const onData = (socket) => async (data) => {
 
       try {
         const { payload } = packetParser(packet, packetId);
-        
-        packetId;
-        const handler = getHandlerById(packetId);
+
+        const handler = getHandlerById(packetId, payload);
         await handler({ socket, payload });
       } catch (error) {
         handleError(socket, error);
