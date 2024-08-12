@@ -4,7 +4,7 @@ import { ErrorCodes } from '../utils/error/errorCodes.js';
 import { enterTownHandler, enterDungeonHandler } from './game/town/enterHandler.js';
 import { avatarMoveHandler, avatarAnimationHandler } from './game/town/avatarHandler.js';
 import chatHandler from './game/chatHandler.js';
-import screenDoneHandler from './game/battle/ScreenDoneHandler.js';
+import screenDoneHandler from './game/battle/screenDoneHandler.js';
 
 const handlers = {
   [HANDLER_IDS.C_ENTER]: {
