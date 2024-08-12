@@ -1,5 +1,10 @@
 import Transform from '../../../classes/models/transfrom.class.js';
-import { addUserTown, getAllList, getFilteredList } from '../../../session/town.session.js';
+import {
+  addUserTown,
+  getAllList,
+  getFilteredList,
+  getTownSession,
+} from '../../../session/town.session.js';
 import { addUser, getUserBySocket, getUserByNickname } from '../../../session/user.session.js';
 import { createResponse } from '../../../utils/response/createResponse.js';
 import { v4 as uuidv4 } from 'uuid';
@@ -76,6 +81,11 @@ const enterDungeonHandler = ({ socket, payload }) => {
   const dungeonId = uuidv4(); // 던전 임시 id
   const dungeonSession = createDungeonSession(dungeonId, user);
   const dungeon = dungeonSession.buildDungeonInfo();
+
+  const townSession = getTownSession();
+  townSession.addLeaveUsers(socket);
+
+  dungeonSession.addUser(user);
 
   const enterDungeonResponse = createResponse('responseTown', 'S_Enter_Dungeon', dungeon);
   socket.write(enterDungeonResponse);
