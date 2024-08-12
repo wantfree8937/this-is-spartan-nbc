@@ -4,7 +4,7 @@ import { ErrorCodes } from '../utils/error/errorCodes.js';
 import { enterTownHandler, enterDungeonHandler } from './game/town/enterHandler.js';
 import { avatarMoveHandler, avatarAnimationHandler } from './game/town/avatarHandler.js';
 import chatHandler from './game/chatHandler.js';
-import screenDoneHandler from './game/battle/screenDoneHandler.js';
+import { screenDoneHandler, selectCheckHandler } from './game/battle/battleHandler.js';
 
 const handlers = {
   [HANDLER_IDS.C_ENTER]: {
@@ -28,7 +28,7 @@ const handlers = {
     protoType: 'town.C_Enter_Dungeon',
   },
   [HANDLER_IDS.C_PLAYER_RESPONSE]: {
-    handler: screenDoneHandler,
+    handler: selectCheckHandler,
     protoType: 'battle.C_Player_Response',
   },
   // 다른 핸들러들을 추가

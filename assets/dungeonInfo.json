@@ -1,19 +1,49 @@
 {
   "name": "dungeonInfo",
   "version": "1.0.0",
-  "dungeonCode": 5001,
+  "dungeonCode": [5001, 5002, 5003, 5004, 5005, 5006, 5007],
   "monsters": [
     {
       "monsterIdx": 0,
-      "monsterModel": 2003,
-      "monsterName": "mush",
-      "monsterHp": 150
+      "monsterModel": 2001,
+      "monsterName": "Mushroom",
+      "monsterHp": 210
     },
     {
       "monsterIdx": 1,
+      "monsterModel": 2002,
+      "monsterName": "Slime",
+      "monsterHp": 130
+    },
+    {
+      "monsterIdx": 2,
+      "monsterModel": 2003,
+      "monsterName": "Snail",
+      "monsterHp": 160
+    },
+    {
+      "monsterIdx": 3,
       "monsterModel": 2004,
-      "monsterName": "slime",
-      "monsterHp": 250
+      "monsterName": "Fish_Man",
+      "monsterHp": 255
+    },
+    {
+      "monsterIdx": 4,
+      "monsterModel": 2005,
+      "monsterName": "Lizard_Man",
+      "monsterHp": 255
+    },
+    {
+      "monsterIdx": 5,
+      "monsterModel": 2006,
+      "monsterName": "Fishman",
+      "monsterHp": 255
+    },
+    {
+      "monsterIdx": 6,
+      "monsterModel": 2007,
+      "monsterName": "Skeleton Warrior",
+      "monsterHp": 255
     }
   ]
 }
