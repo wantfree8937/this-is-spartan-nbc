@@ -13,14 +13,13 @@ export const avatarMoveHandler = async ({ socket, payload }) => {
   user.updatePosition(X, Y, Z, ROT);
   const transform = user.getPosition();
   const playerId = user.getPlayerId();
-  
+
   const playersInTown = getAllList();
   playersInTown.forEach((user) => {
     const socket = user.getSocket();
 
     const cmoveResponse = createResponse('responseTown', 'S_Move', { playerId, transform });
     socket.write(cmoveResponse);
-  
   });
 };
 
@@ -33,7 +32,10 @@ export const avatarAnimationHandler = async ({ socket, payload }) => {
   playersInTown.forEach((user) => {
     const socket = user.getSocket();
 
-    const cAnimationResponse = createResponse('responseTown', 'S_Animation', { playerId, animCode });
+    const cAnimationResponse = createResponse('responseTown', 'S_Animation', {
+      playerId,
+      animCode,
+    });
     socket.write(cAnimationResponse);
   });
 };
