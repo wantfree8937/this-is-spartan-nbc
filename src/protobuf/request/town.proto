@@ -8,25 +8,24 @@ message C_Enter {
   int32 class = 2;
 }
 
+// 마을에서 이동
 message C_Move {
   TransformInfo transform = 1;
 }
 
+// 애니메이션
 message C_Animation {
   int32 animCode = 1;
 }
 
+// 채팅
 message C_Chat {
   int32 playerId = 1;
   string senderName = 2;
   string chatMsg = 3;
 }
 
+// 던전 입장
 message C_EnterDungeon {
   int32 dungeonCode = 1;
 }
-
-message C_PlayerResponse {
-  int32 responseCode = 1;
-}
-
