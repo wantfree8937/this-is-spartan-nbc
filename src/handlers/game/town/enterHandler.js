@@ -1,5 +1,10 @@
 import Transform from '../../../classes/models/transfrom.class.js';
-import { addUserTown, getAllList, getFilteredList, getTownSession } from '../../../session/town.session.js';
+import {
+  addUserTown,
+  getAllList,
+  getFilteredList,
+  getTownSession,
+} from '../../../session/town.session.js';
 import { addUser, getUserBySocket, getUserByNickname } from '../../../session/user.session.js';
 import { createResponse } from '../../../utils/response/createResponse.js';
 import { v4 as uuidv4 } from 'uuid';
@@ -77,11 +82,12 @@ const enterDungeonHandler = ({ socket, payload }) => {
   const dungeonSession = createDungeonSession(dungeonId, user);
   const dungeon = dungeonSession.buildDungeonInfo();
 
-  const enterDungeonResponse = createResponse('responseTown', 'S_Enter_Dungeon', dungeon);
-
-  const townSession = getTownSession() // 게임 객체에서 해당 유저 제거
+  const townSession = getTownSession();
   townSession.addLeaveUsers(socket);
 
+  dungeonSession.addUser(user);
+
+  const enterDungeonResponse = createResponse('responseTown', 'S_Enter_Dungeon', dungeon);
   socket.write(enterDungeonResponse);
 };
 
