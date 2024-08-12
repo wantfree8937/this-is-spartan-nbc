@@ -26,10 +26,14 @@ export const packetParser = (data, packetId) => {
   const actualFields = Object.keys(payload);
   const missingFields = expectedFields.filter((field) => !actualFields.includes(field));
   if (missingFields.length > 0) {
-    throw new CustomError(
-      ErrorCodes.MISSING_FIELDS,
-      `필수 필드가 누락되었습니다: ${missingFields.join(', ')}`,
-    );
+    if (missingFields.includes('responseCode')) { // responseCode가 0일때 예외처리
+      payload = PayloadType.create({ responseCode: 0 });
+    } else {
+      throw new CustomError(
+        ErrorCodes.MISSING_FIELDS,
+        `필수 필드가 누락되었습니다: ${missingFields.join(', ')}`,
+      );
+    }
   }
 
   return { payload };

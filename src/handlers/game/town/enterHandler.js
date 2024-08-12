@@ -1,18 +1,41 @@
 import Transform from '../../../classes/models/transfrom.class.js';
 import { addUserTown, getAllList, getFilteredList } from '../../../session/town.session.js';
-import { addUser } from '../../../session/user.session.js';
+import { addUser, getUserBySocket, getUserByNickname } from '../../../session/user.session.js';
 import { createResponse } from '../../../utils/response/createResponse.js';
+import { v4 as uuidv4 } from 'uuid';
+import { createDungeonSession } from '../../../session/dungeon.session.js';
+import { addUserDB, getUserByNicknameDB } from './../../../db/user/user.db.js';
 
 const enterTownHandler = async ({ socket, payload }) => {
   /*---------Enter--------*/
   const { nickname } = payload;
   const userClass = payload.class;
+  let transform;
+  let user;
+  let townUser;
+  let playerId;
+  let account;
+  //닉네임으로 유저가 있는 지 확인
+  const existUser = await getUserByNicknameDB(nickname);
+  console.log(existUser);
+  if (!existUser) {
+    await addUserDB(nickname, userClass, 1);
+    account = await getUserByNicknameDB(nickname);
 
-  const playerId = nickname;
+    playerId = account.playerId;
+    transform = new Transform();
 
-  const transform = new Transform();
-  const user = addUser(playerId, nickname, userClass, transform, socket);
-  const townUser = addUserTown(user);
+    user = addUser(playerId, nickname, userClass, transform, socket);
+  } else {
+    account = await getUserByNicknameDB(nickname);
+
+    playerId = account.playerId;
+    transform = new Transform(); //lastX lastY 저장? lastX와 lastY 게임 종료 or 던전 입장때 저장
+
+    user = addUser(playerId, nickname, userClass, transform, socket);
+  }
+
+  townUser = addUserTown(user);
 
   const player = townUser.buildPlayerInfo();
 
@@ -21,6 +44,12 @@ const enterTownHandler = async ({ socket, payload }) => {
 
   /*---------Spawn--------*/
 
+  const X = -4.5;
+  const Y = 0.8;
+  const Z = 135;
+  const ROT = 0;
+
+  user.updatePosition(X, Y, Z, ROT);
   //towerSession에서 가져온 유저
   const allList = getAllList();
   allList.forEach((user) => {
@@ -41,64 +70,14 @@ const enterTownHandler = async ({ socket, payload }) => {
 };
 
 const enterDungeonHandler = ({ socket, payload }) => {
-  console.log(payload);
+  console.log(payload); // 던전 난이도 코드
+  const user = getUserBySocket(socket);
 
-  const dungeonPayload = {
-    dungeonInfo: {
-      dungeonCode: 5001,
-      monsters: [
-        {
-          monsterIdx: 0,
-          monsterModel: 2001,
-          monsterName: '11',
-          monsterHp: 150,
-        },
-      ],
-    },
-    player: {
-      playerClass: 1001,
-      playerLevel: 1,
-      playerName: 'mush',
-      playerFullHp: 100,
-      playerFullMp: 40,
-      playerCurHp: 100,
-      playerCurMp: 40,
-    },
-    screenText: {
-      msg: 'Welcome!',
-      typingAnimation: false,
-      alignment: {
-        x: 0,
-        y: 0,
-      },
-      textColor: {
-        r: 255,
-        g: 255,
-        b: 255,
-      },
-      screenColor: {
-        r: 0,
-        g: 0,
-        b: 0,
-      },
-    },
-    battleLog: {
-      msg: 'Battle started',
-      typingAnimation: false,
-      btns: [
-        {
-          msg: 'Attack',
-          enable: true,
-        },
-        {
-          msg: 'Defend',
-          enable: true,
-        },
-      ],
-    },
-  };
+  const dungeonId = uuidv4(); // 던전 임시 id
+  const dungeonSession = createDungeonSession(dungeonId, user);
+  const dungeon = dungeonSession.buildDungeonInfo();
 
-  const enterDungeonResponse = createResponse('responseTown', 'S_Enter_Dungeon', dungeonPayload);
+  const enterDungeonResponse = createResponse('responseTown', 'S_Enter_Dungeon', dungeon);
   socket.write(enterDungeonResponse);
 };
 

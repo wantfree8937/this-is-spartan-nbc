@@ -1,0 +1,21 @@
+{
+  "name": "dungeonInfo",
+  "version": "1.0.0",
+  "dungeonCode": 5001,
+  "monsters": [
+    {
+      "monsterIdx": 0,
+      "monsterModel": 2003,
+      "monsterName": "mush",
+      "monsterHp": 150
+    },
+    {
+      "monsterIdx": 1,
+      "monsterModel": 2004,
+      "monsterName": "slime",
+      "monsterHp": 250
+    }
+  ]
+}
+
+

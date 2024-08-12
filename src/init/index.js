@@ -2,11 +2,13 @@ import { loadProtos } from './loadProtos.js';
 import { testAllConnections } from '../utils/db/testConnection.js';
 import pools from '../db/database.js';
 import { getTownSession, initializeTownSession } from '../session/town.session.js';
+import { loadGameAssets } from './assets.js';
 
 const initServer = async () => {
   try {
     //  await loadGameAssets();
     initializeTownSession();
+    await loadGameAssets();
     await loadProtos();
     const townSession = getTownSession();
     setInterval(() => {
