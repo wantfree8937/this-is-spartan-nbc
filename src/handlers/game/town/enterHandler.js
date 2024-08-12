@@ -1,7 +1,9 @@
 import Transform from '../../../classes/models/transfrom.class.js';
 import { addUserTown, getAllList, getFilteredList } from '../../../session/town.session.js';
-import { addUser, getUserByNickname } from '../../../session/user.session.js';
+import { addUser, getUserBySocket, getUserByNickname } from '../../../session/user.session.js';
 import { createResponse } from '../../../utils/response/createResponse.js';
+import { v4 as uuidv4 } from 'uuid';
+import { createDungeonSession } from '../../../session/dungeon.session.js';
 import { addUserDB, getUserByNicknameDB } from './../../../db/user/user.db.js';
 
 const enterTownHandler = async ({ socket, payload }) => {
@@ -68,64 +70,14 @@ const enterTownHandler = async ({ socket, payload }) => {
 };
 
 const enterDungeonHandler = ({ socket, payload }) => {
-  console.log(payload);
+  console.log(payload); // 던전 난이도 코드
+  const user = getUserBySocket(socket);
 
-  const dungeonPayload = {
-    dungeonInfo: {
-      dungeonCode: 5001,
-      monsters: [
-        {
-          monsterIdx: 0,
-          monsterModel: 2001,
-          monsterName: '11',
-          monsterHp: 150,
-        },
-      ],
-    },
-    player: {
-      playerClass: 1001,
-      playerLevel: 1,
-      playerName: 'mush',
-      playerFullHp: 100,
-      playerFullMp: 40,
-      playerCurHp: 100,
-      playerCurMp: 40,
-    },
-    screenText: {
-      msg: 'Welcome!',
-      typingAnimation: false,
-      alignment: {
-        x: 0,
-        y: 0,
-      },
-      textColor: {
-        r: 255,
-        g: 255,
-        b: 255,
-      },
-      screenColor: {
-        r: 0,
-        g: 0,
-        b: 0,
-      },
-    },
-    battleLog: {
-      msg: 'Battle started',
-      typingAnimation: false,
-      btns: [
-        {
-          msg: 'Attack',
-          enable: true,
-        },
-        {
-          msg: 'Defend',
-          enable: true,
-        },
-      ],
-    },
-  };
+  const dungeonId = uuidv4(); // 던전 임시 id
+  const dungeonSession = createDungeonSession(dungeonId, user);
+  const dungeon = dungeonSession.buildDungeonInfo();
 
-  const enterDungeonResponse = createResponse('responseTown', 'S_Enter_Dungeon', dungeonPayload);
+  const enterDungeonResponse = createResponse('responseTown', 'S_Enter_Dungeon', dungeon);
   socket.write(enterDungeonResponse);
 };
 
