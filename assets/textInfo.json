@@ -1,20 +1,58 @@
 {
   "name": "textInfo",
   "version": "1.0.0",
-  "msg": "던전에 오신걸 환영합니다.",
-  "typingAnimation": false,
-  "alignment": {
-    "x": 0,
-    "y": 0
+  "stage_1": {
+    "msg": "던전에 오신걸 환영합니다.",
+    "typingAnimation": false,
+    "alignment": {
+      "x": 0,
+      "y": 0
+    },
+    "textColor": {
+      "r": 255,
+      "g": 255,
+      "b": 255
+    },
+    "screenColor": {
+      "r": 0,
+      "g": 0,
+      "b": 0
+    }
   },
-  "textColor": {
-    "r": 255,
-    "g": 255,
-    "b": 255
+  "stage_2": {
+    "msg": "stage-2",
+    "typingAnimation": false,
+    "alignment": {
+      "x": 0,
+      "y": 0
+    },
+    "textColor": {
+      "r": 255,
+      "g": 255,
+      "b": 255
+    },
+    "screenColor": {
+      "r": 0,
+      "g": 0,
+      "b": 0
+    }
   },
-  "screenColor": {
-    "r": 0,
-    "g": 0,
-    "b": 0
+  "stage_3": {
+    "msg": "stage-3",
+    "typingAnimation": false,
+    "alignment": {
+      "x": 0,
+      "y": 0
+    },
+    "textColor": {
+      "r": 255,
+      "g": 255,
+      "b": 255
+    },
+    "screenColor": {
+      "r": 0,
+      "g": 0,
+      "b": 0
+    }
   }
 }

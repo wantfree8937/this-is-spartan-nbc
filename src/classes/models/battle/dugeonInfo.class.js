@@ -11,6 +11,11 @@ class Monster {
     this.monsterModel = monsterInfo.monsterModel;
     this.monsterName = monsterInfo.monsterName;
     this.monsterHp = monsterInfo.monsterHp;
+    this.isDead = false
+  }
+
+  DeadMonster(){
+    this.isDead = true;
   }
 }
 

@@ -1,0 +1,16 @@
+{
+  "name": "battleLog2",
+  "version": "1.0.0",
+  "msg": "몬스터 공격 턴",
+  "typingAnimation": false,
+  "btns": [
+    {
+      "msg": "1번 몬스터",
+      "enable": false
+    },
+    {
+      "msg": "2번 몬스터",
+      "enable": false
+    }
+  ]
+}

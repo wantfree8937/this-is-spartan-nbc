@@ -27,13 +27,25 @@ const readFileAsync = (filename) => {
 
 export const loadGameAssets = async () => {
   try {
-    const [classStat, textInfo, battleLogInfo, dungeonInfo] = await Promise.all([
-      readFileAsync('classStat.json'),
-      readFileAsync('textInfo.json'),
-      readFileAsync('battleLogInfo.json'),
-      readFileAsync('dungeonInfo.json'),
-    ]);
-    gameAssets = { classStat, textInfo, battleLogInfo, dungeonInfo };
+    const [classStat, textInfo, dungeonEnterLog, dungeonInfo, battleLog1, battleLog2, battleLog3] =
+      await Promise.all([
+        readFileAsync('classStat.json'),
+        readFileAsync('textInfo.json'),
+        readFileAsync('dungeonEnterLog.json'),
+        readFileAsync('dungeonInfo.json'),
+        readFileAsync('battleLog1.json'),
+        readFileAsync('battleLog2.json'),
+        readFileAsync('battleLog3.json'),
+      ]);
+    gameAssets = {
+      classStat,
+      textInfo,
+      dungeonEnterLog,
+      dungeonInfo,
+      battleLog1,
+      battleLog2,
+      battleLog3,
+    };
     return gameAssets;
   } catch (error) {
     throw new Error('Failed to load game assets: ' + error.message);

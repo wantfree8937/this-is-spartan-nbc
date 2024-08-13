@@ -1,7 +1,7 @@
 {
-  "name": "battleLogInfo",
+  "name": "battleLog3",
   "version": "1.0.0",
-  "msg": "전투 시작!!",
+  "msg": "공격할 몬스터를 선택해주세요",
   "typingAnimation": false,
   "btns": [
     {

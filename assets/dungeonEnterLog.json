@@ -1,0 +1,38 @@
+{
+  "name": "dungeonEnterLog",
+  "version": "1.0.0",
+  "stage_1": {
+    "msg": "전투 시작!!",
+    "typingAnimation": false,
+    "btns": [
+      {
+        "msg": "1번 몬스터",
+        "enable": true
+      },
+      {
+        "msg": "2번 몬스터",
+        "enable": true
+      }
+    ]
+  },
+  "stage_2": {
+    "msg": "전투 시작!!",
+    "typingAnimation": false,
+    "btns": [
+      {
+        "msg": "1번 몬스터",
+        "enable": true
+      }
+    ]
+  },
+  "stage_3": {
+    "msg": "전투 시작!!",
+    "typingAnimation": false,
+    "btns": [
+      {
+        "msg": "1번 몬스터",
+        "enable": true
+      }
+    ]
+  }
+}

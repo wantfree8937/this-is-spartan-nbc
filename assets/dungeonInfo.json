@@ -1,21 +1,77 @@
 {
   "name": "dungeonInfo",
   "version": "1.0.0",
-  "dungeonCode": 5001,
-  "monsters": [
-    {
-      "monsterIdx": 0,
-      "monsterModel": 2003,
-      "monsterName": "mush",
-      "monsterHp": 150
-    },
-    {
-      "monsterIdx": 1,
-      "monsterModel": 2004,
-      "monsterName": "slime",
-      "monsterHp": 250
-    }
-  ]
+  "stage_1": {
+    "dungeonCode": 5001,
+    "monsters": [
+      {
+        "monsterIdx": 0,
+        "monsterModel": 2001,
+        "monsterName": "mush",
+        "monsterHp": 150
+      },
+      {
+        "monsterIdx": 1,
+        "monsterModel": 2002,
+        "monsterName": "slime",
+        "monsterHp": 250
+      }
+    ]
+  },
+  "stage_2": {
+    "dungeonCode": 5001,
+    "monsters": [
+      {
+        "monsterIdx": 0,
+        "monsterModel": 2005,
+        "monsterName": "악어",
+        "monsterHp": 300
+      }
+    ]
+  },
+  "stage_3": {
+    "dungeonCode": 5001,
+    "monsters": [
+      {
+        "monsterIdx": 0,
+        "monsterModel": 2006,
+        "monsterName": "대충 몬스터",
+        "monsterHp": 300
+      }
+    ]
+  },
+  "stage_4": {
+    "dungeonCode": 5001,
+    "monsters": [
+      {
+        "monsterIdx": 0,
+        "monsterModel": 2001,
+        "monsterName": "mush",
+        "monsterHp": 150
+      },
+      {
+        "monsterIdx": 1,
+        "monsterModel": 2002,
+        "monsterName": "slime",
+        "monsterHp": 250
+      }
+    ]
+  },
+  "stage_5": {
+    "dungeonCode": 5001,
+    "monsters": [
+      {
+        "monsterIdx": 0,
+        "monsterModel": 2001,
+        "monsterName": "mush",
+        "monsterHp": 150
+      },
+      {
+        "monsterIdx": 1,
+        "monsterModel": 2002,
+        "monsterName": "slime",
+        "monsterHp": 250
+      }
+    ]
+  }
 }
-
-

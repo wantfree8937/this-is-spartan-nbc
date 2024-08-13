@@ -1,4 +1,4 @@
-import { BattleLog } from './battleLog.class.js';
+import { BattleLog } from './battleInfo/battleLog.class.js';
 import { DungeonInfo } from './dugeonInfo.class.js';
 import Player from './player.class.js';
 import { ScreenText } from './screenText.class.js';
@@ -54,6 +54,13 @@ class Dungeon {
       battleLog: this.battleLog,
     };
     return dungeon;
+  }
+
+  nextStageInfo(dungeonInfo, user, textInfo, battleLogInfo) {
+    this.dungeonInfo = new DungeonInfo(dungeonInfo);
+    this.player = new Player(user);
+    this.screenText = new ScreenText(textInfo);
+    this.battleLog = new BattleLog(battleLogInfo);
   }
 }
 

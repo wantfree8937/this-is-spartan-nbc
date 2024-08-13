@@ -75,9 +75,8 @@ const enterTownHandler = async ({ socket, payload }) => {
 };
 
 const enterDungeonHandler = ({ socket, payload }) => {
-  console.log(payload); // 던전 난이도 코드
   const user = getUserBySocket(socket);
-
+  
   const dungeonId = uuidv4(); // 던전 임시 id
   const dungeonSession = createDungeonSession(dungeonId, user);
   const dungeon = dungeonSession.buildDungeonInfo();
