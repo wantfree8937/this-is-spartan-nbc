@@ -1,32 +1,32 @@
 import Dungeon from '../classes/models/battle/dungeon.class.js';
-import { getGameAssets } from '../init/assets.js';
+// import { getGameAssets } from '../init/assets.js';
 import { dungeonSessions } from './sessions.js';
 
-export const createDungeonSession = (id, user) => {
-  const gameAssets = getGameAssets();
+export const createDungeonSession = (id, user, dungeonCode) => {
 
-  const dungeonInfo = getDungeonInfo(gameAssets);
-  const textInfo = getTextInfo(gameAssets);
-  const battleLogInfo = getBattleLogInfo(gameAssets);
+  const session = new Dungeon(id, user, dungeonCode);    // 던전 세션 생성
+  session.initDungeon();
+  dungeonSessions.push(session);    // 던전 세션 등록
 
-  const session = new Dungeon(id, dungeonInfo, user, textInfo, battleLogInfo);
-  dungeonSessions.push(session);
-
-  return session;
+  return session;   // 생성된 세션 반환
 };
 
-const getDungeonInfo = (gameAssets) => {
-  return gameAssets.dungeonInfo;
+export const getDungeonById = (id) => {
+  return dungeonSessions.find((session) => session.id === id);
 };
 
-const getTextInfo = (gameAssets) => {
-  return gameAssets.textInfo;
-};
+export const getNextStage = (dungeonId) => {
+  const targetId = dungeonId;
+  
+  let stage;
+  console.log('dungeonSessions:', dungeonSessions);
+  const target = getDungeonById(targetId);
+  console.log('found target:', target);
+  
+  stage = target.getNextStage();
 
-const getBattleLogInfo = (gameAssets) => {
-  return gameAssets.battleLogInfo;
-};
+  return stage;
+}
 
 export const enterDungeonSession = (user) => {};
-
 export const leaveDungeonSession = (user) => {};

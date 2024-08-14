@@ -1,16 +1,17 @@
-class BattleLog {
-  constructor(battleLogInfo) {
-    this.msg = battleLogInfo.msg;
-    this.typingAnimation = battleLogInfo.typingAnimation;
-    this.btns = battleLogInfo.btns.map((btn) => new Btn(btn));
+
+export class BattleLog {
+  constructor(battleLog) {
+    this.msg = battleLog.msg;
+    this.typingAnimation = battleLog.typingAnimation;
+    this.btns = battleLog.btns;
   }
 }
 
-class Btn {
-  constructor(btn) {
-    this.msg = btn.msg;
-    this.enable = btn.enable;
+export class Btn {
+  constructor(msg, check) {
+    this.msg = msg;
+    this.enable = check;
   }
 }
 
-export { BattleLog, Btn };
+export default { BattleLog, Btn };

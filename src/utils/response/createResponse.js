@@ -11,6 +11,7 @@ export const createResponse = (packageType, packetId, data = null) => {
   console.log('2222, ', packetId);
 
   const Response = protoMessages[packageType][packetId];
+  console.log('Response:', Response);
   const buffer = Response.encode(data).finish();
   console.log('3333, ', data);
 

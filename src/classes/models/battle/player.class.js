@@ -1,4 +1,4 @@
-class Player {
+export class Player {
   constructor(user) {
     this.playerClass = user.userClass;
     this.playerLevel = user.statInfo.level;

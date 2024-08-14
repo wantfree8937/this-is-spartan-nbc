@@ -1,15 +1,11 @@
 import Transform from '../../../classes/models/transfrom.class.js';
-import {
-  addUserTown,
-  getAllList,
-  getFilteredList,
-  getTownSession,
-} from '../../../session/town.session.js';
-import { addUser, getUserBySocket, getUserByNickname } from '../../../session/user.session.js';
+import { addUserTown, getAllList, getFilteredList, getTownSession, } from '../../../session/town.session.js';
+import { addUser, getUserBySocket } from '../../../session/user.session.js';
 import { createResponse } from '../../../utils/response/createResponse.js';
 import { v4 as uuidv4 } from 'uuid';
-import { createDungeonSession } from '../../../session/dungeon.session.js';
+import { createDungeonSession, getNextStage } from '../../../session/dungeon.session.js';
 import { addUserDB, getUserByNicknameDB } from './../../../db/user/user.db.js';
+// import { getGameAssets } from './../../../init/assets.js';
 
 const enterTownHandler = async ({ socket, payload }) => {
   /*---------Enter--------*/
@@ -75,20 +71,30 @@ const enterTownHandler = async ({ socket, payload }) => {
 };
 
 const enterDungeonHandler = ({ socket, payload }) => {
-  console.log(payload); // 던전 난이도 코드
+  const { dungeonCode } = payload;
+  console.log('dungeonCode :', dungeonCode );   // 던전 난이도 코드 (1 ~ 4)
   const user = getUserBySocket(socket);
 
-  const dungeonId = uuidv4(); // 던전 임시 id
-  const dungeonSession = createDungeonSession(dungeonId, user);
-  const dungeon = dungeonSession.buildDungeonInfo();
+  const dungeonId = uuidv4();   // 던전 임시 id
+  createDungeonSession(dungeonId, user, dungeonCode);     // 던전 세션 생성
 
-  const townSession = getTownSession();
-  townSession.addLeaveUsers(socket);
+  const townSession = getTownSession();   // 마을세션 로드
+  townSession.addLeaveUsers(socket);      // 마을에서 제거
 
-  dungeonSession.addUser(user);
+  // 생성된 던전 세션의 스테이지 추출
+  const nextStage = getNextStage(dungeonId);
+  console.log('생성된 stage: ', nextStage);
+  const { dungeonInfo, player, screenText, battleLog } = nextStage;
 
-  const enterDungeonResponse = createResponse('responseTown', 'S_Enter_Dungeon', dungeon);
+  if(nextStage == -1) {     // 던전 종료(클리어)시 던전나가기
+    const leaveDungeonResponse = createResponse('responseTown', 'S_Leave_Dungeon', { });
+    socket.write(leaveDungeonResponse);
+  } else {
+    // 클라이언트에 생성할 스테이지 정보전달
+  const enterDungeonResponse = createResponse('responseTown', 'S_Enter_Dungeon', { dungeonInfo, player, screenText, battleLog });
   socket.write(enterDungeonResponse);
+  }
+  
 };
 
 export { enterTownHandler, enterDungeonHandler };

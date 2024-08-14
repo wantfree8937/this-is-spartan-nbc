@@ -1,60 +1,112 @@
+import { getGameAssets } from '../../../init/assets.js';
+import Stage from './stage.class.js';
+import { DungeonInfo, Monster } from './dungeonInfo.class.js';
+import { ScreenText, TextAlignment, Color } from './screenText.class.js';
 import { BattleLog } from './battleLog.class.js';
-import { DungeonInfo } from './dugeonInfo.class.js';
-import Player from './player.class.js';
-import { ScreenText } from './screenText.class.js';
-
-const MAX_PLAYERS = 2;
 
 class Dungeon {
-  constructor(id, dungeonInfo, user, textInfo, battleLogInfo) {
+  // 던전 생성시 맵은 고정됨
+  constructor(id, user, dungeonCode) {
     this.id = id;
-    this.users = [];
-    this.dungeonInfo = new DungeonInfo(dungeonInfo);
-    this.player = new Player(user);
-    this.screenText = new ScreenText(textInfo);
-    this.battleLog = new BattleLog(battleLogInfo);
+    this.user = user;
+    this.mapCode;                       // 맵 구별 값
+    this.dungeonCode = dungeonCode;     // 던전 구분 (1 ~ 4)
+    this.stages = [];                   // 스테이지 목록
+    this.proceed = 0;                   // 던전 진행도 (인덱스 값: 0 ~ lastStage-1)
+    this.lastStage = [5, 7, 9, 11];     // 스테이지 별 길이 차이 - 후위 던전일수록 길이 증가
+
+    this.loadedAssets = getGameAssets();      // 데이터 준비
+  }
+
+  // 던전 초기화
+  initDungeon() {
+    this.mapCode = 5000 + Math.floor(Math.random() * 7);    // 맵 랜덤 설정 (5000~5006)
+    this.lastStage = this.lastStage[this.dungeonCode - 1];   // dungeonCode가 1~4 이니 -1 하면 0~3으로 인덱스값과 같다.
+    let count = 1;      // 스테이지 id 설정용 변수. 0은 포로토버프가 null로 인식하므로 1부터 1씩 증가한다.
+
+    // 스테이지 생성을 위한 데이터 (스테이지 개수만큼 필요)
+    for (let i = 0; i < this.lastStage; i++) {
+      let maxNumber;
+      if (+i1 == this.lastStage) {
+        maxNumber = 1;      // 마지막 스테이지는 보스 몬스터 (1)
+      } else {
+        maxNumber = Math.floor(Math.random() * 3) +1;      // 스테이지 당 최대 몬스터수 (0~2 +1 = 1~3)
+      }
+      
+
+      // dungeonInfo 생성
+      let monsters = [];      // 해당 스테이지 몬스터목록
+      for (let j = 0; j < maxNumber; j++) {      // 스테이지당 1~3 마리의 몬스터 생성
+        const monsterDatas = this.loadedAssets.dungeonInfo.monsters;
+        const monsterIdx = Math.floor(Math.random() * 7);
+        const monsterModel = 2000 + monsterIdx +1;          // (2001~2007)
+        const monsterName = `${monsterDatas[monsterIdx].monsterName}`;
+        const monsterHp = monsterDatas[monsterIdx].monsterHp;
+
+        const tempInfo = { monsterIdx, monsterModel, monsterName, monsterHp };
+        const monster = new Monster(tempInfo);
+        monsters.push(monster);
+      }
+      const dungeonCode = this.mapCode;         // 생성자 안에서 this.변수 사용 불가능
+      const dungeonInfo = new DungeonInfo({ dungeonCode, monsters });
+      console.log('생성된 dungeonInfo:', dungeonInfo);
+
+      // screenText 생성
+      let msg = `${this.user.nickname}, 던전${this.dungeonCode}-${count}스테이지 입장!`;
+      const textAlignment = new TextAlignment({ x: 0, y: 0 });
+      const textColor = new Color({ r: 255, g: 255, b: 255 });
+      const screenColor = new Color({ r: 0, g: 0, b: 0 });
+      const textInfo = { msg, typingAnimation: false, textAlignment, textColor, screenColor };
+      const screenText = new ScreenText(textInfo);
+
+      // battleLog 생성
+      msg = '';         // screenText도 Button도 같은 이름의 요소 'msg'를 가지고 있음
+      const typingAnimation = false;
+      const btns = [];
+      console.log('maxNumber:', maxNumber, ' monsters:', monsters);
+      for (let k = 0; k < maxNumber; k++) {
+        // 1번째 이름부터 Attack 버튼 생성
+        if(k == 1) { btns.unshift({ msg: `Attack ${monsters[k].getName()}`, enable: true }); }
+        else { btns.push({ msg: `Attack ${monsters[k].getName()}`, enable: true }); }
+      }
+      const tempLog = { msg, typingAnimation, btns };
+      const battleLog = new BattleLog(tempLog);
+
+      // (전투) 스테이지 생성 (현재로써는 전투방만이 구현 되어있음)
+      if (i + 1 == this.lastStage) {      // 마지막 방 (보스방) 일 경우 - 현재 구현중 임
+        const bossStatMaker = 3;          // 보스몬스터에게 줄 보정 수치 (기본: x3) 정확한 수치는 미정
+        console.log('last_stage monster:', dungeonInfo.monsters[0]);
+        dungeonInfo.monsters[0].setBossStat(bossStatMaker);
+      }
+
+      // 스테이지 생성 (count는 0부터 1씩 증가한다.)
+      const stage = new Stage(count++, dungeonInfo, this.user, screenText, battleLog);
+      this.stages.push(stage);
+    }
+
+  }
+  // 함수를 따로 생성해서 코드를 분리했지만 안된다. 그러면? --> 한 메서드에 전부 박아넣는다!!! Profit!!!!!!!
+
+  // 다음 스테이지
+  getNextStage() {
+    if (this.proceed <= this.lastStage) {
+      return this.stages[this.proceed++];    // 해당 진행도의 스테이지 반환 | 직후 진행도 1 추가
+    }
+    else { return -1; }         // 최종 스테이지 클리어시 -1 반환 : EOF 표현의도
+  }
+
+  setBossStage(dungeonInfo, screenText, battleLog) {
+
+    const stage = new Stage(this.id, dungeonInfo, this.user, screenText, battleLog);
+    this.stages.push(stage);
+
+    return stage;
   }
 
   addUser(user) {
-    if (this.users.length >= MAX_PLAYERS) {
-      throw new Error('Dungeon session is full');
-    }
-    this.users.push(user);
+    this.user = user;
   }
 
-  getDungeonInfo() {
-    const dungeonInfo = this.dungeonInfo;
-
-    return dungeonInfo;
-  }
-
-  getPlayer() {
-    const player = this.player;
-
-    return player;
-  }
-
-  getScreenText() {
-    const screenText = this.screenText;
-
-    return screenText;
-  }
-
-  getBattleLog() {
-    const battleLog = this.battleLog;
-
-    return battleLog;
-  }
-
-  buildDungeonInfo() {
-    const dungeon = {
-      dungeonInfo: this.dungeonInfo,
-      player: this.player,
-      screenText: this.screenText,
-      battleLog: this.battleLog,
-    };
-    return dungeon;
-  }
 }
 
 export default Dungeon;
