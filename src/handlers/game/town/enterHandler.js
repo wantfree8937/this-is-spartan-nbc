@@ -10,8 +10,11 @@ import { createResponse } from '../../../utils/response/createResponse.js';
 import { v4 as uuidv4 } from 'uuid';
 import { createDungeonSession } from '../../../session/dungeon.session.js';
 import { addUserDB, getUserByNicknameDB } from './../../../db/user/user.db.js';
+import { dungeonSessions } from '../../../session/sessions.js';
 
 const enterTownHandler = async ({ socket, payload }) => {
+  console.log(dungeonSessions);
+  
   /*---------Enter--------*/
   const { nickname } = payload;
   const userClass = payload.class;

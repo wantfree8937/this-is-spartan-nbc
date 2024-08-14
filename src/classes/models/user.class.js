@@ -9,6 +9,7 @@ class User {
     this.socket = socket;
     this.transformInfo = transformInfo;
     this.statInfo = new Stat(statInfo);
+    this.isDead = false;
     this.lastUpdateTime = Date.now();
   }
 
@@ -32,6 +33,14 @@ class User {
   getStatInfo() {
     const statInfo = this.statInfo;
     return statInfo;
+  }
+
+  DeadPlayer() {
+    this.isDead = true;
+  }
+
+  AlivePlayer() {
+    this.isDead = false;
   }
 
   // 위치-좌표 업데이트 메서드

@@ -21,7 +21,6 @@ export const removeTownSession = () => {
 
 export const addUserTown = (user) => {
   const townSession = townSessions[0];
-  //게임세션의 타운 세션은 어디에 사용하는 것인가?
   townSession.users.push(user);
   return user;
 };

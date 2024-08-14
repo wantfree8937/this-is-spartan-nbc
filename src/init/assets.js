@@ -27,16 +27,27 @@ const readFileAsync = (filename) => {
 
 export const loadGameAssets = async () => {
   try {
-    const [classStat, textInfo, dungeonEnterLog, dungeonInfo, battleLog1, battleLog2, battleLog3] =
-      await Promise.all([
-        readFileAsync('classStat.json'),
-        readFileAsync('textInfo.json'),
-        readFileAsync('dungeonEnterLog.json'),
-        readFileAsync('dungeonInfo.json'),
-        readFileAsync('battleLog1.json'),
-        readFileAsync('battleLog2.json'),
-        readFileAsync('battleLog3.json'),
-      ]);
+    const [
+      classStat,
+      textInfo,
+      dungeonEnterLog,
+      dungeonInfo,
+      battleLog1,
+      battleLog2,
+      battleLog3,
+      battleLog4,
+      battleLog5,
+    ] = await Promise.all([
+      readFileAsync('classStat.json'),
+      readFileAsync('textInfo.json'),
+      readFileAsync('dungeonEnterLog.json'),
+      readFileAsync('dungeonInfo.json'),
+      readFileAsync('battleLog1.json'),
+      readFileAsync('battleLog2.json'),
+      readFileAsync('battleLog3.json'),
+      readFileAsync('battleLog4.json'),
+      readFileAsync('battleLog5.json'),
+    ]);
     gameAssets = {
       classStat,
       textInfo,
@@ -45,6 +56,8 @@ export const loadGameAssets = async () => {
       battleLog1,
       battleLog2,
       battleLog3,
+      battleLog4,
+      battleLog5,
     };
     return gameAssets;
   } catch (error) {

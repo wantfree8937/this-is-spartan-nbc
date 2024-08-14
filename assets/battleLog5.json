@@ -1,0 +1,12 @@
+{
+  "name": "battleLog5",
+  "version": "1.0.0",
+  "msg": "게임 오버ㅠㅠ",
+  "typingAnimation": false,
+  "btns": [
+    {
+      "msg": "마을로 돌아가기",
+      "enable": true
+    }
+  ]
+}

@@ -22,6 +22,10 @@ class Dungeon {
     this.users.push(user);
   }
 
+  removeUser(user) {
+    this.users = this.users.filter((u) => u !== user);
+  }
+
   getDungeonInfo() {
     const dungeonInfo = this.dungeonInfo;
 

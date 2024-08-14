@@ -9,12 +9,6 @@
         "monsterModel": 2001,
         "monsterName": "mush",
         "monsterHp": 150
-      },
-      {
-        "monsterIdx": 1,
-        "monsterModel": 2002,
-        "monsterName": "slime",
-        "monsterHp": 250
       }
     ]
   },

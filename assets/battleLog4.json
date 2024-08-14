@@ -1,0 +1,16 @@
+{
+  "name": "battleLog4",
+  "version": "1.0.0",
+  "msg": "전투 승리!",
+  "typingAnimation": false,
+  "btns": [
+    {
+      "msg": "던전 진행",
+      "enable": true
+    },
+    {
+      "msg": "마을로 돌아가기",
+      "enable": true
+    }
+  ]
+}

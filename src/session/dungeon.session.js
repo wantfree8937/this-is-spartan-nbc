@@ -44,6 +44,30 @@ export const getDungeonSession = (socket) => {
   return dungeonSessions.find((session) => session.users.some((user) => user.socket === socket));
 };
 
-export const enterDungeonSession = (user) => {};
+// 던전 나가기 함수
+export const leaveDungeonSession = (socket) => {
+  const dungeonSession = getDungeonSession(socket);
+  const user = dungeonSession.users.find((user) => user.socket === socket);
 
-export const leaveDungeonSession = (user) => {};
+  dungeonSession.removeUser(user);
+
+  // 던전 세션에 유저가 0명이면 던전 세션 삭제
+  if (dungeonSession.users.length === 0) {
+    deleteDungeonSession(dungeonSession.id);
+  }
+};
+
+// 던전 삭제 함수
+export const deleteDungeonSession = (sessionId) => {
+  const dungeonSession = dungeonSessions.find((session) => session.id === sessionId);
+
+  if (dungeonSession) {
+    const index = dungeonSessions.indexOf(dungeonSession);
+
+    if (index !== -1) {
+      dungeonSessions.splice(index, 1);
+    }
+  }
+};
+
+export const enterDungeonSession = (user) => {};

@@ -8,10 +8,6 @@
       {
         "msg": "1번 몬스터",
         "enable": true
-      },
-      {
-        "msg": "2번 몬스터",
-        "enable": true
       }
     ]
   },
