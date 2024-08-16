@@ -12,7 +12,7 @@ class Dungeon {
     this.mapCode;                       // 맵 구별 값
     this.dungeonCode = dungeonCode;     // 던전 구분 (1 ~ 4)
     this.stages = [];                   // 스테이지 목록
-    this.proceed = 0;                   // 던전 진행도 (인덱스 값: 0 ~ lastStage-1)
+    this.proceed = 0;                  // 던전 진행도 (인덱스 값: 0 ~ lastStage-1)
     this.lastStage = [5, 7, 9, 11];     // 스테이지 별 길이 차이 - 후위 던전일수록 길이 증가
 
     this.loadedAssets = getGameAssets();      // 데이터 준비
@@ -23,17 +23,17 @@ class Dungeon {
     this.mapCode = 5000 + Math.floor(Math.random() * 7);    // 맵 랜덤 설정 (5000~5006)
     this.lastStage = this.lastStage[this.dungeonCode - 1];   // dungeonCode가 1~4 이니 -1 하면 0~3으로 인덱스값과 같다.
     let count = 1;      // 스테이지 id 설정용 변수. 0은 포로토버프가 null로 인식하므로 1부터 1씩 증가한다.
+    console.log('this.dungeonCode:', this.dungeonCode);
 
     // 스테이지 생성을 위한 데이터 (스테이지 개수만큼 필요)
     for (let i = 0; i < this.lastStage; i++) {
       let maxNumber;
-      if (+i1 == this.lastStage) {
+      if (i+1 == this.lastStage) {
         maxNumber = 1;      // 마지막 스테이지는 보스 몬스터 (1)
       } else {
         maxNumber = Math.floor(Math.random() * 3) +1;      // 스테이지 당 최대 몬스터수 (0~2 +1 = 1~3)
       }
       
-
       // dungeonInfo 생성
       let monsters = [];      // 해당 스테이지 몬스터목록
       for (let j = 0; j < maxNumber; j++) {      // 스테이지당 1~3 마리의 몬스터 생성
@@ -49,7 +49,7 @@ class Dungeon {
       }
       const dungeonCode = this.mapCode;         // 생성자 안에서 this.변수 사용 불가능
       const dungeonInfo = new DungeonInfo({ dungeonCode, monsters });
-      console.log('생성된 dungeonInfo:', dungeonInfo);
+      // console.log('생성된 dungeonInfo:', dungeonInfo);
 
       // screenText 생성
       let msg = `${this.user.nickname}, 던전${this.dungeonCode}-${count}스테이지 입장!`;
@@ -85,12 +85,17 @@ class Dungeon {
     }
 
   }
-  // 함수를 따로 생성해서 코드를 분리했지만 안된다. 그러면? --> 한 메서드에 전부 박아넣는다!!! Profit!!!!!!!
 
-  // 다음 스테이지
+  // 현재 스테이지 반환
+  getStageNow() {
+    console.log('this.proceed:', this.proceed);
+    return this.stages[this.proceed];   // 현재 진행도의 스테이지 반환 | 인덱스값: 0 ~ lastStage-1
+  }
+
+  // 다음 스테이지 반환
   getNextStage() {
     if (this.proceed <= this.lastStage) {
-      return this.stages[this.proceed++];    // 해당 진행도의 스테이지 반환 | 직후 진행도 1 추가
+      return this.stages[++this.proceed];    // 해당 진행도의 스테이지 반환 | 다음 스테이지를 적용하므로 진행도도 변경
     }
     else { return -1; }         // 최종 스테이지 클리어시 -1 반환 : EOF 표현의도
   }
@@ -105,6 +110,9 @@ class Dungeon {
 
   addUser(user) {
     this.user = user;
+  }
+  getUser() {
+    return this.user;     // 유저 정보 반환
   }
 
 }

@@ -5,6 +5,18 @@ export class BattleLog {
     this.typingAnimation = battleLog.typingAnimation;
     this.btns = battleLog.btns;
   }
+
+  changeMsg(msg) {
+    this.msg = msg;
+  }
+
+  getBtns() {
+    return this.btns;
+  }
+
+  deleteBtns() {
+    this.btns = [];
+  }
 }
 
 export class Btn {
@@ -12,6 +24,11 @@ export class Btn {
     this.msg = msg;
     this.enable = check;
   }
+
+  disableBtn() {
+    this.enable = false;
+  }
+
 }
 
 export default { BattleLog, Btn };

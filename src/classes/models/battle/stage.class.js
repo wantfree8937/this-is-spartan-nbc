@@ -22,9 +22,9 @@ class Stage {
   }
 
   // 정보반환(get) 함수들
-  getDungeonInfo() {
-    const dungeonInfo = this.dungeonInfo;
-    return dungeonInfo;
+  getMonsters() {
+    const monsters = this.dungeonInfo.getMonsters();
+    return monsters;
   }
   getPlayer() {
     const player = this.player;
@@ -39,7 +39,11 @@ class Stage {
     return battleLog;
   }
 
-  buildStageInfo() {
+  createStageForSend() {
+    
+
+
+
     const dungeon = {
       dungeonInfo: this.dungeonInfo,
       player: this.player,

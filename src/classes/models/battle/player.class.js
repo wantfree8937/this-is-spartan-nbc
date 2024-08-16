@@ -8,6 +8,20 @@ export class Player {
     this.playerCurHp = user.statInfo.hp;
     this.playerCurMp = user.statInfo.mp;
   }
+
+  getHpNow() {
+    return this.playerCurHp;
+  }
+  getMpNow() {
+    return this.playerCurMp;
+  }
+
+  updatePlayerHp(hp) {
+    this.playerCurHp = this.playerCurHp + hp;
+  }
+  updatePlayerMp(mp) {
+    this.playerCurMp = this.playerCurMp + mp;
+  }
 }
 
 export default Player;

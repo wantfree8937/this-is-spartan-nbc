@@ -10,6 +10,20 @@ class Stat {
     this.magic = statInfo.magic;
     this.speed = statInfo.speed;
   }
+
+  makeStatForPayload() {
+    return {
+      level: this.level,
+      hp: this.hp,
+      maxHp: this.maxHp,
+      mp: this.mp,
+      maxMp: this.maxMp,
+      atk: this.atk,
+      def: this.def,
+      magic: this.magic,
+      speed: this.speed,
+    };
+  }
 }
 
 export default Stat;

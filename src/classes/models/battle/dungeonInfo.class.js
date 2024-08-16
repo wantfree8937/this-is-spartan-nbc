@@ -3,6 +3,10 @@ export class DungeonInfo {
     this.dungeonCode = dungeonInfo.dungeonCode;
     this.monsters = dungeonInfo.monsters.map((monster) => new Monster(monster));
   }
+
+  getMonsters() {
+    return this.monsters;
+  }
 }
 
 export class Monster {
@@ -13,8 +17,18 @@ export class Monster {
     this.monsterHp = monsterInfo.monsterHp;
   }
 
+  getIdx() {
+    return this.monsterIdx;
+  }
   getName() {
     return this.monsterName;
+  }
+  getHp() {
+    return this.monsterHp;
+  }
+
+  damageMonsterHp(hp) {
+    this.monsterHp = this.monsterHp - hp;
   }
 
   setBossStat(statBoost) {

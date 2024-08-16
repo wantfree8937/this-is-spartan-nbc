@@ -8,49 +8,56 @@
       "monsterModel": 2001,
       "monsterName": "Mushroom",
       "monsterHp": 210,
-      "monsterAttack": 30
+      "monsterAttack": 30,
+      "monsterDefense": 5
     },
     {
       "monsterIdx": 1,
       "monsterModel": 2002,
       "monsterName": "Slime",
       "monsterHp": 130,
-      "monsterAttack": 15
+      "monsterAttack": 15,
+      "monsterDefense": 0
     },
     {
       "monsterIdx": 2,
       "monsterModel": 2003,
       "monsterName": "Spiked_Snail",
       "monsterHp": 160,
-      "monsterAttack": 20
+      "monsterAttack": 20,
+      "monsterDefense": 15
     },
     {
       "monsterIdx": 3,
       "monsterModel": 2004,
       "monsterName": "Fish_Man",
       "monsterHp": 255,
-      "monsterAttack": 25
+      "monsterAttack": 25,
+      "monsterDefense": 10
     },
     {
       "monsterIdx": 4,
       "monsterModel": 2005,
       "monsterName": "Lizard_Man",
       "monsterHp": 325,
-      "monsterAttack": 50
+      "monsterAttack": 50,
+      "monsterDefense": 30
     },
     {
       "monsterIdx": 5,
       "monsterModel": 2006,
       "monsterName": "Man_Eater",
       "monsterHp": 280,
-      "monsterAttack": 35
+      "monsterAttack": 35,
+      "monsterDefense": 20
     },
     {
       "monsterIdx": 6,
       "monsterModel": 2007,
       "monsterName": "Skeleton_Warrior",
       "monsterHp": 245,
-      "monsterAttack": 40
+      "monsterAttack": 40,
+      "monsterDefense": 25
     }
   ]
 }

@@ -14,19 +14,17 @@ export const createDungeonSession = (id, user, dungeonCode) => {
 export const getDungeonById = (id) => {
   return dungeonSessions.find((session) => session.id === id);
 };
+export const getDungeonBySocket = (socket) => {
+  return dungeonSessions.find((session) => session.user.socket === socket);
+};
 
-export const getNextStage = (dungeonId) => {
-  const targetId = dungeonId;
+export const getNextStage = (socket) => {
+  const targetSocket = socket;
+  const targetDungeon = getDungeonBySocket(targetSocket);
   
-  let stage;
-  console.log('dungeonSessions:', dungeonSessions);
-  const target = getDungeonById(targetId);
-  console.log('found target:', target);
-  
-  stage = target.getNextStage();
-
+  const stage = targetDungeon.getStageNow();
   return stage;
-}
+};
 
 export const enterDungeonSession = (user) => {};
 export const leaveDungeonSession = (user) => {};

@@ -17,13 +17,11 @@ class User {
 
     return PlayerId;
   }
-
   getSocket() {
     const socket = this.socket;
 
     return socket;
   }
-
   getPosition() {
     const transform = this.transformInfo;
 
