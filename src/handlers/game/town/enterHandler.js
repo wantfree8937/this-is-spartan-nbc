@@ -82,19 +82,25 @@ const enterDungeonHandler = ({ socket, payload }) => {
   townSession.addLeaveUsers(socket);      // 마을에서 제거
 
   // 참가된 던전의 스테이지 추출
-  const nextStage = getNextStage(socket);
-  //console.log('생성된 stage: ', nextStage);
+  const stage = getNextStage(socket);
+  // 스테이지 진입
+  enterNextStage(socket, stage);
+
+};
+
+const enterNextStage = (socket, nextStage) => {
   const { dungeonInfo, player, screenText, battleLog } = nextStage;
 
   if(nextStage == -1) {     // 던전 종료(클리어)시 던전나가기
-    const leaveDungeonResponse = createResponse('responseTown', 'S_Leave_Dungeon', { });
+    const leaveDungeonResponse = createResponse('responseTown', 'S_Leave_Dungeon', {});
     socket.write(leaveDungeonResponse);
   } else {
     // 클라이언트에 생성할 스테이지 정보전달
     const enterDungeonResponse = createResponse('responseTown', 'S_Enter_Dungeon', { dungeonInfo, player, screenText, battleLog });
     socket.write(enterDungeonResponse);
   }
-  
+
+
 };
 
-export { enterTownHandler, enterDungeonHandler };
+export { enterTownHandler, enterDungeonHandler, enterNextStage };

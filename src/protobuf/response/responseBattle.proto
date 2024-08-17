@@ -10,7 +10,7 @@ message S_ScreenText {
   ScreenText screenText = 1;
 }
 
-// 화면 완료??
+// 검은배경 화면닫기
 message S_ScreenDone { }
 
 // 전투 로그

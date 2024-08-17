@@ -26,5 +26,11 @@ export const getNextStage = (socket) => {
   return stage;
 };
 
+// 세션 종료(제거)
+export const endSesssionById = (targetId) => { 
+  const targetIdx = dungeonSessions.findIndex((dungeon) => dungeon.id = targetId);
+  dungeonSessions.splice(targetIdx, 1);
+}
+
 export const enterDungeonSession = (user) => {};
 export const leaveDungeonSession = (user) => {};

@@ -30,6 +30,9 @@ export class Monster {
   damageMonsterHp(hp) {
     this.monsterHp = this.monsterHp - hp;
   }
+  setHpZero() {
+    this.monsterHp = 0;
+  }
 
   setBossStat(statBoost) {
     this.monsterHp = (this.monsterHp * statBoost);

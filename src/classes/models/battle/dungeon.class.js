@@ -2,7 +2,7 @@ import { getGameAssets } from '../../../init/assets.js';
 import Stage from './stage.class.js';
 import { DungeonInfo, Monster } from './dungeonInfo.class.js';
 import { ScreenText, TextAlignment, Color } from './screenText.class.js';
-import { BattleLog } from './battleLog.class.js';
+import { BattleLog, Btn } from './battleLog.class.js';
 
 class Dungeon {
   // 던전 생성시 맵은 고정됨
@@ -40,7 +40,10 @@ class Dungeon {
         const monsterDatas = this.loadedAssets.dungeonInfo.monsters;
         const monsterIdx = Math.floor(Math.random() * 7);
         const monsterModel = 2000 + monsterIdx +1;          // (2001~2007)
-        const monsterName = `${monsterDatas[monsterIdx].monsterName}`;
+        let monster_Name = '';
+        if(i+1 == this.lastStage) { monster_Name = `[BOSS] ${monsterDatas[monsterIdx].monsterName}` }
+        else { monster_Name = `${monsterDatas[monsterIdx].monsterName}` }
+        const monsterName = monster_Name;
         const monsterHp = monsterDatas[monsterIdx].monsterHp;
 
         const tempInfo = { monsterIdx, monsterModel, monsterName, monsterHp };
@@ -66,8 +69,9 @@ class Dungeon {
       console.log('maxNumber:', maxNumber, ' monsters:', monsters);
       for (let k = 0; k < maxNumber; k++) {
         // 1번째 이름부터 Attack 버튼 생성
-        if(k == 1) { btns.unshift({ msg: `Attack ${monsters[k].getName()}`, enable: true }); }
-        else { btns.push({ msg: `Attack ${monsters[k].getName()}`, enable: true }); }
+        const newBtn = new Btn(`Attack ${monsters[k].getName()}`, true);
+        if(k == 1) { btns.unshift(newBtn); }
+        else { btns.push(newBtn); }
       }
       const tempLog = { msg, typingAnimation, btns };
       const battleLog = new BattleLog(tempLog);
@@ -91,13 +95,25 @@ class Dungeon {
     console.log('this.proceed:', this.proceed);
     return this.stages[this.proceed];   // 현재 진행도의 스테이지 반환 | 인덱스값: 0 ~ lastStage-1
   }
-
   // 다음 스테이지 반환
   getNextStage() {
     if (this.proceed <= this.lastStage) {
-      return this.stages[++this.proceed];    // 해당 진행도의 스테이지 반환 | 다음 스테이지를 적용하므로 진행도도 변경
+      const proceedNow = this.proceed;
+      console.log('proceedNow:', proceedNow);
+      console.log('proceedNext:', proceedNow+1);
+
+      this.proceed += 1;
+      return this.stages[this.proceed];    // 해당 진행도의 스테이지 반환 | 다음 스테이지를 적용하므로 진행도도 변경
     }
     else { return -1; }         // 최종 스테이지 클리어시 -1 반환 : EOF 표현의도
+  }
+  // 스테이지 진행도 반환
+  getProceed() {
+    return this.proceed;     // 현재 진행도
+  }
+  // 마지막 스테이지 번호 반환
+  getLastStage() {
+    return this.lastStage;     // 최종 스테이지 값 (5,7,9,11)
   }
 
   setBossStage(dungeonInfo, screenText, battleLog) {

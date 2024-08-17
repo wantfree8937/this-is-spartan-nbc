@@ -12,6 +12,7 @@ class Stage {
     this.player = new Player(user);
     this.screenText = new ScreenText(textInfo);
     this.battleLog = new BattleLog(battleLog);
+    this.stageDone = false;
   }
 
   addUser(user) {
@@ -19,6 +20,9 @@ class Stage {
       throw new Error('Dungeon session is full');
     }
     this.users.push(user);
+  }
+  makeDone() {
+    this.stageDone = true;
   }
 
   // 정보반환(get) 함수들
@@ -38,12 +42,11 @@ class Stage {
     const battleLog = this.battleLog;
     return battleLog;
   }
+  getStageDone() {
+    return this.stageDone;
+  }
 
   createStageForSend() {
-    
-
-
-
     const dungeon = {
       dungeonInfo: this.dungeonInfo,
       player: this.player,
