@@ -82,7 +82,8 @@ export const selectCheckHandler = async ({ socket, payload }) => {
 
     // 몬스터 HP 체력감소 연산처리 및 반영
     const monsterDataIdx = monstersNow[targetMonsterIdx].getIdx();
-    const monsterDef = monsterStats[monsterDataIdx].monsterDefense;
+    const monsterDef = monsterStats[monsterDataIdx].monsterDeffence;
+    console.log('monsterDef:', monsterDef);
     let resultDamage = playerStats.atk - monsterDef;
     if (resultDamage < 0) { resultDamage = 0; }
     monstersNow[attackTarget].damageMonsterHp(resultDamage);

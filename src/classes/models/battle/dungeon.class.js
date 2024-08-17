@@ -38,7 +38,10 @@ class Dungeon {
       let monsters = [];      // 해당 스테이지 몬스터목록
       for (let j = 0; j < maxNumber; j++) {      // 스테이지당 1~3 마리의 몬스터 생성
         const monsterDatas = this.loadedAssets.dungeonInfo.monsters;
-        const monsterIdx = Math.floor(Math.random() * 7);
+        let monsterIdx = -1;
+        if(this.dungeonCode <= 2) { monsterIdx = Math.floor(Math.random() * 8); }
+        else if(this.dungeonCode >= 3) { monsterIdx = Math.floor(Math.random() * 8) +8; }
+        
         const monsterModel = 2000 + monsterIdx +1;          // (2001~2007)
         let monster_Name = '';
         if(i+1 == this.lastStage) { monster_Name = `[BOSS] ${monsterDatas[monsterIdx].monsterName}` }

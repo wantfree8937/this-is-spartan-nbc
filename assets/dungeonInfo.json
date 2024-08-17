@@ -6,60 +6,234 @@
     {
       "monsterIdx": 0,
       "monsterModel": 2001,
-      "monsterName": "Mushroom",
-      "monsterHp": 210,
-      "monsterAttack": 30,
-      "monsterDefense": 5
+      "monsterName": "초급 일반 1",
+      "monsterHp": 50,
+      "monsterAttack": 7,
+      "monsterDeffence": 5
     },
     {
       "monsterIdx": 1,
       "monsterModel": 2002,
-      "monsterName": "Slime",
-      "monsterHp": 130,
-      "monsterAttack": 15,
-      "monsterDefense": 0
+      "monsterName": "초급 일반 2",
+      "monsterHp": 60,
+      "monsterAttack": 6,
+      "monsterDeffence": 10
     },
     {
       "monsterIdx": 2,
       "monsterModel": 2003,
-      "monsterName": "Spiked_Snail",
-      "monsterHp": 160,
-      "monsterAttack": 20,
-      "monsterDefense": 15
+      "monsterName": "초급 일반 3",
+      "monsterHp": 70,
+      "monsterAttack": 6,
+      "monsterDeffence": 8
     },
     {
       "monsterIdx": 3,
       "monsterModel": 2004,
-      "monsterName": "Fish_Man",
-      "monsterHp": 255,
-      "monsterAttack": 25,
-      "monsterDefense": 10
+      "monsterName": "초급 일반 4",
+      "monsterHp": 90,
+      "monsterAttack": 5,
+      "monsterDeffence": 5
     },
     {
       "monsterIdx": 4,
       "monsterModel": 2005,
-      "monsterName": "Lizard_Man",
-      "monsterHp": 325,
-      "monsterAttack": 50,
-      "monsterDefense": 30
+      "monsterName": "초급 일반 5",
+      "monsterHp": 80,
+      "monsterAttack": 4,
+      "monsterDeffence": 4
     },
     {
       "monsterIdx": 5,
       "monsterModel": 2006,
-      "monsterName": "Man_Eater",
-      "monsterHp": 280,
-      "monsterAttack": 35,
-      "monsterDefense": 20
+      "monsterName": "초급 일반 6",
+      "monsterHp": 60,
+      "monsterAttack": 6,
+      "monsterDeffence": 20
     },
     {
       "monsterIdx": 6,
       "monsterModel": 2007,
-      "monsterName": "Skeleton_Warrior",
-      "monsterHp": 245,
-      "monsterAttack": 40,
-      "monsterDefense": 25
+      "monsterName": "초급 일반 7",
+      "monsterHp": 70,
+      "monsterAttack": 5,
+      "monsterDeffence": 18
+    },
+    {
+      "monsterIdx": 7,
+      "monsterModel": 2008,
+      "monsterName": "초급 일반 8",
+      "monsterHp": 80,
+      "monsterAttack": 4,
+      "monsterDeffence": 22
+    },
+    {
+      "monsterIdx": 8,
+      "monsterModel": 2009,
+      "monsterName": "고급 일반 1",
+      "monsterHp": 75,
+      "monsterAttack": 7,
+      "monsterDeffence": 20
+    },
+    {
+      "monsterIdx": 9,
+      "monsterModel": 2010,
+      "monsterName": "고급 일반 2",
+      "monsterHp": 90,
+      "monsterAttack": 6,
+      "monsterDeffence": 25
+    },
+    {
+      "monsterIdx": 10,
+      "monsterModel": 2011,
+      "monsterName": "고급 일반 3",
+      "monsterHp": 100,
+      "monsterAttack": 8,
+      "monsterDeffence": 18
+    },
+    {
+      "monsterIdx": 11,
+      "monsterModel": 2012,
+      "monsterName": "고급 일반 4",
+      "monsterHp": 90,
+      "monsterAttack": 7,
+      "monsterDeffence": 22
+    },
+    {
+      "monsterIdx": 12,
+      "monsterModel": 2013,
+      "monsterName": "고급 일반 5",
+      "monsterHp": 60,
+      "monsterAttack": 10,
+      "monsterDeffence": 20
+    },
+    {
+      "monsterIdx": 13,
+      "monsterModel": 2014,
+      "monsterName": "고급 일반 6",
+      "monsterHp": 80,
+      "monsterAttack": 6,
+      "monsterDeffence": 25
+    },
+    {
+      "monsterIdx": 14,
+      "monsterModel": 2015,
+      "monsterName": "고급 일반 7",
+      "monsterHp": 80,
+      "monsterAttack": 7,
+      "monsterDeffence": 22
+    },
+    {
+      "monsterIdx": 15,
+      "monsterModel": 2016,
+      "monsterName": "고급 일반 8",
+      "monsterHp": 10,
+      "monsterAttack": 3,
+      "monsterDeffence": 28
+    },
+    {
+      "monsterIdx": 16,
+      "monsterModel": 2017,
+      "monsterName": "초급 보스 1",
+      "monsterHp": 50,
+      "monsterAttack": 10,
+      "monsterDeffence": 25
+    },
+    {
+      "monsterIdx": 17,
+      "monsterModel": 2018,
+      "monsterName": "초급 보스 2",
+      "monsterHp": 75,
+      "monsterAttack": 4,
+      "monsterDeffence": 30
+    },
+    {
+      "monsterIdx": 18,
+      "monsterModel": 2019,
+      "monsterName": "초급 보스 3",
+      "monsterHp": 120,
+      "monsterAttack": 15,
+      "monsterDeffence": 35
+    },
+    {
+      "monsterIdx": 19,
+      "monsterModel": 2020,
+      "monsterName": "초급 보스 4",
+      "monsterHp": 90,
+      "monsterAttack": 13,
+      "monsterDeffence": 100
+    },
+    {
+      "monsterIdx": 20,
+      "monsterModel": 2021,
+      "monsterName": "초급 보스 5",
+      "monsterHp": 60,
+      "monsterAttack": 15,
+      "monsterDeffence": 100
+    },
+    {
+      "monsterIdx": 21,
+      "monsterModel": 2022,
+      "monsterName": "초급 보스 6",
+      "monsterHp": 110,
+      "monsterAttack": 13,
+      "monsterDeffence": 100
+    },
+    {
+      "monsterIdx": 22,
+      "monsterModel": 2023,
+      "monsterName": "고급 보스 1",
+      "monsterHp": 120,
+      "monsterAttack": 11,
+      "monsterDeffence": 100
+    },
+    {
+      "monsterIdx": 23,
+      "monsterModel": 2024,
+      "monsterName": "고급 보스 2",
+      "monsterHp": 140,
+      "monsterAttack": 20,
+      "monsterDeffence": 100
+    },
+    {
+      "monsterIdx": 24,
+      "monsterModel": 2025,
+      "monsterName": "고급 보스 3",
+      "monsterHp": 90,
+      "monsterAttack": 15,
+      "monsterDeffence": 100
+    },
+    {
+      "monsterIdx": 25,
+      "monsterModel": 2026,
+      "monsterName": "고급 보스 4",
+      "monsterHp": 130,
+      "monsterAttack": 17,
+      "monsterDeffence": 100
+    },
+    {
+      "monsterIdx": 26,
+      "monsterModel": 2027,
+      "monsterName": "고급 보스 5",
+      "monsterHp": 140,
+      "monsterAttack": 20,
+      "monsterDeffence": 100
+    },
+    {
+      "monsterIdx": 27,
+      "monsterModel": 2028,
+      "monsterName": "고급 보스 6",
+      "monsterHp": 110,
+      "monsterAttack": 19,
+      "monsterDeffence": 100
+    },
+    {
+      "monsterIdx": 28,
+      "monsterModel": 2029,
+      "monsterName": "최종 보스",
+      "monsterHp": 550,
+      "monsterAttack": 70,
+      "monsterDeffence": 250
     }
   ]
 }
-
-
