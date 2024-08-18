@@ -1,21 +1,14 @@
 import { userSessions } from './sessions.js';
 import User from '../classes/models/user.class.js';
-
-import { redisV4 } from '../init/redis.js';
+import { getUserRedis } from '../db/user/redis.assets.js';
 
 export const addUser = async (playerId, nickname, userClass, transform, socket) => {
-  const statList = await getUserData();
+  const statList = await getUserRedis();
   const statInfo = getClassStats(userClass, statList);
   const user = new User(playerId, nickname, userClass, statInfo, transform, socket);
   userSessions.push(user);
 
   return user;
-};
-
-const getUserData = async () => {
-  const userStatJson = await redisV4.get('userStats');
-  const characterStat = JSON.parse(userStatJson);
-  return characterStat;
 };
 
 const getClassStats = (userClass, statList) => {
