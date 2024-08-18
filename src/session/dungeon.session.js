@@ -6,6 +6,7 @@ export const createDungeonSession = (id, user, dungeonCode) => {
 
   const session = new Dungeon(id, user, dungeonCode);    // 던전 세션 생성
   session.initDungeon();
+  session.initStage();
   dungeonSessions.push(session);    // 던전 세션 등록
 
   return session;   // 생성된 세션 반환

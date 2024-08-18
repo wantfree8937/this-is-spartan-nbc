@@ -54,100 +54,164 @@ export const selectCheckHandler = async ({ socket, payload }) => {
   }
 
   // 진행순서 : 플레이어 공격모션 -> 몬스터 HP감소 처리 -> 몬스터 공격모션 -> 플레이어 HP감소
-  // 일반공격과 특수공격(MP 사용) 구분 예정
-  if (0 < responseCode && responseCode <= monstersNow.length) {
-    console.log(`${responseCode}번 버튼을 선택함.`);      // 플레이어가 선택한 버튼 로그
+  // 특수공격(MP 사용) 기능 구현예정
+  console.log(`${responseCode}번 버튼을 선택함.`);      // 플레이어가 선택한 버튼 로그
 
-    let attackTarget;
-    if (monstersNow.length >= 2) {
-      if (responseCode == 1) { attackTarget = 1; }
-      else if (responseCode == 2) { attackTarget = 0; }
-      else { attackTarget = 2; }
-    } else {
-      attackTarget = responseCode - 1;         // 몬스터 인덱스와 responseCode의 값차이 == 1
-    }
+  let attackTarget;
+  if (monstersNow.length >= 2) {
+    if (responseCode == 1) { attackTarget = 1; }
+    else if (responseCode == 2) { attackTarget = 0; }
+    else { attackTarget = 2; }
+  } else {
+    attackTarget = responseCode - 1;         // 몬스터 인덱스와 responseCode의 값차이 == 1
+  }
 
-    // 모든 이벤트 처리전까지 버튼 비활성화
-    battleLog.disableBtns();
-    let updateBatteLog = createResponse('responseBattle', 'S_Battle_Log', { battleLog });
-    socket.write(updateBatteLog);
+  // 모든 이벤트 처리전까지 버튼 비활성화
+  battleLog.disableBtns();
+  let updateBatteLog = createResponse('responseBattle', 'S_Battle_Log', { battleLog });
+  socket.write(updateBatteLog);
 
+  const targetMonsterIdx = attackTarget;
+  let actionSet;
+  let special;
+  // 스테이지 진입시
+  if (responseCode == 0) {
+    const resultResponse = createResponse('responseBattle', 'S_Screen_Done', {});
+    socket.write(resultResponse);
+    await sleep(200);
+  }
+  // 일반공격(1~3) 선택시
+  else if (0 < responseCode && responseCode <= 3) {
     // 플레이어 공격처리 및 반영
-    const targetMonsterIdx = attackTarget;
-    const actionSet = new ActionSet(0, 1);      // animCode(attack: 0), effectCode
+    actionSet = new ActionSet(0, 3003);      // animCode(attack: 0), effectCode
+    special = 0;
 
-    const playerAnimaion = createResponse('responseBattle', 'S_Player_Action', { targetMonsterIdx, actionSet });
-    socket.write(playerAnimaion);
-    await sleep(800);
+  }
+  // 특수공격(4~6) 선택시
+  else if (3 < responseCode && responseCode <= 6) {
+    // 플레이어 특수공격 처리 및 반영
+    actionSet = new ActionSet(0, 3006);      // animCode(attack: 0), effectCode
+    special = playerStats.magic;             // 추가 데미지 : 플레이어의 마법수치
 
-    // 몬스터 HP 체력감소 연산처리 및 반영
-    const monsterDataIdx = monstersNow[targetMonsterIdx].getIdx();
-    const monsterDef = monsterStats[monsterDataIdx].monsterDeffence;
-    console.log('monsterDef:', monsterDef);
-    let resultDamage = playerStats.atk - monsterDef;
-    if (resultDamage < 0) { resultDamage = 0; }
-    monstersNow[attackTarget].damageMonsterHp(resultDamage);
-    
-    // 몬스터 사망시 이벤트처리
-    if (monstersNow[attackTarget].getHp() < 0) {
-      monstersNow[attackTarget].setHpZero();
-      const actionMonsterIdx = attackTarget;
-      const actionSet = new ActionSet(4, null);      // animCode(death: 4), effectCode
-      const monsterAnimaion = createResponse('responseBattle', 'S_Monster_Action', { actionMonsterIdx, actionSet });
-      socket.write(monsterAnimaion);
-      await sleep(600);
-    };
-    const monsterIdx = targetMonsterIdx;
-    const hp = monstersNow[attackTarget].getHp();
+  } else {
+    console.log('!!!ERROR!!! 있을수 없는 값 !!!ERROR!!!');
 
-    const updateMonsterHp = createResponse('responseBattle', 'S_Set_Monster_Hp', { monsterIdx, hp });
-    socket.write(updateMonsterHp);
-    await sleep(300);
-
-    // 배틀로그 변경 및 반영
-    let msg = `플레이어가 ${monstersNow[attackTarget].getName()} 공격! ${resultDamage}의 데미지!`;
+    let msg = `데이터 오류 발생! 클라이언트 재시작 필요.`;
     battleLog.changeMsg(msg);
     updateBatteLog = createResponse('responseBattle', 'S_Battle_Log', { battleLog });
     socket.write(updateBatteLog);
-    await sleep(700);
+    await sleep(500);
 
-    console.log('monstersNow.length:', monstersNow.length);
-    // 스테이지의 모든 몬스터에 대하여 수행
-    for (let i = 0; i < monstersNow.length; i++) {
-      if (monstersNow[i].getHp() <= 0) {      // 몬스터 사망시 패스
-        
-        killCount++; continue;
-      } else {      // 살아있을시 공격
-        // 몬스터 행동처리 및 반영
-        const actionMonsterIdx = i;                 // 0 에서 최대 2
-        const actionSet = new ActionSet(0, 3);      // animCode(attack: 0), effectCode
+    return;
+  }
 
-        const monsterAnimaion = createResponse('responseBattle', 'S_Monster_Action', { actionMonsterIdx, actionSet });
-        socket.write(monsterAnimaion);
-        await sleep(600);
+  // 몬스터 HP 체력감소 연산처리
+  const monsterDataIdx = monstersNow[targetMonsterIdx].getIdx();
+  const monsterDef = monsterStats[monsterDataIdx].monsterDeffence;
+  console.log('monsterDef:', monsterDef);
+  let resultDamage = playerStats.atk + special - monsterDef;      // special = 일반공격시 0, 특수공격시 magic 수치
+  if (resultDamage < 0) { resultDamage = 0; }
+  monstersNow[attackTarget].damageMonsterHp(resultDamage);
 
-        // 플레이어 HP감소 처리 및 반영
-        const monsterIdx = monstersNow[i].getIdx();
-        console.log('monsterIdx:', monsterIdx);
-        const monsterAtk = monsterStats[monsterIdx].monsterAttack;
-        let damageResult = monsterAtk - playerStats.def;
-        if (damageResult < 0) { damageResult = 0; }
-        playerNow.updatePlayerHp(-damageResult);
+  // 플레이어 행동 반영
+  const playerAnimaion = createResponse('responseBattle', 'S_Player_Action', { targetMonsterIdx, actionSet });
+  socket.write(playerAnimaion);
+  await sleep(800);
 
-        const hp = playerNow.getHpNow();
-        const updateplayerHp = createResponse('responseBattle', 'S_Set_Player_Hp', { hp });
-        socket.write(updateplayerHp);
-        await sleep(200);
+  // 몬스터 사망시 이벤트처리
+  if (monstersNow[attackTarget].getHp() < 0) {
+    monstersNow[attackTarget].setHpZero();
+    const actionMonsterIdx = attackTarget;
+    const actionSet = new ActionSet(4, null);      // animCode(death: 4), effectCode:none
+    const monsterAnimaion = createResponse('responseBattle', 'S_Monster_Action', { actionMonsterIdx, actionSet });
+    socket.write(monsterAnimaion);
+    await sleep(600);
+  };
+  const monsterIdx = targetMonsterIdx;
+  const hp = monstersNow[attackTarget].getHp();
 
-        // 배틀로그 변경 및 반영
-        const msg = `${monstersNow[i].getName()}가 플레이어 공격! ${damageResult}의 데미지!`;
-        battleLog.changeMsg(msg);
-        const updateBatteLog = createResponse('responseBattle', 'S_Battle_Log', { battleLog });
-        socket.write(updateBatteLog);
-        await sleep(700);
-      }
+  const updateMonsterHp = createResponse('responseBattle', 'S_Set_Monster_Hp', { monsterIdx, hp });
+  socket.write(updateMonsterHp);
+  await sleep(100);
+
+  // 배틀로그 변경 및 반영
+  let msg = `플레이어가 ${monstersNow[attackTarget].getName()} 공격! ${resultDamage}의 데미지!`;
+  battleLog.changeMsg(msg);
+  updateBatteLog = createResponse('responseBattle', 'S_Battle_Log', { battleLog });
+  socket.write(updateBatteLog);
+  await sleep(1000);
+
+  // 스테이지의 모든 몬스터에 대하여 수행
+  for (let i = 0; i < monstersNow.length; i++) {
+    if (monstersNow[i].getHp() <= 0) {      // 몬스터 사망시 패스
+      killCount++; continue;
+    } else {      // 살아있을시 공격
+      // 몬스터 행동처리 및 반영
+      const actionMonsterIdx = i;                 // 0 에서 최대 2
+      const actionSet = new ActionSet(0, 3004);      // animCode(attack: 0), effectCode
+
+      const monsterAnimaion = createResponse('responseBattle', 'S_Monster_Action', { actionMonsterIdx, actionSet });
+      socket.write(monsterAnimaion);
+      await sleep(600);
+
+      // 플레이어 HP감소 처리 및 반영
+      const monsterIdx = monstersNow[i].getIdx();
+      console.log('monsterIdx:', monsterIdx);
+      const monsterAtk = monsterStats[monsterIdx].monsterAttack;
+      let damageResult = monsterAtk - playerStats.def;
+      if (damageResult < 0) { damageResult = 0; }
+      playerNow.updatePlayerHp(-damageResult);
+
+      const hp = playerNow.getHpNow();
+      const updateplayerHp = createResponse('responseBattle', 'S_Set_Player_Hp', { hp });
+      socket.write(updateplayerHp);
+      await sleep(100);
+
+      // 배틀로그 변경 및 반영
+      const msg = `${monstersNow[i].getName()}가 플레이어 공격! ${damageResult}의 데미지!`;
+      battleLog.changeMsg(msg);
+      const updateBatteLog = createResponse('responseBattle', 'S_Battle_Log', { battleLog });
+      socket.write(updateBatteLog);
+      await sleep(1000);
+
+      // 플레이어 HP가 0 이하일 경우 전투종료
+      if (playerNow.getHp() <= 0) break;
+    }
+  }
+
+  // 플레이어 사망시 이벤트처리
+  if (playerNow.getHpNow() <= 0) {
+    const targetMonsterIdx = 0;
+    const actionSet = new ActionSet(1, null);      // animCode(death: 1), effectCode:none
+    const playerAnimaion = createResponse('responseBattle', 'S_Player_Action', { targetMonsterIdx, actionSet });
+    socket.write(playerAnimaion);
+    await sleep(600);
+
+    battleLog.deleteBtns();
+    battleLog.addBtn('던전 나가기', true);
+    const loseBatteLog = createResponse('responseBattle', 'S_Battle_Log', { battleLog });
+    socket.write(loseBatteLog);
+    await sleep(200);
+  }
+  // 전투 승리시 이벤트처리
+  else if (killCount == monstersNow.length) {
+    stageNow.makeDone();
+    const msg = '전투 승리!';
+    battleLog.changeMsg(msg);
+    battleLog.deleteBtns();
+
+    battleLog.addBtn('던전 나가기', true);
+    if (dungeonNow.getProceed() + 1 == dungeonNow.getLastStage()) {
+      battleLog.addBtn('던전 클리어!', false);
+    } else {
+      battleLog.addBtn('다음 스테이지', true);
     }
 
+    const winBatteLog = createResponse('responseBattle', 'S_Battle_Log', { battleLog });
+    socket.write(winBatteLog);
+    await sleep(200);
+  }
+  else {
     // 행동 선택화면 구성
     for (let i = 0; i < monstersNow.length; i++) {
       let checker = -1;
@@ -158,56 +222,13 @@ export const selectCheckHandler = async ({ socket, payload }) => {
       } else {
         checker = i;         // 몬스터 인덱스와 responseCode의 값차이 == 1
       }
-      if(monstersNow[i].getHp() > 0) { battleLog.btns[checker].enableBtn(); }
+      if (monstersNow[i].getHp() > 0) { battleLog.btns[checker].enableBtn(); }
     }
     // 플레이어 행동 선택
     msg = `플레이어, 행동을 선택하세요.`;
     battleLog.changeMsg(msg);
     updateBatteLog = createResponse('responseBattle', 'S_Battle_Log', { battleLog });
     socket.write(updateBatteLog);
-    await sleep(200);
-
-    // 전투 승리시 이벤트처리
-    if (killCount == monstersNow.length) {
-      stageNow.makeDone();
-      const msg = '전투 승리!';
-      battleLog.changeMsg(msg);
-      battleLog.deleteBtns();
-      
-      battleLog.addBtn('던전 나가기', true);
-      if(dungeonNow.getProceed()+1 == dungeonNow.getLastStage()) {
-        battleLog.addBtn('던전 클리어!', false);
-      }else {
-        battleLog.addBtn('다음 스테이지', true);
-      }
-      
-      const winBatteLog = createResponse('responseBattle', 'S_Battle_Log', { battleLog });
-      socket.write(winBatteLog);
-      await sleep(200);
-    }
-
-    // 플레이어 사망시 이벤트처리
-    if (playerNow.getHpNow() <= 0) {
-      const targetMonsterIdx = 0;
-      const actionSet = new ActionSet(1, null);      // animCode(death: 1), effectCode
-      const playerAnimaion = createResponse('responseBattle', 'S_Player_Action', { targetMonsterIdx, actionSet });
-      socket.write(playerAnimaion);
-      await sleep(600);
-
-      battleLog.deleteBtns();
-      battleLog.addBtn('던전 나가기', true);
-      const loseBatteLog = createResponse('responseBattle', 'S_Battle_Log', { battleLog });
-      socket.write(loseBatteLog);
-      await sleep(200);
-    }
-
-  } else if (responseCode > monstersNow.length) {
-    console.log(`${responseCode}번 버튼을 선택함.`);
-
-  } else {
-    console.log('버튼이 선택되지 않음.')
-    const resultResponse = createResponse('responseBattle', 'S_Screen_Done', {});
-    socket.write(resultResponse);
     await sleep(200);
   }
 
