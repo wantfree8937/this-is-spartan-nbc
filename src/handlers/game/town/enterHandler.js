@@ -45,7 +45,7 @@ const enterTownHandler = async ({ socket, payload }) => {
     level = 1;
     soul = 0;
 
-    user = addUser(playerId, nickname, userClass, level, soul, transform, socket);
+    user = await addUser(playerId, nickname, userClass, level, soul, transform, socket);
   } else {
     account = existUser;
     playerId = existUser.playerId;
@@ -60,17 +60,17 @@ const enterTownHandler = async ({ socket, payload }) => {
 
       transform = new Transform(); //lastX lastY 저장? lastX와 lastY 게임 종료 or 던전 입장때 저장
 
-      user = addUser(playerId, nickname, userClass, level, soul, transform, socket);
+      user = await addUser(playerId, nickname, userClass, level, soul, transform, socket);
     } else {
       level = existCharacter.level;
       soul = existCharacter.soul;
       transform = new Transform();
 
-      user = addUser(playerId, nickname, userClass, level, soul, transform, socket);
+      user = await addUser(playerId, nickname, userClass, level, soul, transform, socket);
     }
   }
 
-  townUser = addUserTown(user);
+  townUser = await addUserTown(user);
 
   const player = townUser.buildPlayerInfo();
 
@@ -84,6 +84,7 @@ const enterTownHandler = async ({ socket, payload }) => {
   const Z = 135;
   const ROT = 0;
 
+  console.log('user::::::::::', townUser);
   user.updatePosition(X, Y, Z, ROT);
   //towerSession에서 가져온 유저
   const allList = getAllList();

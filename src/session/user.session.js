@@ -1,9 +1,9 @@
 import { userSessions } from './sessions.js';
 import User from '../classes/models/user.class.js';
-import { getUserRedis } from '../db/user/redis.assets.js';
+import { getUserStatsRedis } from '../db/game/redis.assets.js';
 
-export const addUser = (playerId, nickname, userClass, level, soul, transform, socket) => {
-  const gameAssets = getGameAssets();
+export const addUser = async (playerId, nickname, userClass, level, soul, transform, socket) => {
+  const gameAssets = await getUserStatsRedis();
   const statInfo = getClassStats(userClass, gameAssets);
   const user = new User(playerId, nickname, userClass, level, soul, statInfo, transform, socket);
   userSessions.push(user);

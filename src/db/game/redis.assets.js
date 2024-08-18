@@ -5,3 +5,9 @@ export const getMonstersRedis = async () => {
   const monstersData = JSON.parse(monstersJson);
   return monstersData;
 };
+
+export const getUserStatsRedis = async () => {
+  const userStatJson = await redisV4.get('userStats');
+  const characterStat = JSON.parse(userStatJson);
+  return characterStat;
+};
