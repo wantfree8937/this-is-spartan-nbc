@@ -11,6 +11,13 @@ class Stat {
     this.speed = statInfo.speed;
   }
 
+  getHp() {
+    return this.hp;
+  }
+  getMp() {
+    return this.mp;
+  }
+
   makeStatForPayload() {
     return {
       level: this.level,

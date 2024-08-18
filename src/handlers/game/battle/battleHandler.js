@@ -16,6 +16,13 @@ export const selectCheckHandler = async ({ socket, payload }) => {
   const { responseCode } = payload;
   console.log('responseCode:', responseCode);
 
+  // 스테이지 진입시
+  if (responseCode == 0) {
+    const resultResponse = createResponse('responseBattle', 'S_Screen_Done', {});
+    socket.write(resultResponse);
+    await sleep(200); return;
+  }
+
   // 전투 상황처리를 위해 필요한 데이터들
   // 필요한 것1 : 현재 플레이중인 던전과 현재 진행중인 스테이지 정보
   // 필요한 것2 : 현재 스테이지의 플레이어와 몬스터들 정보
@@ -30,6 +37,7 @@ export const selectCheckHandler = async ({ socket, payload }) => {
   const playerNow = stageNow.getPlayer();
   // 4. 현재 스테이지의 몬스터(들) 정보 로드 | 결과: (Monster 객체들이 들어있는) monsters 배열
   const monstersNow = stageNow.getMonsters();
+  console.log('monstersNow:', monstersNow);
 
   // 플레이어 스텟 정보
   const playerStats = dungeonNow.getUser().getStatInfo();
@@ -45,17 +53,17 @@ export const selectCheckHandler = async ({ socket, payload }) => {
     if (responseCode == 1) {
       endSesssionById(dungeonNow.id);     // 던전세션 종료(삭제)
       const leaveDungeon = createResponse('responseBattle', 'S_Leave_Dungeon', null);
-      socket.write(leaveDungeon);
+      socket.write(leaveDungeon);     // 던전 나가기
     } else if (responseCode == 2) {
-      const nextStage = dungeonNow.getNextStage();
-      enterNextStage(socket, nextStage);
-      return;
+      const nextStage = dungeonNow.getNextStage();      // 다음스테이지 로드
+      enterNextStage(socket, nextStage);      // 다음스테이지 진입
+      return;     // 현재 스테이지 종료
     }
   }
 
   // 진행순서 : 플레이어 공격모션 -> 몬스터 HP감소 처리 -> 몬스터 공격모션 -> 플레이어 HP감소
   // 특수공격(MP 사용) 기능 구현예정
-  console.log(`${responseCode}번 버튼을 선택함.`);      // 플레이어가 선택한 버튼 로그
+  console.log(`${responseCode +1}번 버튼을 선택함.`);      // 플레이어가 선택한 버튼 로그
 
   let attackTarget;
   if (monstersNow.length >= 2) {
@@ -72,18 +80,15 @@ export const selectCheckHandler = async ({ socket, payload }) => {
   socket.write(updateBatteLog);
 
   const targetMonsterIdx = attackTarget;
+  console.log('targetMonsterIdx:', targetMonsterIdx);
+  console.log('typeof(targetMonsterIdx):', typeof(targetMonsterIdx));
+
   let actionSet;
   let special;
-  // 스테이지 진입시
-  if (responseCode == 0) {
-    const resultResponse = createResponse('responseBattle', 'S_Screen_Done', {});
-    socket.write(resultResponse);
-    await sleep(200);
-  }
   // 일반공격(1~3) 선택시
-  else if (0 < responseCode && responseCode <= 3) {
+  if (0 < responseCode && responseCode <= 3) {
     // 플레이어 공격처리 및 반영
-    actionSet = new ActionSet(0, 3003);      // animCode(attack: 0), effectCode
+    actionSet = new ActionSet(0, 3006);      // animCode(attack: 0), effectCode
     special = 0;
 
   }
@@ -106,9 +111,12 @@ export const selectCheckHandler = async ({ socket, payload }) => {
   }
 
   // 몬스터 HP 체력감소 연산처리
-  const monsterDataIdx = monstersNow[targetMonsterIdx].getIdx();
+  console.log('monstersNow[0]:', monstersNow[0]);
+  console.log('monstersNow[1]:', monstersNow[1]);
+  console.log('monstersNow[targetMonsterIdx]:', monstersNow[`${targetMonsterIdx}`]);
+
+  const monsterDataIdx = monstersNow[`${targetMonsterIdx}`].getIdx();
   const monsterDef = monsterStats[monsterDataIdx].monsterDeffence;
-  console.log('monsterDef:', monsterDef);
   let resultDamage = playerStats.atk + special - monsterDef;      // special = 일반공격시 0, 특수공격시 magic 수치
   if (resultDamage < 0) { resultDamage = 0; }
   monstersNow[attackTarget].damageMonsterHp(resultDamage);
@@ -175,12 +183,13 @@ export const selectCheckHandler = async ({ socket, payload }) => {
       await sleep(1000);
 
       // 플레이어 HP가 0 이하일 경우 전투종료
-      if (playerNow.getHp() <= 0) break;
+      if (playerNow.getHpNow() <= 0) break;
     }
   }
 
   // 플레이어 사망시 이벤트처리
   if (playerNow.getHpNow() <= 0) {
+    stageNow.makeDone();
     const targetMonsterIdx = 0;
     const actionSet = new ActionSet(1, null);      // animCode(death: 1), effectCode:none
     const playerAnimaion = createResponse('responseBattle', 'S_Player_Action', { targetMonsterIdx, actionSet });
@@ -191,7 +200,7 @@ export const selectCheckHandler = async ({ socket, payload }) => {
     battleLog.addBtn('던전 나가기', true);
     const loseBatteLog = createResponse('responseBattle', 'S_Battle_Log', { battleLog });
     socket.write(loseBatteLog);
-    await sleep(200);
+    await sleep(200); return;
   }
   // 전투 승리시 이벤트처리
   else if (killCount == monstersNow.length) {
@@ -209,7 +218,7 @@ export const selectCheckHandler = async ({ socket, payload }) => {
 
     const winBatteLog = createResponse('responseBattle', 'S_Battle_Log', { battleLog });
     socket.write(winBatteLog);
-    await sleep(200);
+    await sleep(200); return;
   }
   else {
     // 행동 선택화면 구성
@@ -229,9 +238,8 @@ export const selectCheckHandler = async ({ socket, payload }) => {
     battleLog.changeMsg(msg);
     updateBatteLog = createResponse('responseBattle', 'S_Battle_Log', { battleLog });
     socket.write(updateBatteLog);
-    await sleep(200);
+    await sleep(200); return;
   }
-
 };
 
 function sleep(ms) {
