@@ -18,7 +18,7 @@ const initServer = async () => {
     // 다음 작업
 
     // 유저세션, 타운세션 생성
-    // 접소과 동시에 양쪽 세션에 유저추가
+    // 접속과 동시에 양쪽 세션에 유저추가
   } catch (e) {
     console.error(e);
     process.exit(1); // 오류 발생 시 프로세스 종료
