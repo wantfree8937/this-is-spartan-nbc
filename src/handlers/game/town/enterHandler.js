@@ -11,6 +11,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { createDungeonSession, getNextStage } from '../../../session/dungeon.session.js';
 import { addUserDB, getUserByNicknameDB } from './../../../db/user/user.db.js';
 import { redisV4 } from '../../../init/redis.js';
+import { getMonstersRedis } from '../../../db/game/redis.assets.js';
 // import { getGameAssets } from './../../../init/assets.js';
 
 const enterTownHandler = async ({ socket, payload }) => {
@@ -82,13 +83,14 @@ const enterTownHandler = async ({ socket, payload }) => {
   });
 };
 
-const enterDungeonHandler = ({ socket, payload }) => {
+const enterDungeonHandler = async ({ socket, payload }) => {
   const { dungeonCode } = payload;
+  const monsterData = await getMonstersRedis();
   console.log('dungeonCode :', dungeonCode); // 던전 난이도 코드 (1 ~ 4)
   const user = getUserBySocket(socket);
 
   const dungeonId = uuidv4(); // 던전 임시 id
-  createDungeonSession(dungeonId, user, dungeonCode); // 던전 세션 생성
+  createDungeonSession(dungeonId, user, dungeonCode, monsterData); // 던전 세션 생성
 
   const townSession = getTownSession(); // 마을세션 로드
   townSession.addLeaveUsers(socket); // 마을에서 제거
