@@ -9,8 +9,12 @@ import { addUser, getUserBySocket } from '../../../session/user.session.js';
 import { createResponse } from '../../../utils/response/createResponse.js';
 import { v4 as uuidv4 } from 'uuid';
 import { createDungeonSession, getNextStage } from '../../../session/dungeon.session.js';
-import { addUserDB, getUserByNicknameDB } from './../../../db/user/user.db.js';
-import { redisV4 } from '../../../init/redis.js';
+import {
+  getUserByNicknameDB,
+  getCharacterClassByIdsDB,
+  registerUser,
+  registerUserCharacter,
+} from './../../../db/user/user.db.js';
 import { getMonstersRedis } from '../../../db/game/redis.assets.js';
 // import { getGameAssets } from './../../../init/assets.js';
 
@@ -18,35 +22,52 @@ const enterTownHandler = async ({ socket, payload }) => {
   /*---------Enter--------*/
   const { nickname } = payload;
   const userClass = payload.class;
-  const userStatsJson = await redisV4.get('userStats');
-  const userStatsData = JSON.parse(userStatsJson);
-  const targetUserData = userStatsData.find((stat) => stat.class === userClass);
-
-  console.log('userStats', targetUserData);
 
   let transform;
   let user;
   let townUser;
   let playerId;
   let account;
-  //닉네임으로 유저가 있는 지 확인
-  const existUser = await getUserByNicknameDB(nickname);
-  console.log(existUser);
-  if (!existUser) {
-    await addUserDB(nickname, userClass, 1);
-    account = await getUserByNicknameDB(nickname);
+  //정의할것.
+  let level;
+  let soul;
 
+  //경우의 수
+  //1. 계정X
+  //2. 계정O 캐릭터 X
+  //3. 계정O 캐릭터 O
+  const existUser = await getUserByNicknameDB(nickname, userClass);
+  if (!existUser) {
+    //1. 계정 X
+    account = await registerUser(nickname, userClass);
     playerId = account.playerId;
     transform = new Transform();
+    level = 1;
+    soul = 0;
 
-    user = addUser(playerId, nickname, userClass, transform, socket);
+    user = addUser(playerId, nickname, userClass, level, soul, transform, socket);
   } else {
-    account = await getUserByNicknameDB(nickname);
+    account = existUser;
+    playerId = existUser.playerId;
 
-    playerId = account.playerId;
-    transform = new Transform(); //lastX lastY 저장? lastX와 lastY 게임 종료 or 던전 입장때 저장
+    let existCharacter = await getCharacterClassByIdsDB(playerId, userClass);
+    console.log('existUserCharacter::', existCharacter);
+    if (!existCharacter) {
+      //2. 계정 O 캐릭터 X
+      registerUserCharacter(playerId, userClass);
+      level = 1;
+      soul = 0;
 
-    user = addUser(playerId, nickname, userClass, transform, socket);
+      transform = new Transform(); //lastX lastY 저장? lastX와 lastY 게임 종료 or 던전 입장때 저장
+
+      user = addUser(playerId, nickname, userClass, level, soul, transform, socket);
+    } else {
+      level = existCharacter.level;
+      soul = existCharacter.soul;
+      transform = new Transform();
+
+      user = addUser(playerId, nickname, userClass, level, soul, transform, socket);
+    }
   }
 
   townUser = addUserTown(user);
