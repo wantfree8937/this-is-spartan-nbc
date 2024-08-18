@@ -1,6 +1,6 @@
 import { createClient } from 'redis';
 import { config } from '../config/config.js';
-import { getMapCodes, getMonsters, getTextInfos, getUserStats } from '../db/game/game.db.js';
+import { getMapCodes, getMonsterStats, getTextInfo, getUserStats } from '../db/game/game.db.js';
 
 export const redisClient = createClient({
   url: `redis://${config.databases.redis.user}:${config.databases.redis.password}@${config.databases.redis.host}:${config.databases.redis.port}/0`,
@@ -8,6 +8,7 @@ export const redisClient = createClient({
 });
 
 redisClient.on('connect', async () => {
+  console.log('레디스 연결 완료');
   await loadRedisAssets();
 });
 
@@ -22,13 +23,13 @@ const loadRedisAssets = async () => {
 
   const mapCodes = await getMapCodes();
 
-  const monsters = await getMonsters();
+  const monsters = await getMonsterStats();
 
-  const textInfo = await getTextInfos();
+  const textInfo = await getTextInfo();
 
-  await redisClient.set('classStat', classStat);
+  await redisClient.set('userStats', userStats);
 
-  await redisClient.set('battleLogInfo', battleLogInfo);
+  await redisClient.set('mapCodes', mapCodes);
 
   await redisClient.set('monsters', monsters);
 

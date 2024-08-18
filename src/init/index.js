@@ -3,10 +3,12 @@ import { testAllConnections } from '../utils/db/testConnection.js';
 import pools from '../db/database.js';
 import { getTownSession, initializeTownSession } from '../session/town.session.js';
 import { loadGameAssets } from './assets.js';
+import { redisClient } from './redis.js';
 
 const initServer = async () => {
   try {
     //  await loadGameAssets();
+    redisClient;
     initializeTownSession();
     await loadGameAssets();
     await loadProtos();

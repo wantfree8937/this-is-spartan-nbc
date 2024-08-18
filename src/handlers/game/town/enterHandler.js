@@ -1,16 +1,28 @@
 import Transform from '../../../classes/models/transfrom.class.js';
-import { addUserTown, getAllList, getFilteredList, getTownSession, } from '../../../session/town.session.js';
+import {
+  addUserTown,
+  getAllList,
+  getFilteredList,
+  getTownSession,
+} from '../../../session/town.session.js';
 import { addUser, getUserBySocket } from '../../../session/user.session.js';
 import { createResponse } from '../../../utils/response/createResponse.js';
 import { v4 as uuidv4 } from 'uuid';
 import { createDungeonSession, getNextStage } from '../../../session/dungeon.session.js';
 import { addUserDB, getUserByNicknameDB } from './../../../db/user/user.db.js';
+import { redisV4 } from '../../../init/redis.js';
 // import { getGameAssets } from './../../../init/assets.js';
 
 const enterTownHandler = async ({ socket, payload }) => {
   /*---------Enter--------*/
   const { nickname } = payload;
   const userClass = payload.class;
+  const userStatsJson = await redisV4.get('userStats');
+  const userStatsData = JSON.parse(userStatsJson);
+  const targetUserData = userStatsData.find((stat) => stat.class === userClass);
+
+  console.log('userStats', targetUserData);
+
   let transform;
   let user;
   let townUser;
@@ -72,35 +84,38 @@ const enterTownHandler = async ({ socket, payload }) => {
 
 const enterDungeonHandler = ({ socket, payload }) => {
   const { dungeonCode } = payload;
-  console.log('dungeonCode :', dungeonCode );   // 던전 난이도 코드 (1 ~ 4)
+  console.log('dungeonCode :', dungeonCode); // 던전 난이도 코드 (1 ~ 4)
   const user = getUserBySocket(socket);
 
-  const dungeonId = uuidv4();   // 던전 임시 id
-  createDungeonSession(dungeonId, user, dungeonCode);     // 던전 세션 생성
+  const dungeonId = uuidv4(); // 던전 임시 id
+  createDungeonSession(dungeonId, user, dungeonCode); // 던전 세션 생성
 
-  const townSession = getTownSession();   // 마을세션 로드
-  townSession.addLeaveUsers(socket);      // 마을에서 제거
+  const townSession = getTownSession(); // 마을세션 로드
+  townSession.addLeaveUsers(socket); // 마을에서 제거
 
   // 참가된 던전의 스테이지 추출
   const stage = getNextStage(socket);
   // 스테이지 진입
   enterNextStage(socket, stage);
-
 };
 
 const enterNextStage = (socket, nextStage) => {
   const { dungeonInfo, player, screenText, battleLog } = nextStage;
 
-  if(nextStage == -1) {     // 던전 종료(클리어)시 던전나가기
+  if (nextStage == -1) {
+    // 던전 종료(클리어)시 던전나가기
     const leaveDungeonResponse = createResponse('responseTown', 'S_Leave_Dungeon', {});
     socket.write(leaveDungeonResponse);
   } else {
     // 클라이언트에 생성할 스테이지 정보전달
-    const enterDungeonResponse = createResponse('responseTown', 'S_Enter_Dungeon', { dungeonInfo, player, screenText, battleLog });
+    const enterDungeonResponse = createResponse('responseTown', 'S_Enter_Dungeon', {
+      dungeonInfo,
+      player,
+      screenText,
+      battleLog,
+    });
     socket.write(enterDungeonResponse);
   }
-
-
 };
 
 export { enterTownHandler, enterDungeonHandler, enterNextStage };

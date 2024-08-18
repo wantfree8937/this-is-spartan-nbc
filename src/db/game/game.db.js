@@ -1,5 +1,6 @@
 import { GAME_QUERIES } from './game.queries.js';
 import pools from '../database.js';
+import { toCamelCase } from '../../utils/transformCase.js';
 
 export const getUserStats = async () => {
   const [rows] = await pools.GAME_DB.query(GAME_QUERIES.FIND_ALL_USER_STATS);
