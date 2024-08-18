@@ -1,6 +1,6 @@
 import { userSessions } from './sessions.js';
 import User from '../classes/models/user.class.js';
-import { getGameAssets } from '../init/assets.js';
+import { getUserRedis } from '../db/user/redis.assets.js';
 
 export const addUser = (playerId, nickname, userClass, level, soul, transform, socket) => {
   const gameAssets = getGameAssets();
@@ -11,8 +11,8 @@ export const addUser = (playerId, nickname, userClass, level, soul, transform, s
   return user;
 };
 
-const getClassStats = (userClass, gameAssets) => {
-  for (let stat of gameAssets.classStat.data) {
+const getClassStats = (userClass, statList) => {
+  for (let stat of statList) {
     if (stat.class === userClass) {
       return stat;
     }

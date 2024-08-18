@@ -78,6 +78,7 @@ class Dungeon {
       const typingAnimation = false;
       const btns = [];
       console.log('maxNumber:', maxNumber, ' monsters:', monsters);
+
       for (let k = 0; k < maxNumber; k++) {
         // 1번째 이름부터 Attack 버튼 생성
         const newBtn = new Btn(`Attack ${monsters[k].getName()}`, true);
