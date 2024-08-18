@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package chat;
+
+// 채팅메세지 서버가 수신
+message C_Chat{
+  int32 playerId = 1;
+  string senderName = 2;
+  string chatMsg = 3;
+}

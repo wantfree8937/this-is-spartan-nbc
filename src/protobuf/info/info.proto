@@ -1,0 +1,87 @@
+syntax = 'proto3';
+
+package info;
+
+message PlayerInfo {
+  int32 playerId = 1;   // 입장할때 서버 내부에서 생성한 관리코드
+  string nickname = 2;  // C_EnterGame 에서 지정한 이름
+  int32 class = 3;      // C_EnterGame 에서 지정한 직업 정보, 이 정보를 통해 캐릭터가 결정
+  TransformInfo transform = 4;
+  StatInfo statInfo =5;
+}
+
+message TransformInfo {
+  float posX = 1; // 기본값 : -9 ~ 9
+  float posY = 2; // 기본값 : 1
+  float posZ = 3; // 기본값 : -8 ~ 8
+  float rot = 4; // 기본값 : 0~360
+}
+
+message StatInfo {
+  int32 level = 1;
+  float hp = 2;
+  float maxHp = 3;
+  float mp = 4;
+  float maxMp = 5;
+  float atk = 6;
+  float def = 7;
+  float magic = 8;
+  float speed = 9; 
+}
+
+message DungeonInfo {
+  int32 dungeonCode = 1;
+  repeated MonsterStatus monsters = 2;
+}
+
+message MonsterStatus {
+  int32 monsterIdx = 1;
+  int32 monsterModel = 2;
+  string monsterName = 3;
+  float monsterHp = 4;
+}
+
+message PlayerStatus {
+  int32 playerClass = 1;
+  int32 playerLevel = 2;
+  string playerName = 3;
+  float playerFullHp = 4;
+  float playerFullMp = 5;
+  float playerCurHp = 6;
+  float playerCurMp = 7;
+}
+
+message ScreenText{
+  string msg = 1;
+  bool typingAnimation = 2;
+  optional ScreenTextAlignment alignment = 3;
+  optional Color textColor = 4;
+  optional Color screenColor = 5;
+}
+
+message ScreenTextAlignment {
+  int32 x = 1;
+  int32 y = 2;
+}
+
+message Color {
+  int32 r = 1;
+  int32 g = 2;
+  int32 b = 3;
+}
+
+message BattleLog {
+  string msg = 1;
+  bool typingAnimation = 2;
+  repeated BtnInfo btns = 3; // Optional
+}
+
+message BtnInfo {
+  string msg = 1;
+  bool enable = 2;
+}
+
+message ActionSet {
+  int32 animCode = 1;
+  int32 effectCode = 2;
+}
