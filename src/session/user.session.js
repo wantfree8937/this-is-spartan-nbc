@@ -1,18 +1,25 @@
 import { userSessions } from './sessions.js';
 import User from '../classes/models/user.class.js';
-import { getGameAssets } from '../init/assets.js';
 
-export const addUser = (playerId, nickname, userClass, transform, socket) => {
-  const gameAssets = getGameAssets();
-  const statInfo = getClassStats(userClass, gameAssets);
+import { redisV4 } from '../init/redis.js';
+
+export const addUser = async (playerId, nickname, userClass, transform, socket) => {
+  const statList = await getUserData();
+  const statInfo = getClassStats(userClass, statList);
   const user = new User(playerId, nickname, userClass, statInfo, transform, socket);
   userSessions.push(user);
 
   return user;
 };
 
-const getClassStats = (userClass, gameAssets) => {
-  for (let stat of gameAssets.classStat.data) {
+const getUserData = async () => {
+  const userStatJson = await redisV4.get('userStats');
+  const characterStat = JSON.parse(userStatJson);
+  return characterStat;
+};
+
+const getClassStats = (userClass, statList) => {
+  for (let stat of statList) {
     if (stat.class === userClass) {
       return stat;
     }

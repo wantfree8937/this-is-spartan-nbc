@@ -45,7 +45,7 @@ const enterTownHandler = async ({ socket, payload }) => {
     playerId = account.playerId;
     transform = new Transform(); //lastX lastY 저장? lastX와 lastY 게임 종료 or 던전 입장때 저장
 
-    user = addUser(playerId, nickname, userClass, transform, socket);
+    user = await addUser(playerId, nickname, userClass, transform, socket);
   }
 
   townUser = addUserTown(user);
