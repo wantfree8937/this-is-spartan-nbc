@@ -6,34 +6,29 @@ CREATE TABLE IF NOT EXISTS user_stat (
     atk INT,
     def INT,
     magic INT,
-    speed INT,
-)
+    speed INT
+);
 
-INSERT INTO user_stat (
-    class, maxHp, maxMp, atk, def, magic, speed
-    ) VALUES
-(1001, 320, 75, 60, 10, 40, 3) --Cerberus
-(1002, 320, 75, 60, 10, 40, 3) --Pegasus
-(1003, 320, 75, 60, 10, 40, 3) --Phoenix
-(1004, 320, 75, 60, 10, 40, 3) --Chinese Dragon
-(1005, 320, 75, 60, 10, 40, 3) --Kitsune
-(1006, 320, 75, 60, 10, 40, 3) --Leviathan
-(1007, 320, 75, 60, 10, 40, 3) --Wyvern
-(1008, 320, 75, 60, 10, 40, 3) --Dragon
-(1009, 320, 75, 60, 10, 40, 3) --Kirin
+INSERT INTO user_stat (class, maxHp, maxMp, atk, def, magic, speed) VALUES
+(1001, 320, 75, 60, 10, 40, 3),
+(1002, 320, 75, 60, 10, 40, 3),
+(1003, 320, 75, 60, 10, 40, 3),
+(1004, 320, 75, 60, 10, 40, 3),
+(1005, 320, 75, 60, 10, 40, 3),
+(1006, 320, 75, 60, 10, 40, 3),
+(1007, 320, 75, 60, 10, 40, 3),
+(1008, 320, 75, 60, 10, 40, 3),
+(1009, 320, 75, 60, 10, 40, 3);
 
-
-
-
--- 몬스터의 특성
+-- 몬스터 특성
 CREATE TABLE IF NOT EXISTS monster_stat (
     monsterIdx INT PRIMARY KEY,
     monsterModel INT,
     monsterName VARCHAR(255),
     monsterHp INT,
     monsterAttack INT,
-    monsterDeffence INT,
-)
+    monsterDeffence INT
+);
 
 INSERT INTO monster_stat (
     monsterIdx, monsterModel, monsterName, monsterHp, monsterAttack, monsterDeffence
@@ -68,13 +63,10 @@ INSERT INTO monster_stat (
 (27, 2028, '고급 보스 6', 110, 19, 100),
 (28, 2029, '최종 보스', 550, 70, 250);
 
-
-
-
--- 던전 맵 코드
+-- 맵 코드
 CREATE TABLE IF NOT EXISTS map_code (
-    mapCode INT,
-)
+    mapCode INT
+);
 
 INSERT INTO map_code (mapCode) VALUES
 (5001),
@@ -83,12 +75,9 @@ INSERT INTO map_code (mapCode) VALUES
 (5004),
 (5005),
 (5006),
-(5007),
+(5007);
 
-
-
-
--- textInfo
+-- 텍스트 정보
 CREATE TABLE IF NOT EXISTS text_info (
     name VARCHAR(255),
     version VARCHAR(255),
@@ -101,8 +90,8 @@ CREATE TABLE IF NOT EXISTS text_info (
     textColor_b INT,
     screenColor_r INT,
     screenColor_g INT,
-    screenColor_b INT,
-)
+    screenColor_b INT
+);
 
 INSERT INTO text_info (
     name, version, msg, typingAnimation, 
@@ -110,4 +99,4 @@ INSERT INTO text_info (
     textColor_r, textColor_g, textColor_b, 
     screenColor_r, screenColor_g, screenColor_b
     ) VALUES
-("textInfo", "1.0.0", "던전에 오신걸 환영합니다.", false),
+("textInfo", "1.0.0", "던전에 오신걸 환영합니다.", false, 0, 0, 255, 255, 255, 0, 0, 0);
