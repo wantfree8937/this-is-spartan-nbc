@@ -43,7 +43,7 @@ class Dungeon {
     let monsters = []; // 해당 스테이지 몬스터목록
     for (let j = 0; j < maxNumber; j++) {
       // 스테이지당 1~3 마리의 몬스터 생성
-      const monsterDatas = this.loadedAssets.dungeonInfo.monsters; // 몬스터스텟 정보
+      const monsterDatas = this.monsters; // 몬스터스텟 정보
 
       // 몬스터 생성
       let monsterIdx = -1;
