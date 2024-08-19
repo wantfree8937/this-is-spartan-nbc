@@ -4,10 +4,10 @@
   "data": [
     {
       "class": 1001,
-      "maxHp": 320,
+      "maxHp": 210,
       "maxMp": 75,
-      "atk": 60,
-      "def": 10,
+      "atk": 120,
+      "def": 5,
       "magic": 40,
       "speed": 3
     },

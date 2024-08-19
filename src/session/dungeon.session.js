@@ -2,9 +2,10 @@ import Dungeon from '../classes/models/battle/dungeon.class.js';
 // import { getGameAssets } from '../init/assets.js';
 import { dungeonSessions } from './sessions.js';
 
-export const createDungeonSession = (id, user, dungeonCode, monsters) => {
-  const session = new Dungeon(id, user, dungeonCode, monsters); // 던전 세션 생성
-  session.initDungeon();
+export const createDungeonSession = (id, user, dungeonCode) => {
+  const session = new Dungeon(id, user, dungeonCode); // 던전 세션 생성
+  session.initDungeon(); // 던전 초기화
+  session.initStage(user); // 첫 스테이지 생성
   dungeonSessions.push(session); // 던전 세션 등록
 
   return session; // 생성된 세션 반환

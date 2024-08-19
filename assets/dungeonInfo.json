@@ -161,7 +161,7 @@
       "monsterName": "초급 보스 4",
       "monsterHp": 90,
       "monsterAttack": 13,
-      "monsterDeffence": 100
+      "monsterDeffence": 45
     },
     {
       "monsterIdx": 20,
@@ -169,7 +169,7 @@
       "monsterName": "초급 보스 5",
       "monsterHp": 60,
       "monsterAttack": 15,
-      "monsterDeffence": 100
+      "monsterDeffence": 35
     },
     {
       "monsterIdx": 21,
@@ -177,7 +177,7 @@
       "monsterName": "초급 보스 6",
       "monsterHp": 110,
       "monsterAttack": 13,
-      "monsterDeffence": 100
+      "monsterDeffence": 25
     },
     {
       "monsterIdx": 22,
@@ -231,9 +231,9 @@
       "monsterIdx": 28,
       "monsterModel": 2029,
       "monsterName": "최종 보스",
-      "monsterHp": 550,
-      "monsterAttack": 70,
-      "monsterDeffence": 250
+      "monsterHp": 560,
+      "monsterAttack": 60,
+      "monsterDeffence": 210
     }
   ]
 }

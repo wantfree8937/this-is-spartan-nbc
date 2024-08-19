@@ -12,6 +12,8 @@ class User {
     this.transformInfo = transformInfo;
     this.statInfo = new Stat(statInfo);
     this.lastUpdateTime = Date.now();
+    this.gold;
+    this.soul;
   }
 
   getPlayerId() {
@@ -32,6 +34,13 @@ class User {
   getStatInfo() {
     const statInfo = this.statInfo;
     return statInfo;
+  }
+
+  getHp() {
+    return this.statInfo.getHp();
+  }
+  getMp() {
+    return this.statInfo.getMp();
   }
 
   // 위치-좌표 업데이트 메서드
