@@ -5,10 +5,10 @@
     {
       "class": 1001,
       "maxHp": 210,
-      "maxMp": 75,
-      "atk": 120,
+      "maxMp": 95,
+      "atk": 70,
       "def": 5,
-      "magic": 40,
+      "magic": 50,
       "speed": 3
     },
     {
