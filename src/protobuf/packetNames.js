@@ -1,5 +1,7 @@
 export const packetNames = {
   town: {
+    C_Login: 'town.C_Login',
+    C_Unlock: 'town.C_UnlockCharacter',
     C_Enter: 'town.C_Enter',
     C_Move: 'town.C_Move',
     C_Animation: 'town.C_Animation',
@@ -9,6 +11,7 @@ export const packetNames = {
     C_Player_Response: 'battle.C_PlayerResponse',
   },
   responseTown: {
+    S_Select_Character: 'responseTown.S_SelectCharacter',
     S_Enter: 'responseTown.S_Enter',
     S_Spawn: 'responseTown.S_Spawn',
     S_Move: 'responseTown.S_Move',
@@ -16,7 +19,7 @@ export const packetNames = {
     S_Chat: 'responseTown.S_Chat',
     S_Enter_Dungeon: 'responseTown.S_EnterDungeon',
   },
-  responseBattle:{
+  responseBattle: {
     S_Leave_Dungeon: 'responseBattle.S_LeaveDungeon',
     S_Screen_Text: 'responseBattle.S_ScreenText',
     S_Screen_Done: 'responseBattle.S_ScreenDone',
@@ -30,6 +33,15 @@ export const packetNames = {
   chat: {
     C_Chat: 'chat.C_Chat',
   },
+  item: {
+    C_Player_Soul: 'item.C_PlayerSoul',
+    C_Player_Coin: 'item.C_PlayerCoin',
+  },
+
+  responseItem: {
+    S_Player_Item: 'responseItem.S_PlayerItem',
+  },
+
   gameNotification: {
     S_Despawn: 'gameNotification.S_Despawn',
   },

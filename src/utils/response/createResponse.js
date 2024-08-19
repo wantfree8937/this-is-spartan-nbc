@@ -7,13 +7,13 @@ import { ErrorCodes } from '../error/errorCodes.js';
 
 export const createResponse = (packageType, packetId, data = null) => {
   const protoMessages = getProtoMessages();
-  //console.log('1111, ', packageType);
-  //console.log('2222, ', packetId);
-  //console.log('3333, ', data);
+  console.log('1111, ', packageType);
+  console.log('2222, ', packetId);
+  console.log('3333, ', data);
 
   const Response = protoMessages[packageType][packetId];
   const buffer = Response.encode(data).finish();
-  
+
   const packetLength = Buffer.alloc(config.packet.totalLength);
   packetLength.writeUInt32BE(
     buffer.length + config.packet.typeLength + config.packet.totalLength,
@@ -21,7 +21,7 @@ export const createResponse = (packageType, packetId, data = null) => {
   );
 
   const packetType = Buffer.alloc(config.packet.typeLength);
-  
+
   const packetCode = PACKET_TYPE[packetId.toUpperCase()];
 
   if (!packetCode) {

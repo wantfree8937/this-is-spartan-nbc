@@ -2,6 +2,16 @@ syntax = "proto3";
 
 package town;
 
+message C_Login {
+  string nickname = 1;
+}
+
+message C_UnlockCharacter{
+  string nickname =1;
+  int32 class = 2;
+  int32 coin = 3;
+}
+
 // 마을 입장 payload
 message C_Enter {
   string nickname = 1;

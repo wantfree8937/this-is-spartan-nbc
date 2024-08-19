@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package item;
+
+message C_PlayerSoul{
+  int32 soul = 1;
+}
+
+message C_PlayerCoin{
+  int32 coin = 1;
+}
