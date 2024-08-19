@@ -14,10 +14,67 @@ import {
   getCharacterClassByIdsDB,
   registerUser,
   registerUserCharacter,
+  getUserUnlockByPlayerId,
+  unlockCharacter,
+  updateCoin,
+  getCoinByPlayerId,
+  getSoulByClass,
 } from './../../../db/user/user.db.js';
 import { getMonstersRedis } from '../../../db/game/redis.assets.js';
 // import { getGameAssets } from './../../../init/assets.js';
-const loginHandler = async ({ socket, payload }) => {};
+
+const loginHandler = async ({ socket, payload }) => {
+  const { nickname } = payload;
+  let account;
+  let playerId;
+
+  const existUser = await getUserByNicknameDB(nickname);
+  if (!existUser) {
+    account = await registerUser(nickname);
+  } else {
+    account = existUser;
+  }
+  console.log(account);
+
+  playerId = account.playerId;
+  const unlocked = await getUserUnlockByPlayerId(playerId);
+  const selectCharacterResponse = createResponse('responseTown', 'S_Select_Character', {
+    isUnlocked: [
+      unlocked[0].cerbe,
+      unlocked[0].uni,
+      unlocked[0].nix,
+      unlocked[0].chad,
+      unlocked[0].miho,
+      unlocked[0].levi,
+      unlocked[0].wyv,
+      unlocked[0].drago,
+      unlocked[0].kiri,
+    ],
+    coin: 500,
+  });
+  socket.write(selectCharacterResponse);
+};
+
+const unlockCharacterHandler = async ({ socket, payload }) => {
+  const { nickname, class: className, coin } = payload;
+  const playerNames = ['cerbe', 'uni', 'nix', 'chad', 'miho', 'levi', 'wyv', 'drago', 'kiri'];
+  let account;
+  let playerId;
+
+  const existUser = await getUserByNicknameDB(nickname);
+  if (!existUser) {
+    account = await registerUser(nickname);
+  } else {
+    account = existUser;
+  }
+  playerId = account.playerId;
+
+  const characterName = playerNames[className - 1000];
+
+  unlockCharacter(playerId, characterName);
+  updateCoin(playerId, coin);
+};
+
 const enterTownHandler = async ({ socket, payload }) => {
   /*---------Enter--------*/
   const { nickname } = payload;
@@ -36,7 +93,7 @@ const enterTownHandler = async ({ socket, payload }) => {
   //1. 계정X
   //2. 계정O 캐릭터 X
   //3. 계정O 캐릭터 O
-  const existUser = await getUserByNicknameDB(nickname, userClass);
+  const existUser = await getUserByNicknameDB(nickname);
   if (!existUser) {
     //1. 계정 X
     account = await registerUser(nickname, userClass);
@@ -51,7 +108,6 @@ const enterTownHandler = async ({ socket, payload }) => {
     playerId = existUser.playerId;
 
     let existCharacter = await getCharacterClassByIdsDB(playerId, userClass);
-    console.log('existUserCharacter::', existCharacter);
     if (!existCharacter) {
       //2. 계정 O 캐릭터 X
       registerUserCharacter(playerId, userClass);
@@ -70,26 +126,21 @@ const enterTownHandler = async ({ socket, payload }) => {
     }
   }
 
-  console.log('uesr::::::::::::::', user);
   townUser = await addUserTown(user);
 
   const player = townUser.buildPlayerInfo();
 
   const enterTownResponse = createResponse('responseTown', 'S_Enter', { player });
 
-  //packet 테스트 코드
+  const userSoul = await getSoulByClass(playerId, userClass);
+  const userCoin = await getCoinByPlayerId(playerId);
+
   const playerItemResponse = createResponse('responseItem', 'S_Player_Item', {
-    soul: 10000,
-    coin: 10000,
+    soul: 600,
+    coin: userCoin,
   });
+
   socket.write(playerItemResponse);
-  const isUnlocked = [1, 1, 1, 0, 0, 0, 0, 0, 0];
-  const selectCharacterResponse = createResponse('responseTown', 'S_Select_Character', {
-    isUnlocked: isUnlocked,
-    coin: 0,
-  });
-  socket.write(selectCharacterResponse);
-  //여기까지 packet 테스트 코드
 
   socket.write(enterTownResponse);
 
@@ -100,7 +151,6 @@ const enterTownHandler = async ({ socket, payload }) => {
   const Z = 135;
   const ROT = 0;
 
-  console.log('user::::::::::', townUser);
   user.updatePosition(X, Y, Z, ROT);
   //towerSession에서 가져온 유저
   const allList = getAllList();
@@ -157,4 +207,10 @@ const enterNextStage = (socket, nextStage) => {
   }
 };
 
-export { enterTownHandler, enterDungeonHandler, enterNextStage, loginHandler };
+export {
+  enterTownHandler,
+  enterDungeonHandler,
+  enterNextStage,
+  loginHandler,
+  unlockCharacterHandler,
+};

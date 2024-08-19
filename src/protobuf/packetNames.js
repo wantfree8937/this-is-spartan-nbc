@@ -1,7 +1,7 @@
 export const packetNames = {
   town: {
     C_Login: 'town.C_Login',
-    C_Unlock: 'town.C_UnlockCharacter',
+    C_Unlock_Character: 'town.C_UnlockCharacter',
     C_Enter: 'town.C_Enter',
     C_Move: 'town.C_Move',
     C_Animation: 'town.C_Animation',

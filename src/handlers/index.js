@@ -1,7 +1,12 @@
 import { HANDLER_IDS } from '../constants/handlerIds.js';
 import CustomError from '../utils/error/customError.js';
 import { ErrorCodes } from '../utils/error/errorCodes.js';
-import { enterTownHandler, enterDungeonHandler } from './game/town/enterHandler.js';
+import {
+  enterTownHandler,
+  enterDungeonHandler,
+  loginHandler,
+  unlockCharacterHandler,
+} from './game/town/enterHandler.js';
 import { avatarMoveHandler, avatarAnimationHandler } from './game/town/avatarHandler.js';
 import chatHandler from './game/chatHandler.js';
 import { screenDoneHandler, selectCheckHandler } from './game/battle/battleHandler.js';
@@ -30,6 +35,14 @@ const handlers = {
   [HANDLER_IDS.C_PLAYER_RESPONSE]: {
     handler: selectCheckHandler,
     protoType: 'battle.C_Player_Response',
+  },
+  [HANDLER_IDS.C_LOGIN]: {
+    handler: loginHandler,
+    protoType: 'town.C_Login',
+  },
+  [HANDLER_IDS.C_UNLOCK_CHARACTER]: {
+    handler: unlockCharacterHandler,
+    protoType: 'town.C_Unlock_Character',
   },
   // 다른 핸들러들을 추가
 };

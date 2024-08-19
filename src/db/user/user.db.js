@@ -39,12 +39,12 @@ export const updateUserLogin = async (id) => {
 
 //편의
 
-export const registerUser = async (nickname, userClass) => {
+export const registerUser = async (nickname) => {
   await addUserDB(nickname);
 
   const account = await getUserByNicknameDB(nickname);
-  const uuid = uuidv4();
-  await addUserCharacterDB(uuid, account.playerId, userClass);
+  // const uuid = uuidv4();
+  // await addUserCharacterDB(uuid, account.playerId, userClass);
   await addUserUnlockDB(account.playerId);
   return account;
 };
@@ -52,4 +52,53 @@ export const registerUser = async (nickname, userClass) => {
 export const registerUserCharacter = async (playerId, userClass) => {
   const uuid = uuidv4();
   await addUserCharacterDB(uuid, playerId, userClass);
+};
+
+// 언락된 캐릭터 목록 가져오기
+export const getUserUnlockByPlayerId = async (playerId) => {
+  const [rows] = await pools.USER_DB.query(SQL_QUERIES.GET_USER_UNLOCK, [playerId]);
+  return rows; // 쿼리 결과 반환
+};
+
+// 캐릭터 언락
+export const unlockCharacter = async (playerId, name) => {
+  await pools.USER_DB.query(SQL_QUERIES.UPDATE_UNLOCK_CHARACTER(name), [playerId]);
+};
+
+// 코인 갱신
+export const updateCoin = async (playerId, coin) => {
+  await pools.USER_DB.query(SQL_QUERIES.UPDATE_COIN, [coin, playerId]);
+};
+
+// 레벨, 소울 가져오는 함수
+export const getSoulAndLevelByClass = async (playerId, characterClass) => {
+  const [results] = await pools.USER_DB.query(SQL_QUERIES.GET_SOUL_AND_LEVEL_BY_CLASS, [
+    playerId,
+    characterClass,
+  ]);
+  return results;
+};
+
+// 소울만 가져오는 함수
+export const getSoulByClass = async (playerId, characterClass) => {
+  const [results] = await pools.USER_DB.query(SQL_QUERIES.GET_SOUL_BY_CLASS, [
+    playerId,
+    characterClass,
+  ]);
+  return results.length ? results[0].soul : null;
+};
+
+// 레벨만 가져오는 함수
+export const getLevelByClass = async (playerId, characterClass) => {
+  const [results] = await pools.USER_DB.query(SQL_QUERIES.GET_LEVEL_BY_CLASS, [
+    playerId,
+    characterClass,
+  ]);
+  return results.length ? results[0].level : null;
+};
+
+// 코인만 가져오는 함수
+export const getCoinByPlayerId = async (playerId) => {
+  const [results] = await pools.USER_DB.query(SQL_QUERIES.GET_COIN_BY_PLAYER_ID, [playerId]);
+  return results.length ? results[0].coin : null;
 };
