@@ -31,12 +31,10 @@ export const selectCheckHandler = async ({ socket, payload }) => {
   const dungeonNow = getDungeonBySocket(socket);
   // 2. 선택된 던전에서 현재 스테이지 정보 로드 | 결과: stage 객체
   const stageNow = dungeonNow.getStageNow();
-  //console.log('stageNow:', stageNow);
   // 3. 현재 스테이지의 플레이어 정보 로드 | 결과: Player 객체
   const playerNow = stageNow.getPlayer();
   // 4. 현재 스테이지의 몬스터(들) 정보 로드 | 결과: (Monster 객체들이 들어있는) monsters 배열
   const monstersNow = stageNow.getMonsters();
-  console.log('monstersNow:', monstersNow);
 
   // 플레이어 스텟 정보
   const playerStats = dungeonNow.getUser().getStatInfo();
@@ -50,7 +48,7 @@ export const selectCheckHandler = async ({ socket, payload }) => {
   // 스테이지 종료시 (플레이어 사망 or 전투 승리)
   if (stageNow.getStageDone()) {
     if (responseCode == 1) {
-      endSesssionById(dungeonNow.id); // 던전세션 종료(삭제)
+      endSesssionById(dungeonNow.getId()); // 던전세션 종료(삭제)
       const leaveDungeon = createResponse('responseBattle', 'S_Leave_Dungeon', null);
       socket.write(leaveDungeon); // 던전 나가기
     } else if (responseCode == 2) {
@@ -83,42 +81,59 @@ export const selectCheckHandler = async ({ socket, payload }) => {
   socket.write(updateBatteLog);
 
   const targetMonsterIdx = attackTarget;
-  console.log('targetMonsterIdx:', targetMonsterIdx);
-  console.log('typeof(targetMonsterIdx):', typeof targetMonsterIdx);
 
   let actionSet;
-  let special;
+  let special = -1; // if문 미동작시 에러발생 : -1
   // 일반공격(1~3) 선택시
   if (0 < responseCode && responseCode <= 3) {
     // 플레이어 공격처리 및 반영
     actionSet = new ActionSet(0, 3006); // animCode(attack: 0), effectCode
     special = 0;
+    await sleep(500);
   }
   // 특수공격(4~6) 선택시
   else if (3 < responseCode && responseCode <= 6) {
     // 플레이어 특수공격 처리 및 반영
-    actionSet = new ActionSet(0, 3006); // animCode(attack: 0), effectCode
+    actionSet = new ActionSet(0, 3018); // animCode(attack: 0), effectCode
     special = playerStats.magic; // 추가 데미지 : 플레이어의 마법수치
+
+    playerNow.updatePlayerMp(-10); // 특수 공격시 MP소모 (수치 조정가능)
+    const mp = playerNow.getMpNow();
+    const updateplayerMp = createResponse('responseBattle', 'S_Set_Player_Mp', { mp });
+    socket.write(updateplayerMp);
+    await sleep(500);
   } else {
+    // responseCode 범위: 0~6 | 범위를 벗어나는 값이 전달되지 않아야 정상
+    console.log('!!!ERROR!!! 있을수 없는 값 !!!ERROR!!!');
+
+    let msg = `데이터 오류 발생! 클라이언트 재시작 필요.`;
+    battleLog.changeMsg(msg);
+    battleLog.deleteBtns();
+    battleLog.addBtn('!! 에러 !!', false);
+    updateBatteLog = createResponse('responseBattle', 'S_Battle_Log', { battleLog });
+    socket.write(updateBatteLog);
+    await sleep(200);
+
+    return;
+  }
+
+  if (special < 0) {
+    // special 값으로 0 아래는 설정될 수 없음
     console.log('!!!ERROR!!! 있을수 없는 값 !!!ERROR!!!');
 
     let msg = `데이터 오류 발생! 클라이언트 재시작 필요.`;
     battleLog.changeMsg(msg);
     updateBatteLog = createResponse('responseBattle', 'S_Battle_Log', { battleLog });
     socket.write(updateBatteLog);
-    await sleep(500);
+    await sleep(200);
 
     return;
   }
 
   // 몬스터 HP 체력감소 연산처리
-  console.log('monstersNow[0]:', monstersNow[0]);
-  console.log('monstersNow[1]:', monstersNow[1]);
-  console.log('monstersNow[targetMonsterIdx]:', monstersNow[`${targetMonsterIdx}`]);
-
   const monsterDataIdx = monstersNow[`${targetMonsterIdx}`].getIdx();
   const monsterDef = monsterStats[monsterDataIdx].monsterDeffence;
-  let resultDamage = playerStats.atk + special - monsterDef; // special = 일반공격시 0, 특수공격시 magic 수치
+  let resultDamage = playerStats.atk + special - monsterDef; // special = 일반 공격시 0, 특수 공격시 magic 값
   if (resultDamage < 0) {
     resultDamage = 0;
   }
@@ -130,7 +145,7 @@ export const selectCheckHandler = async ({ socket, payload }) => {
     actionSet,
   });
   socket.write(playerAnimaion);
-  await sleep(800);
+  await sleep(600);
 
   // 몬스터 사망시 이벤트처리
   if (monstersNow[attackTarget].getHp() < 0) {
@@ -179,7 +194,6 @@ export const selectCheckHandler = async ({ socket, payload }) => {
 
       // 플레이어 HP감소 처리 및 반영
       const monsterIdx = monstersNow[i].getIdx();
-      console.log('monsterIdx:', monsterIdx);
       const monsterAtk = monsterStats[monsterIdx].monsterAttack;
       let damageResult = monsterAtk - playerStats.def;
       if (damageResult < 0) {

@@ -6,10 +6,10 @@ import { BattleLog } from './battleLog.class.js';
 const MAX_PLAYERS = 1;
 
 class Stage {
-  constructor(id, dungeonInfo, user, textInfo, battleLog) {
+  constructor(id, dungeonInfo, player, textInfo, battleLog) {
     this.id = id;
     this.dungeonInfo = new DungeonInfo(dungeonInfo);
-    this.player = new Player(user);
+    this.player = player;
     this.screenText = new ScreenText(textInfo);
     this.battleLog = new BattleLog(battleLog);
     this.stageDone = false;

@@ -1,6 +1,7 @@
 import { getGameAssets } from '../../../init/assets.js';
 import Stage from './stage.class.js';
 import { DungeonInfo, Monster } from './dungeonInfo.class.js';
+import { Player } from './player.class.js';
 import { ScreenText, TextAlignment, Color } from './screenText.class.js';
 import { BattleLog, Btn } from './battleLog.class.js';
 
@@ -9,6 +10,7 @@ class Dungeon {
   constructor(id, user, dungeonCode, monsters) {
     this.id = id;
     this.user = user;
+    this.player = new Player(user);
     this.mapCode; // 맵 구별 값
     this.dungeonCode = dungeonCode; // 던전 구분 (1 ~ 4)
     this.stages = []; // 스테이지 목록
@@ -25,9 +27,7 @@ class Dungeon {
     this.lastStage = this.lastStage[this.dungeonCode - 1]; // dungeonCode가 1~4 이니 -1 하면 0~3으로 인덱스값과 같다.
   }
   // 스테이지 생성
-  initStage(user) {
-    this.user; // 유저(플레이어) 정보갱신
-
+  initStage() {
     // 최대 몬스터수 지정 (1~3)
     let maxNumber;
     if (this.proceed + 1 == this.lastStage) {
@@ -93,6 +93,9 @@ class Dungeon {
     }
     const dungeonInfo = new DungeonInfo({ dungeonCode, monsters }); // 생성자 안에서 this.변수 사용 불가능
 
+    // PlayerStatus 생성
+    // Dungeon 클래스(세션) 생성시 this.user에 Player(Status) 객체를 생성하여 할당됨
+
     // screenText 생성
     let msg = '';
     if (this.proceed + 1 == this.lastStage) {
@@ -107,33 +110,71 @@ class Dungeon {
     const screenText = new ScreenText(textInfo);
 
     // battleLog 생성
-    msg = ''; // screenText도 Button도 같은 이름의 요소 'msg'를 가지고 있음
+    if (this.proceed + 1 == this.lastStage) {
+      msg = `적 보스 ${monsters[0].getName()} 출현!`;
+    } else {
+      msg = `적 ${maxNumber} 개체 출현!`;
+    } // screenText도 Button도 같은 이름의 요소 'msg'를 가지고 있음
     const typingAnimation = false;
     const btns = [];
-    console.log('maxNumber:', maxNumber, ' monsters:', monsters);
-    for (let k = 0; k < maxNumber; k++) {
-      // 1번째 이름부터 Attack 버튼 생성
-      const newBtn = new Btn(`Attack ${monsters[k].getName()}`, true);
-      if (k == 1) {
-        btns.unshift(newBtn);
-      } else {
-        btns.push(newBtn);
+
+    // 일반공격/특수공격 버튼생성
+    for (let l = 0; l < 2; l++) {
+      const newBtns = []; // 버튼 한줄 공간
+      for (let k = 0; k < 3; k++) {
+        let newBtn;
+        if (l == 0) {
+          // 일반공격 버튼생성
+          if (!monsters[k]) {
+            newBtn = new Btn(`[X]`, false);
+          } else {
+            newBtn = new Btn(`[공격] ${monsters[k].getName()}`, true);
+          }
+
+          if (k == 1) {
+            newBtns.unshift(newBtn);
+          } else {
+            newBtns.push(newBtn);
+          }
+        }
+        /*
+        else if (l == 1) {     // 특수공격 버튼생성
+          if (!monsters[k]) { newBtn = new Btn(`[X]`, false);}
+          else { newBtn = new Btn(`[특수] ${monsters[k].getName()}`, true); }
+          2
+          if (k == 1) { newBtns.unshift(newBtn); }
+          else { newBtns.push(newBtn); }
+        }
+        */
+      }
+      console.log('newBtns:', newBtns);
+
+      // 생성된 버튼 등록
+      for (let i = 0; i < 3; i++) {
+        const shiftedBtn = newBtns.shift();
+        console.log('shiftedBtn:', shiftedBtn);
+        if (!shiftedBtn) {
+          continue;
+        } else {
+          btns.push(shiftedBtn);
+        }
       }
     }
+    console.log('btns:', btns);
+
     const tempLog = { msg, typingAnimation, btns };
     const battleLog = new BattleLog(tempLog);
 
     // (전투) 스테이지 생성 (현재로써는 전투방만이 구현 되어있음)
     if (this.proceed + 1 == this.lastStage) {
       // 마지막 방 (보스방) 일 경우 - 현재 구현중 임
-      const bossStatMaker = 3; // 보스몬스터에게 줄 보정 수치 (기본: x3) 정확한 수치는 미정
-      console.log('last_stage monster:', dungeonInfo.monsters[0]);
+      const bossStatMaker = 2; // 보스몬스터에게 줄 보정 수치 (기본: x3) 정확한 수치는 미정
       dungeonInfo.monsters[0].setBossStat(bossStatMaker);
     }
 
     // 스테이지 생성 (count는 0부터 1씩 증가한다.)
     let stageId = this.proceed + 1; // 스테이지 id 설정용 변수. 0은 포로토버프가 null로 인식하므로 1부터 1씩 증가한다.
-    const stage = new Stage(stageId, dungeonInfo, this.user, screenText, battleLog);
+    const stage = new Stage(stageId, dungeonInfo, this.player, screenText, battleLog);
     this.stages.push(stage);
 
     return stage;
@@ -161,12 +202,21 @@ class Dungeon {
   getLastStage() {
     return this.lastStage; // 최종 스테이지 값 (5,7,9,11)
   }
+  // 유저 정보 반환
+  getUser() {
+    return this.user;
+  }
+  // 플레이어 정보 반환
+  getPlayer() {
+    return this.player;
+  }
+  getId() {
+    return this.id;
+  }
 
+  // 유저 정보 등록(갱신)
   addUser(user) {
     this.user = user;
-  }
-  getUser() {
-    return this.user; // 유저 정보 반환
   }
 }
 

@@ -11,8 +11,8 @@ class User {
     this.transformInfo = transformInfo;
     this.statInfo = new Stat(statInfo);
     this.lastUpdateTime = Date.now();
-    this.gold;
-    this.soul;
+    this.gold = 0;
+    this.soul = 0;
   }
 
   getPlayerId() {
