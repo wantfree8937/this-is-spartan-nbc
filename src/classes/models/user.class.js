@@ -10,7 +10,7 @@ class User {
     this.transformInfo = transformInfo;
     this.statInfo = new Stat(statInfo);
     this.lastUpdateTime = Date.now();
-    this.gold = 0;
+    this.coin = 0;
     this.soul = 0;
   }
 
@@ -39,6 +39,12 @@ class User {
   }
   getMp() {
     return this.statInfo.getMp();
+  }
+  getCoin() {
+    return this.coin;
+  }
+  getSoul() {
+    return this.soul;
   }
 
   // 위치-좌표 업데이트 메서드
