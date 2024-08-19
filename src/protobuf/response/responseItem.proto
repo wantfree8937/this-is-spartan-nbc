@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+package responseItem;
+
+message S_PlayerItem {
+    int32 soul = 1;  // 필드 번호 1
+    int32 coin = 2;  // 필드 번호 2
+}

@@ -1,18 +1,19 @@
 import { userSessions } from './sessions.js';
 import User from '../classes/models/user.class.js';
-import { getGameAssets } from '../init/assets.js';
+import { getUserStatsRedis } from '../db/game/redis.assets.js';
 
-export const addUser = (playerId, nickname, userClass, transform, socket) => {
-  const gameAssets = getGameAssets();
-  const statInfo = getClassStats(userClass, gameAssets);
-  const user = new User(playerId, nickname, userClass, statInfo, transform, socket);
+export const addUser = async (playerId, nickname, userClass, level, soul, transform, socket) => {
+  const statList = await getUserStatsRedis();
+  const statInfo = getClassStats(userClass, statList);
+  statInfo.level = level;
+  const user = new User(playerId, nickname, userClass, soul, statInfo, transform, socket);
   userSessions.push(user);
 
   return user;
 };
 
-const getClassStats = (userClass, gameAssets) => {
-  for (let stat of gameAssets.classStat.data) {
+const getClassStats = (userClass, statList) => {
+  for (let stat of statList) {
     if (stat.class === userClass) {
       return stat;
     }
