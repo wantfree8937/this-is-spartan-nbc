@@ -75,7 +75,13 @@ const enterTownHandler = async ({ socket, payload }) => {
   const player = townUser.buildPlayerInfo();
 
   const enterTownResponse = createResponse('responseTown', 'S_Enter', { player });
+
+  const playerItemResponse = createResponse('responseItem', 'S_Player_Item', {
+    soul: 10000,
+    coin: 10000,
+  });
   socket.write(enterTownResponse);
+  socket.write(playerItemResponse);
 
   /*---------Spawn--------*/
 

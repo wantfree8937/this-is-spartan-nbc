@@ -8,4 +8,6 @@ export const HANDLER_IDS = {
   C_CHAT: 12,
   C_ENTER_DUNGEON: 14,
   C_PLAYER_RESPONSE: 15,
+  C_PLAYER_SOUL: 27,
+  C_PLAYER_COIN: 28,
 };
