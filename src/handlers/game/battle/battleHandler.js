@@ -63,21 +63,10 @@ export const selectCheckHandler = async ({ socket, payload }) => {
   // 특수공격(MP 사용) 기능 구현예정
   console.log(`${responseCode + 1}번 버튼을 선택함.`);      // 플레이어가 선택한 버튼 로그
 
-  let attackTarget;
-  if (monstersNow.length >= 2) {
-    if (responseCode == 1) { attackTarget = 1; }
-    else if (responseCode == 2) { attackTarget = 0; }
-    else { attackTarget = 2; }
-  } else {
-    attackTarget = responseCode - 1;         // 몬스터 인덱스와 responseCode의 값차이 == 1
-  }
-
   // 모든 이벤트 처리전까지 버튼 비활성화
   battleLog.disableBtns();
   let updateBatteLog = createResponse('responseBattle', 'S_Battle_Log', { battleLog });
   socket.write(updateBatteLog);
-
-  const targetMonsterIdx = attackTarget;
 
   let actionSet;
   let special = -1;     // if문 미동작시 에러발생 : -1
@@ -126,8 +115,20 @@ export const selectCheckHandler = async ({ socket, payload }) => {
     return;
   }
 
+  // 공격대상 지정처리 (4~6은 -3 하고 처리함 ) | 결과: (1~3)
+  let targetCheck;
+  if (responseCode > 3) { targetCheck = responseCode - 3; }
+  else { targetCheck = responseCode; }
+
+  let attackTarget;
+  if (targetCheck == 1) { attackTarget = 1; }
+  else if (targetCheck == 2) { attackTarget = 0; }
+  else { attackTarget = 2; }
+
+  const targetMonsterIdx = attackTarget;
+
   // 몬스터 HP 체력감소 연산처리
-  const monsterDataIdx = monstersNow[`${targetMonsterIdx}`].getIdx();
+  const monsterDataIdx = monstersNow[targetMonsterIdx].getIdx();
   const monsterDef = monsterStats[monsterDataIdx].monsterDeffence;
   let resultDamage = playerStats.atk + special - monsterDef;      // special = 일반 공격시 0, 특수 공격시 magic 값
   if (resultDamage < 0) { resultDamage = 0; }
@@ -155,7 +156,9 @@ export const selectCheckHandler = async ({ socket, payload }) => {
   await sleep(100);
 
   // 배틀로그 변경 및 반영
-  let msg = `플레이어가 ${monstersNow[attackTarget].getName()} 공격! ${resultDamage}의 데미지!`;
+  let skill = '';
+  if(special > 0) { skill = '특수' }
+  let msg = `플레이어가 ${monstersNow[attackTarget].getName()}를 ${skill}공격! ${resultDamage}의 데미지!`;
   battleLog.changeMsg(msg);
   updateBatteLog = createResponse('responseBattle', 'S_Battle_Log', { battleLog });
   socket.write(updateBatteLog);
@@ -181,6 +184,7 @@ export const selectCheckHandler = async ({ socket, payload }) => {
       if (damageResult < 0) { damageResult = 0; }
       playerNow.updatePlayerHp(-damageResult);
 
+      if(playerNow.getHpNow() < 0) { playerNow.setHpZero(); }     // HP가 -일시 0으로 지정
       const hp = playerNow.getHpNow();
       const updateplayerHp = createResponse('responseBattle', 'S_Set_Player_Hp', { hp });
       socket.write(updateplayerHp);
@@ -207,6 +211,8 @@ export const selectCheckHandler = async ({ socket, payload }) => {
     socket.write(playerAnimaion);
     await sleep(600);
 
+    const msg = '전투 패배...';
+    battleLog.changeMsg(msg);
     battleLog.deleteBtns();
     battleLog.addBtn('던전 나가기', true);
     const loseBatteLog = createResponse('responseBattle', 'S_Battle_Log', { battleLog });
@@ -235,14 +241,13 @@ export const selectCheckHandler = async ({ socket, payload }) => {
     // 행동 선택화면 구성
     for (let i = 0; i < monstersNow.length; i++) {
       let checker = -1;
-      if (monstersNow.length >= 2) {
-        if (i == 0) { checker = 1; }
-        else if (i == 1) { checker = 0; }
-        else { checker = 2; }
-      } else {
-        checker = i;         // 몬스터 인덱스와 responseCode의 값차이 == 1
+      if (i == 0) { checker = 1; }
+      else if (i == 1) { checker = 0; }
+      else { checker = 2; }
+      if (monstersNow[i].getHp() > 0) {
+        battleLog.btns[checker].enableBtn();
+        if(playerNow.getMpNow() >= 10) { battleLog.btns[checker + 3].enableBtn(); }
       }
-      if (monstersNow[i].getHp() > 0) { battleLog.btns[checker].enableBtn(); }
     }
     // 플레이어 행동 선택
     msg = `플레이어, 행동을 선택하세요.`;

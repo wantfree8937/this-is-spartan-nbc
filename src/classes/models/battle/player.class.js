@@ -22,6 +22,10 @@ export class Player {
   updatePlayerMp(mp) {
     this.playerCurMp = this.playerCurMp + mp;
   }
+
+  setHpZero() {
+    this.playerCurHp = 0;
+  }
 }
 
 export default Player;

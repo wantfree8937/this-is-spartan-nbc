@@ -22,7 +22,7 @@ class Dungeon {
 
   // 던전 초기화 (맵, 스테이지길이)
   initDungeon() {
-    this.mapCode = 5000 + Math.floor(Math.random() * 7);    // 맵 랜덤 설정 (5000~5006)
+    this.mapCode = 5001 + Math.floor(Math.random() * 6);    // 맵 랜덤 설정 (5001~5006) | 5000은 공백 공간 (테스트용 맵?)
     this.lastStage = this.lastStage[this.dungeonCode - 1];   // dungeonCode가 1~4 이니 -1 하면 0~3으로 인덱스값과 같다.
   }
   // 스테이지 생성
@@ -67,6 +67,7 @@ class Dungeon {
       const monster = new Monster(tempInfo);
       monsters.push(monster);
     }
+    console.log('dungeonCode:', dungeonCode);
     const dungeonInfo = new DungeonInfo({ dungeonCode, monsters });     // 생성자 안에서 this.변수 사용 불가능
 
     // PlayerStatus 생성
@@ -100,7 +101,6 @@ class Dungeon {
           if (k == 1) { newBtns.unshift(newBtn); }
           else { newBtns.push(newBtn); }
         }
-        /*
         else if (l == 1) {     // 특수공격 버튼생성
           if (!monsters[k]) { newBtn = new Btn(`[X]`, false);}
           else { newBtn = new Btn(`[특수] ${monsters[k].getName()}`, true); }
@@ -108,19 +108,15 @@ class Dungeon {
           if (k == 1) { newBtns.unshift(newBtn); }
           else { newBtns.push(newBtn); }
         }
-        */
       }
-      console.log('newBtns:', newBtns);
       
       // 생성된 버튼 등록
       for(let i=0; i<3; i++) {
         const shiftedBtn = newBtns.shift();
-        console.log('shiftedBtn:', shiftedBtn);
         if(!shiftedBtn) { continue; }
         else { btns.push(shiftedBtn); }
       }
     }
-    console.log('btns:', btns);
 
     const tempLog = { msg, typingAnimation, btns };
     const battleLog = new BattleLog(tempLog);
