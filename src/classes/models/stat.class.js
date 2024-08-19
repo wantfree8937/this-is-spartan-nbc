@@ -1,6 +1,6 @@
 class Stat {
   constructor(statInfo) {
-    this.level = 1;
+    this.level = statInfo.level;
     this.hp = statInfo.maxHp;
     this.maxHp = statInfo.maxHp;
     this.mp = statInfo.maxMp;

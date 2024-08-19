@@ -17,7 +17,7 @@ import {
 } from './../../../db/user/user.db.js';
 import { getMonstersRedis } from '../../../db/game/redis.assets.js';
 // import { getGameAssets } from './../../../init/assets.js';
-
+const loginHandler = async ({ socket, payload }) => {};
 const enterTownHandler = async ({ socket, payload }) => {
   /*---------Enter--------*/
   const { nickname } = payload;
@@ -70,18 +70,28 @@ const enterTownHandler = async ({ socket, payload }) => {
     }
   }
 
+  console.log('uesr::::::::::::::', user);
   townUser = await addUserTown(user);
 
   const player = townUser.buildPlayerInfo();
 
   const enterTownResponse = createResponse('responseTown', 'S_Enter', { player });
 
+  //packet 테스트 코드
   const playerItemResponse = createResponse('responseItem', 'S_Player_Item', {
     soul: 10000,
     coin: 10000,
   });
-  socket.write(enterTownResponse);
   socket.write(playerItemResponse);
+  const isUnlocked = [1, 1, 1, 0, 0, 0, 0, 0, 0];
+  const selectCharacterResponse = createResponse('responseTown', 'S_Select_Character', {
+    isUnlocked: isUnlocked,
+    coin: 0,
+  });
+  socket.write(selectCharacterResponse);
+  //여기까지 packet 테스트 코드
+
+  socket.write(enterTownResponse);
 
   /*---------Spawn--------*/
 
@@ -148,4 +158,4 @@ const enterNextStage = (socket, nextStage) => {
   }
 };
 
-export { enterTownHandler, enterDungeonHandler, enterNextStage };
+export { enterTownHandler, enterDungeonHandler, enterNextStage, loginHandler };

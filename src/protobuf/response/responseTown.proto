@@ -42,3 +42,8 @@ message S_EnterDungeon{
   ScreenText screenText = 3; // Option
   BattleLog battleLog = 4;
 }
+
+message S_SelectCharacter{
+repeated bool isUnlocked = 1;
+int32 coin = 2;
+}

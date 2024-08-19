@@ -3,9 +3,10 @@ import User from '../classes/models/user.class.js';
 import { getUserStatsRedis } from '../db/game/redis.assets.js';
 
 export const addUser = async (playerId, nickname, userClass, level, soul, transform, socket) => {
-  const gameAssets = await getUserStatsRedis();
-  const statInfo = getClassStats(userClass, gameAssets);
-  const user = new User(playerId, nickname, userClass, level, soul, statInfo, transform, socket);
+  const statList = await getUserStatsRedis();
+  const statInfo = getClassStats(userClass, statList);
+  statInfo.level = level;
+  const user = new User(playerId, nickname, userClass, soul, statInfo, transform, socket);
   userSessions.push(user);
 
   return user;

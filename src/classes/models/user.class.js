@@ -2,11 +2,10 @@ import Stat from './stat.class.js';
 import Transform from './transfrom.class.js';
 
 class User {
-  constructor(playerId, nickname, userClass, level, soul, statInfo, transformInfo, socket) {
+  constructor(playerId, nickname, userClass, soul, statInfo, transformInfo, socket) {
     this.playerId = playerId;
     this.nickname = nickname;
     this.userClass = userClass;
-    this.level = level;
     this.soul = soul;
     this.socket = socket;
     this.transformInfo = transformInfo;

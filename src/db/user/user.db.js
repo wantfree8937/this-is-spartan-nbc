@@ -16,12 +16,16 @@ export const addUserDB = async (nickname) => {
 export const addUserCharacterDB = async (uuid, playerId, userClass) => {
   await pools.USER_DB.query(SQL_QUERIES.ADD_CHARACTER_CLASS, [uuid, playerId, userClass]);
 };
+
+export const addUserUnlockDB = async (playerId) => {
+  await pools.USER_DB.query(SQL_QUERIES.ADD_CHARACTER_UNLOCK, [playerId]);
+};
+
 export const getCharacterClassByIdsDB = async (playerId, userClass) => {
   const [rows] = await pools.USER_DB.query(SQL_QUERIES.GET_CHARACTER_CLASS_BY_IDS, [
     playerId,
     userClass,
   ]);
-
   if (rows.length > 0) {
     return rows[0]; // 일치하는 레코드가 있으면 첫 번째 레코드를 반환
   } else {
@@ -36,10 +40,12 @@ export const updateUserLogin = async (id) => {
 //편의
 
 export const registerUser = async (nickname, userClass) => {
-  const uuid = uuidv4();
   await addUserDB(nickname);
+
   const account = await getUserByNicknameDB(nickname);
+  const uuid = uuidv4();
   await addUserCharacterDB(uuid, account.playerId, userClass);
+  await addUserUnlockDB(account.playerId);
   return account;
 };
 

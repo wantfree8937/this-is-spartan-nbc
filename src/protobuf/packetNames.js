@@ -1,5 +1,7 @@
 export const packetNames = {
   town: {
+    C_Login: 'town.C_Login',
+    C_Unlock: 'town.C_UnlockCharacter',
     C_Enter: 'town.C_Enter',
     C_Move: 'town.C_Move',
     C_Animation: 'town.C_Animation',
@@ -9,6 +11,7 @@ export const packetNames = {
     C_Player_Response: 'battle.C_PlayerResponse',
   },
   responseTown: {
+    S_Select_Character: 'responseTown.S_SelectCharacter',
     S_Enter: 'responseTown.S_Enter',
     S_Spawn: 'responseTown.S_Spawn',
     S_Move: 'responseTown.S_Move',
