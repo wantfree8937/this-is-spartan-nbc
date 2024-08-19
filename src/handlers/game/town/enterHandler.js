@@ -50,7 +50,7 @@ const loginHandler = async ({ socket, payload }) => {
       unlocked[0].drago,
       unlocked[0].kiri,
     ],
-    coin: 500,
+    coin: account.coin,
   });
   socket.write(selectCharacterResponse);
 };
@@ -76,54 +76,41 @@ const unlockCharacterHandler = async ({ socket, payload }) => {
 };
 
 const enterTownHandler = async ({ socket, payload }) => {
+  console.log('You just activated my enterTownHandler');
   /*---------Enter--------*/
   const { nickname } = payload;
   const userClass = payload.class;
 
-  let transform;
+  const account = await getUserByNicknameDB(nickname);
+  const playerId = account.playerId;
+
+  const transform = new Transform();
   let user;
   let townUser;
-  let playerId;
-  let account;
-  //정의할것.
   let level;
   let soul;
+  let coin;
 
   //경우의 수
   //1. 계정X
   //2. 계정O 캐릭터 X
   //3. 계정O 캐릭터 O
-  const existUser = await getUserByNicknameDB(nickname);
-  if (!existUser) {
-    //1. 계정 X
-    account = await registerUser(nickname, userClass);
-    playerId = account.playerId;
-    transform = new Transform();
+
+  let existCharacter = await getCharacterClassByIdsDB(playerId, userClass);
+  if (!existCharacter) {
+    //2. 계정 O 캐릭터 X
+    registerUserCharacter(playerId, userClass);
+    coin = account.coin;
     level = 1;
     soul = 0;
-
-    user = await addUser(playerId, nickname, userClass, level, soul, transform, socket);
+    user = await addUser(playerId, nickname, userClass, level, soul, coin, transform, socket);
   } else {
-    account = existUser;
-    playerId = existUser.playerId;
+    //3. 계정 O 캐릭터 O
+    coin = account.coin;
+    level = existCharacter.level;
+    soul = existCharacter.soul;
 
-    let existCharacter = await getCharacterClassByIdsDB(playerId, userClass);
-    if (!existCharacter) {
-      //2. 계정 O 캐릭터 X
-      registerUserCharacter(playerId, userClass);
-      level = 1;
-      soul = 0;
-
-      transform = new Transform(); //lastX lastY 저장? lastX와 lastY 게임 종료 or 던전 입장때 저장
-
-      user = await addUser(playerId, nickname, userClass, level, soul, transform, socket);
-    } else {
-      level = existCharacter.level;
-      soul = existCharacter.soul;
-      transform = new Transform();
-
-      user = await addUser(playerId, nickname, userClass, level, soul, transform, socket);
-    }
+    user = await addUser(playerId, nickname, userClass, level, soul, coin, transform, socket);
   }
 
   townUser = await addUserTown(user);
@@ -136,12 +123,11 @@ const enterTownHandler = async ({ socket, payload }) => {
   const userCoin = await getCoinByPlayerId(playerId);
 
   const playerItemResponse = createResponse('responseItem', 'S_Player_Item', {
-    soul: 600,
+    soul: userSoul,
     coin: userCoin,
   });
 
   socket.write(playerItemResponse);
-
   socket.write(enterTownResponse);
 
   /*---------Spawn--------*/

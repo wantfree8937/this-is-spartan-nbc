@@ -2,17 +2,16 @@ import Stat from './stat.class.js';
 import Transform from './transfrom.class.js';
 
 class User {
-  constructor(playerId, nickname, userClass, soul, statInfo, transformInfo, socket) {
+  constructor(playerId, nickname, userClass, soul, coin, statInfo, transformInfo, socket) {
     this.playerId = playerId;
     this.nickname = nickname;
     this.userClass = userClass;
     this.soul = soul;
+    this.coin = coin;
     this.socket = socket;
     this.transformInfo = transformInfo;
     this.statInfo = new Stat(statInfo);
     this.lastUpdateTime = Date.now();
-    this.gold = 0;
-    this.soul = 0;
   }
 
   getPlayerId() {
@@ -41,6 +40,12 @@ class User {
   getMp() {
     return this.statInfo.getMp();
   }
+  getCoin() {
+    return this.coin;
+  }
+  getSoul() {
+    return this.soul;
+  }
 
   // 위치-좌표 업데이트 메서드
   updatePosition(x, y, z, Rot) {
@@ -49,6 +54,14 @@ class User {
     this.transformInfo.posZ = z;
     this.transformInfo.rot = Rot;
     this.lastUpdateTime = Date.now();
+  }
+  addSoul(rewardSoul) {
+    this.soul += rewardSoul;
+    return this;
+  }
+  addCoin(rewardCoin) {
+    this.coin += rewardCoin;
+    return this;
   }
 
   // 추측항법을 사용하여 위치를 추정하는 메서드

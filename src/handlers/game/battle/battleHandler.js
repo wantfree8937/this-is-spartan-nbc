@@ -136,7 +136,7 @@ export const selectCheckHandler = async ({ socket, payload }) => {
 
   // 몬스터 HP 체력감소 연산처리
   const monsterDataIdx = monstersNow[targetMonsterIdx].getIdx();
-  const monsterDef = monsterStats[monsterDataIdx].monsterDeffence;
+  const monsterDef = monsterStats[monsterDataIdx].monsterDefense;
   let resultDamage = playerStats.atk + special - monsterDef; // special = 일반 공격시 0, 특수 공격시 magic 값
   if (resultDamage < 0) {
     resultDamage = 0;
@@ -154,6 +154,9 @@ export const selectCheckHandler = async ({ socket, payload }) => {
   // 몬스터 사망시 이벤트처리
   if (monstersNow[attackTarget].getHp() < 0) {
     monstersNow[attackTarget].setHpZero();
+    const rewardCoin = monstersNow[attackTarget].getCoin();
+    const rewardSoul = monstersNow[attackTarget].getSoul();
+    dungeonNow.getUser().addSoul(rewardSoul).addCoin(rewardCoin);
     const actionMonsterIdx = attackTarget;
     const actionSet = new ActionSet(4, null); // animCode(death: 4), effectCode:none
     const monsterAnimaion = createResponse('responseBattle', 'S_Monster_Action', {
