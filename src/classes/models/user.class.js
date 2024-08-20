@@ -31,7 +31,8 @@ class User {
     const next = new NextInfo(nextLevel, nextHp, nextAttack, nextMagic);
 
     // 업그레이드 비용
-    const upgradeCost = initStat.upgradeCost;
+    const level = this.statInfo.getLevel();
+    const upgradeCost = initStat.upgradeCost * level;
 
     // 보유 영혼 수
     const soul = this.soul;

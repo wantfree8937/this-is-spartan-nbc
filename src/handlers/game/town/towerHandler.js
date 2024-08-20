@@ -24,29 +24,31 @@ export const characterUpgradeHandler = async ({ socket, payload }) => {
   const initStat = getClassStats(userClass, statList);
   
   // 영혼 지불 & 업그레이드 적용 (스텟 변경) 후 DB 업데이트 (soul, level)
+  console.log('before offering:', user.getSoul());
   const leftSoul = user.offeringSoul(cost);
-  console.log('leftSoul:', leftSoul);
+  console.log('leftSoul:', leftSoul, 'getSoul:', user.getSoul());
   const level = currentStatInfo.upgradeLevel();
   await updateSoul(leftSoul, uuid);
   await updateLevel(level, uuid);
 
   // upgradePacket 패킷 payload 준비
   const totalLevel = await getRitualLevel(playerId);
-  const playerInfo = user.buildPlayerInfo();
+  const playerInfo = await user.buildPlayerInfo();
   const nextCost = initStat.upgradeCost * level;
-  tower.updateTower(totalLevel, playerInfo, nextCost, leftSoul);
+  await tower.updateTower(totalLevel, playerInfo, nextCost, leftSoul);
+  console.log('soul after updateTower:', tower.getSoul());
 
-  const upgradePacket = tower.makeUpgradePacket();
+  const upgradePacket = await tower.makeUpgradePacket();
   const { ritualLevel, player, next, upgradeCost, soul } = upgradePacket;
+  console.log('soul from UpgradePacket:', soul);
+  const playerUpgradeResponse = createResponse('responseTown', 'S_Player_Upgrade', { ritualLevel, player, next, upgradeCost, soul, });
 
-
-  // 클라이언트 자원변경 반영(soul, coin)
+  // 클라이언트 마을에서 표시되는 자원 업데이트
   const userSoul = await getSoulByUUID(uuid);
   const userCoin = await getCoinByPlayerId(playerId);
   const playerItemResponse = createResponse('responseItem', 'S_Player_Item', { soul: userSoul, coin: userCoin });
 
   // 타워에 표시될 수치 & 마을에서 보이는 자원 수치 반영
-  const playerUpgradeResponse = createResponse('responseTown', 'S_Player_Upgrade', { ritualLevel, player, next, upgradeCost, soul });
   socket.write(playerUpgradeResponse);
   socket.write(playerItemResponse);
 };

@@ -24,6 +24,7 @@ export class Tower {
     this.player = playerInfo;
     this.nextInfo.updateNextInfo();
     this.upgradeCost = nextCost;
+    console.log('leftSoul in updateTower:', leftSoul);
     this.soul = leftSoul;
   }
 
@@ -32,6 +33,9 @@ export class Tower {
   }
   getNextInfo() {
     return this.nextInfo;
+  }
+  getSoul() {
+    return this.soul;
   }
 }
 
