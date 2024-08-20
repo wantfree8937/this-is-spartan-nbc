@@ -10,9 +10,11 @@ export const SQL_QUERIES = {
   GET_USER_UNLOCK: 'SELECT * FROM user_unlock_characters WHERE playerId = ?',
   UPDATE_UNLOCK_CHARACTER: (name) =>
     `UPDATE user_unlock_characters SET ${name} = TRUE WHERE playerId = ?`,
+  UPDATE_LEVEL: 'UPDATE user_character SET level = ? where uuid = ?',
   UPDATE_COIN: 'UPDATE user SET coin = ? WHERE playerId = ?',
   UPDATE_SOUL: 'UPDATE user_character SET soul = ? WHERE uuid = ?',
   GET_SOUL_BY_UUID: 'SELECT soul FROM user_character WHERE uuid = ?',
   GET_LEVEL_BY_CLASS: 'SELECT level FROM user_character WHERE uuid = ?',
   GET_COIN_BY_PLAYER_ID: 'SELECT coin FROM user WHERE playerId = ?',
+  GET_RITUAL_LEVEL: 'SELECT level FROM user_character WHERE playerId = ?',
 };

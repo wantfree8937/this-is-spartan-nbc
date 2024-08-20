@@ -11,11 +11,25 @@ class Stat {
     this.speed = statInfo.speed;
   }
 
+  getLevel() {
+    return this.level;
+  }
   getHp() {
     return this.hp;
   }
   getMp() {
     return this.mp;
+  }
+  getAttack() {
+    return this.atk;
+  }
+  getMagic() {
+    return this.magic;
+  }
+
+  upgradeLevel() {
+    this.level += 1;
+    return this.level;
   }
 
   makeStatForPayload() {

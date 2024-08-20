@@ -48,6 +48,10 @@ export const unlockCharacter = async (playerId, name) => {
   await pools.USER_DB.query(SQL_QUERIES.UPDATE_UNLOCK_CHARACTER(name), [playerId]);
 };
 
+//레벨 갱신
+export const updateLevel = async (level, uuid) => {
+  await pools.USER_DB.query(SQL_QUERIES.UPDATE_LEVEL, [level, uuid]);
+};
 // 코인 갱신
 export const updateCoin = async (coin, playerId) => {
   await pools.USER_DB.query(SQL_QUERIES.UPDATE_COIN, [coin, playerId]);
@@ -82,4 +86,10 @@ export const registerUserCharacter = async (playerId, userClass) => {
   const uuid = uuidv4();
   await addUserCharacterDB(uuid, playerId, userClass);
   return uuid;
+};
+
+export const getRitualLevel = async (playerId) => {
+  const [levelArray] = await pools.USER_DB.query(SQL_QUERIES.GET_RITUAL_LEVEL, [playerId]);
+  const ritualLevel = levelArray.reduce((sum, item) => sum + item.level, 0) - levelArray.length;
+  return ritualLevel;
 };
