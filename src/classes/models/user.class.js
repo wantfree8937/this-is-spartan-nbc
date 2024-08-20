@@ -74,6 +74,10 @@ class User {
     this.coin += rewardCoin;
     return this;
   }
+  
+  setCoin(currCoin) {
+    this.coin = currCoin;
+  }
 
   // 추측항법을 사용하여 위치를 추정하는 메서드
   calculatePosition(latency) {

@@ -7,6 +7,7 @@ export const packetNames = {
     C_Animation: 'town.C_Animation',
     C_Enter_Dungeon: 'town.C_EnterDungeon',
     C_Player_Upgrade: 'town.C_PlayerUpgrade',
+    C_Town_Select: 'town.C_TownSelect',
   },
   battle: {
     C_Player_Response: 'battle.C_PlayerResponse',
@@ -20,6 +21,7 @@ export const packetNames = {
     S_Chat: 'responseTown.S_Chat',
     S_Enter_Dungeon: 'responseTown.S_EnterDungeon',
     S_Player_Upgrade: 'responseTown.S_PlayerUpgrade',
+    S_Unlock_Character: 'responseTown.S_UnlockCharacter',
   },
   responseBattle: {
     S_Leave_Dungeon: 'responseBattle.S_LeaveDungeon',

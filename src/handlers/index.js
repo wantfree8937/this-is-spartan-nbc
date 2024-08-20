@@ -6,6 +6,7 @@ import {
   enterDungeonHandler,
   loginHandler,
   unlockCharacterHandler,
+  townSelectHandler,
 } from './game/town/enterHandler.js';
 import { avatarMoveHandler, avatarAnimationHandler } from './game/town/avatarHandler.js';
 import chatHandler from './game/chatHandler.js';
@@ -48,6 +49,10 @@ const handlers = {
   [HANDLER_IDS.C_PLAYER_UPGRADE]: {
     handler: characterUpgradeHandler,
     protoType: 'town.C_Player_Upgrade',
+  },
+  [HANDLER_IDS.C_TOWN_SELECT]: {
+    handler: townSelectHandler,
+    protoType: 'town.C_Town_Select',
   },
   // 다른 핸들러들을 추가
 };
