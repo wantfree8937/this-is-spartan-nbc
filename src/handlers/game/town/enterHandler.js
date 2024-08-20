@@ -137,9 +137,10 @@ const enterTownHandler = async ({ socket, payload }) => {
   //ritualLevel 후추
   const upgradePacket = {
     ritualLevel: 1, //<==이건 통합
-    player, //<==이 안에
+    player, //<==이 안에 현재 레벨
     next,
     upgradeCost: 1,
+    soul: 5, //남은 영혼
   };
   const playerUpgradeResponse = createResponse('responseTown', 'S_Player_Upgrade', upgradePacket);
   socket.write(playerUpgradeResponse);

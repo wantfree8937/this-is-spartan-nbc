@@ -7,13 +7,10 @@ import {
   loginHandler,
   unlockCharacterHandler,
 } from './game/town/enterHandler.js';
-import {
-  avatarMoveHandler,
-  avatarAnimationHandler,
-  characterUpgradeHandler,
-} from './game/town/avatarHandler.js';
+import { avatarMoveHandler, avatarAnimationHandler } from './game/town/avatarHandler.js';
 import chatHandler from './game/chatHandler.js';
 import { screenDoneHandler, selectCheckHandler } from './game/battle/battleHandler.js';
+import { characterUpgradeHandler } from './game/town/towerHandler.js';
 
 const handlers = {
   [HANDLER_IDS.C_ENTER]: {
