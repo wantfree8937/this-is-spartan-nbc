@@ -52,4 +52,5 @@ message S_PlayerUpgrade{
   PlayerInfo player = 1;
   NextInfo next = 2;
   int32 ritualLevel = 3;
+  int32 upgradeCost= 4;
 }
