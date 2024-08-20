@@ -20,12 +20,12 @@ export class Tower {
     return upgradePacket;
   }
 
-  updateTower(towerInfo) {
-    this.ritualLevel = towerInfo.ritualLevel;
-    this.player = towerInfo.player;
-    this.nextInfo = towerInfo.next;
-    this.upgradeCost = towerInfo.upgradeCost;
-    this.soul = towerInfo.soul;
+  updateTower(totalLevel, playerInfo, nextCost, leftSoul) {
+    this.ritualLevel = totalLevel;
+    this.player = playerInfo;
+    this.nextInfo.updateNextInfo();
+    this.upgradeCost = nextCost;
+    this.soul = leftSoul;
   }
 
   getUpgradeCost() {
@@ -45,11 +45,11 @@ export class NextInfo {
     this.mag = nextMagic;
   }
 
-  updateNextInfo(nextInfo) {
-    this.level = nextInfo.level +1;
-    this.hp = nextInfo.hp +200;
-    this.atk = nextInfo.atk +50;
-    this.mag = nextInfo.mag +70;
+  updateNextInfo() {
+    this.level += 1;
+    this.hp += 200;
+    this.atk += 50;
+    this.mag += 70;
   }
 
 }

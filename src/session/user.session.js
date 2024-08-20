@@ -11,7 +11,7 @@ export const addUser = async (
   const initStat = getClassStats(userClass, statList);
   const statInfo = new Stat(initStat);
   statInfo.setLevel(level);
-  
+
   const user = new User(
     uuid, playerId, nickname, userClass,
     soul, coin, statInfo, transform, socket
@@ -22,7 +22,7 @@ export const addUser = async (
   return user;
 };
 
-const getClassStats = (userClass, statList) => {
+export const getClassStats = (userClass, statList) => {
   for (let stat of statList) {
     if (stat.class === userClass) {
       return stat;

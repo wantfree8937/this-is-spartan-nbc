@@ -58,6 +58,7 @@ export const updateCoin = async (coin, playerId) => {
 };
 //소울 갱신
 export const updateSoul = async (soul, uuid) => {
+  console.log('soul:', soul);
   await pools.USER_DB.query(SQL_QUERIES.UPDATE_SOUL, [soul, uuid]);
 };
 

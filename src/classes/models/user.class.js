@@ -50,6 +50,11 @@ class User {
 
     return PlayerId;
   }
+  getUserClass() {
+    const userClass = this.userClass;
+
+    return userClass;
+  }
   getSocket() {
     const socket = this.socket;
 
@@ -90,7 +95,8 @@ class User {
   }
 
   offeringSoul(cost) {
-    this.soul -= cost;
+    this.soul = this.soul - cost;
+    return this.soul;
   }
 
   addSoul(rewardSoul) {

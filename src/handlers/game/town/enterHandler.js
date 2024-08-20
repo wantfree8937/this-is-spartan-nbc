@@ -146,9 +146,7 @@ const enterTownHandler = async ({ socket, payload }) => {
   // uuid, level, soul 선언 후 정의가능
   const transform = new Transform();
   const user = await addUser(uuid, playerId, nickname, userClass, level, leftSoul, coin, transform, socket);
-  console.log('user:', user);
   const townUser = await addUserTown(user);
-  console.log('townUser:', townUser);
 
   // 클라이언트에 반영할 타워정보
   const upgradePacket = user.getTower().makeUpgradePacket();
