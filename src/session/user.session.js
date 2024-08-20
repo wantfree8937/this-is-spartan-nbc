@@ -11,6 +11,7 @@ export const addUser = async (
   const initStat = getClassStats(userClass, statList);
   const statInfo = new Stat(initStat);
   statInfo.setLevel(level);
+  
   const user = new User(
     uuid, playerId, nickname, userClass,
     soul, coin, statInfo, transform, socket

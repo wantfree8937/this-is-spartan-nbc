@@ -19,7 +19,8 @@ export const characterUpgradeHandler = async ({ socket, payload }) => {
   await updateLevel(level, uuid);
   
   // upgradePacket 패킷 payload 준비
-  const upgradePacket = user.getTower().makeUpgradePacket();
+  const tower = user.getTower();
+  const upgradePacket = tower.makeUpgradePacket();
   const { ritualLevel, player, next, upgradeCost, soul } = upgradePacket;
 
   // 타워에 표시될 수치 반영
@@ -28,7 +29,6 @@ export const characterUpgradeHandler = async ({ socket, payload }) => {
 };
 
 export const finalBossHandler = async ({socket, payload}) => {
-  
   const { dungeonCode } = payload;
   const monsterData = await getMonstersRedis();
   const user = getUserBySocket(socket);
