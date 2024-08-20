@@ -19,8 +19,10 @@ import {
   updateCoin,
   getCoinByPlayerId,
   getSoulByUUID,
+  getRitualLevel,
 } from './../../../db/user/user.db.js';
 import { getMonstersRedis } from '../../../db/game/redis.assets.js';
+import NextInfo from '../../../classes/models/nextInfo.class.js';
 // import { getGameAssets } from './../../../init/assets.js';
 
 //접속 핸들러
@@ -117,13 +119,6 @@ const enterTownHandler = async ({ socket, payload }) => {
   townUser = await addUserTown(user);
 
   const player = townUser.buildPlayerInfo();
-  //next 레벨 데이터 후추
-  const next = {
-    level: 1,
-    hp: 1,
-    atk: 1,
-    mag: 1,
-  };
 
   const enterTownResponse = createResponse('responseTown', 'S_Enter', { player });
 
@@ -134,13 +129,24 @@ const enterTownHandler = async ({ socket, payload }) => {
     soul: userSoul,
     coin: userCoin,
   });
-  //ritualLevel 후추
+
+  const currentStatInfo = user.getStatInfo();
+
+  //스탯도 여기서 올려야함 level
+  let nextLevel = currentStatInfo.getLevel() + 1;
+  let nextHp = currentStatInfo.getHp() + 200;
+  let nextAttack = currentStatInfo.getAttack() + 50;
+  let nextMagic = currentStatInfo.getMagic() + 70;
+  let leftSoul = user.getSoul();
+
+  const next = new NextInfo(nextLevel, nextHp, nextAttack, nextMagic);
+  const ritualLevel = await getRitualLevel(playerId);
   const upgradePacket = {
-    ritualLevel: 1, //<==이건 통합
+    ritualLevel: ritualLevel, //<==이건 통합
     player, //<==이 안에 현재 레벨
     next,
-    upgradeCost: 1,
-    soul: 5, //남은 영혼
+    upgradeCost: 100,
+    soul: leftSoul, //남은 영혼
   };
   const playerUpgradeResponse = createResponse('responseTown', 'S_Player_Upgrade', upgradePacket);
   socket.write(playerUpgradeResponse);
