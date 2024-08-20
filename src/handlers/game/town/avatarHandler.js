@@ -39,3 +39,7 @@ export const avatarAnimationHandler = async ({ socket, payload }) => {
     socket.write(cAnimationResponse);
   });
 };
+
+export const characterUpgradeHandler = async ({ socket, payload }) => {
+  console.log('TestCode #47::', payload);
+};

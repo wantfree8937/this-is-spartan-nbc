@@ -117,6 +117,13 @@ const enterTownHandler = async ({ socket, payload }) => {
   townUser = await addUserTown(user);
 
   const player = townUser.buildPlayerInfo();
+  //next 데이터 후추
+  const next = {
+    level: 1,
+    hp: 1,
+    atk: 1,
+    mag: 1,
+  };
 
   const enterTownResponse = createResponse('responseTown', 'S_Enter', { player });
 
@@ -127,7 +134,14 @@ const enterTownHandler = async ({ socket, payload }) => {
     soul: userSoul,
     coin: userCoin,
   });
-
+  //ritualLevel 후추
+  const upgradePacket = {
+    ritualLevel: 1,
+    player,
+    next,
+  };
+  const playerUpgradeResponse = createResponse('responseTown', 'S_Player_Upgrade', upgradePacket);
+  socket.write(playerUpgradeResponse);
   socket.write(playerItemResponse);
   socket.write(enterTownResponse);
 
