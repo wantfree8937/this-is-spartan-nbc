@@ -6,6 +6,7 @@ import { avatarMoveHandler, avatarAnimationHandler, characterUpgradeHandler, } f
 import { finalBossHandler } from './game/town/towerHandler';
 import chatHandler from './game/chatHandler.js';
 import { screenDoneHandler, selectCheckHandler } from './game/battle/battleHandler.js';
+import { characterUpgradeHandler } from './game/town/towerHandler.js';
 
 const handlers = {
   [HANDLER_IDS.C_ENTER]: {
