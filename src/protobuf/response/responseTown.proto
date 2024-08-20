@@ -47,3 +47,9 @@ message S_SelectCharacter{
 repeated bool isUnlocked = 1;
 int32 coin = 2;
 }
+
+message S_PlayerUpgrade{
+  PlayerInfo player = 1;
+  NextInfo next = 2;
+  int32 ritualLevel = 3;
+}

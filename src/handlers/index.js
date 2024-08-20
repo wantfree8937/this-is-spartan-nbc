@@ -7,7 +7,11 @@ import {
   loginHandler,
   unlockCharacterHandler,
 } from './game/town/enterHandler.js';
-import { avatarMoveHandler, avatarAnimationHandler } from './game/town/avatarHandler.js';
+import {
+  avatarMoveHandler,
+  avatarAnimationHandler,
+  characterUpgradeHandler,
+} from './game/town/avatarHandler.js';
 import chatHandler from './game/chatHandler.js';
 import { screenDoneHandler, selectCheckHandler } from './game/battle/battleHandler.js';
 
@@ -43,6 +47,10 @@ const handlers = {
   [HANDLER_IDS.C_UNLOCK_CHARACTER]: {
     handler: unlockCharacterHandler,
     protoType: 'town.C_Unlock_Character',
+  },
+  [HANDLER_IDS.C_PLAYER_UPGRADE]: {
+    handler: characterUpgradeHandler,
+    protoType: 'town.C_Player_Upgrade',
   },
   // 다른 핸들러들을 추가
 };
