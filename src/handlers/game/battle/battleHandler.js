@@ -31,7 +31,7 @@ export const selectCheckHandler = async ({ socket, payload }) => {
   // 전투 상황처리를 위해 필요한 데이터들
   // 필요한 것1 : 현재 플레이중인 던전과 현재 진행중인 스테이지 정보
   // 필요한 것2 : 현재 스테이지의 플레이어와 몬스터들 정보
-  // **던전 객체 하나면 가져오면 나머지 메서드들은 각 클래스(객체)에 들어있음**
+  // **던전 객체 하나면 가져오면 나머지 데이터들은 하위 클래스(객체)에 들어있음**
 
   // 1. 던전세션 목록에서 본인이 플레이중인 던전 선택 | 결과: Dungeon 객체
   const dungeonNow = getDungeonBySocket(socket);
