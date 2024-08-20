@@ -20,6 +20,8 @@ export const characterUpgradeHandler = async ({ socket, payload }) => {
   
   // upgradePacket 패킷 payload 준비
   const tower = user.getTower();
+  const nextInfo = tower.getNextInfo();
+  nextInfo.updateNextInfo();
   const upgradePacket = tower.makeUpgradePacket();
   const { ritualLevel, player, next, upgradeCost, soul } = upgradePacket;
 

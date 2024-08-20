@@ -31,6 +31,9 @@ export class Tower {
   getUpgradeCost() {
     return this.upgradeCost;
   }
+  getNextInfo() {
+    return this.nextInfo;
+  }
 
 }
 
@@ -43,10 +46,10 @@ export class NextInfo {
   }
 
   updateNextInfo(nextInfo) {
-    this.level = nextInfo.level;
-    this.hp = nextInfo.hp;
-    this.atk = nextInfo.atk;
-    this.mag = nextInfo.mag;
+    this.level = nextInfo.level +1;
+    this.hp = nextInfo.hp +200;
+    this.atk = nextInfo.atk +50;
+    this.mag = nextInfo.mag +70;
   }
 
 }
