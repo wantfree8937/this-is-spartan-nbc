@@ -30,8 +30,12 @@ class Dungeon {
     // 최대 몬스터수 지정 (1~3)
     let maxNumber;
     if (this.proceed + 1 == this.lastStage) {
-      if(this.dungeonCode % 2 == 1) { maxNumber = 1; }      // 던전 1,3,5 보스몹 수 : 1
-      else { maxNumber = 2; }                               // 던전 2,4 보스몹 수 : 2
+      if (this.dungeonCode % 2 == 1) {
+        maxNumber = 1;
+      } // 던전 1,3,5 보스몹 수 : 1
+      else {
+        maxNumber = 2;
+      } // 던전 2,4 보스몹 수 : 2
     } // 마지막 스테이지는 보스 몬스터 (1or2 개체 / 변경가능)
     else {
       maxNumber = Math.floor(Math.random() * 3) + 1;
@@ -55,7 +59,7 @@ class Dungeon {
         else if (3 <= this.dungeonCode && this.dungeonCode < 5) {
           monsterIdx = Math.floor(Math.random() * 6) + 22;
         } // 3,4 던전은 고급보스 지정 | (22~27)
-        else if ( this.dungeonCode == 5) {
+        else if (this.dungeonCode == 5) {
           monsterIdx = 28;
         } // 최종던전은 최종보스 지정 | 28
 
@@ -65,8 +69,8 @@ class Dungeon {
         else if (3 <= this.dungeonCode && this.dungeonCode < 5) {
           monsterModel = 2000 + monsterIdx;
         } // 3,4 던전은 고급보스 이미지 | (2022~2027)
-        else if ( this.dungeonCode == 5) {
-          monsterIdx = 2029;
+        else if (this.dungeonCode == 5) {
+          monsterModel = 2029;
         } // 최종던전은 최종보스 이미지 | 2029
       } else {
         if (this.dungeonCode <= 2) {

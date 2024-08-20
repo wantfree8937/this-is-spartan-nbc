@@ -124,7 +124,7 @@ const enterTownHandler = async ({ socket, payload }) => {
   const account = await getUserByNicknameDB(nickname);
   const playerId = account.playerId;
   const coin = account.coin;
-  
+
   //캐릭터 X / 캐릭터 O
   let existCharacter = await getCharacterClassByIdsDB(playerId, userClass);
   let uuid;
@@ -150,8 +150,14 @@ const enterTownHandler = async ({ socket, payload }) => {
 
   // 클라이언트에 반영할 타워정보
   const upgradePacket = user.getTower().makeUpgradePacket();
-  const { ritualLevel, player, next, upgradeCost, soul } = upgradePacket;   // player: user의 PlayerInfo
-  const playerUpgradeResponse = createResponse('responseTown', 'S_Player_Upgrade', { ritualLevel, player, next, upgradeCost, soul });
+  const { ritualLevel, player, next, upgradeCost, soul } = upgradePacket; // player: user의 PlayerInfo
+  const playerUpgradeResponse = createResponse('responseTown', 'S_Player_Upgrade', {
+    ritualLevel,
+    player,
+    next,
+    upgradeCost,
+    soul,
+  });
 
   // 클라이언트에 반영할 마을입장
   const enterTownResponse = createResponse('responseTown', 'S_Enter', { player });
@@ -159,8 +165,11 @@ const enterTownHandler = async ({ socket, payload }) => {
   // 클라이언트에 반영할 자원(soul, coin)
   const userSoul = await getSoulByUUID(uuid);
   const userCoin = await getCoinByPlayerId(playerId);
-  const playerItemResponse = createResponse('responseItem', 'S_Player_Item', { soul: userSoul, coin: userCoin });
-  
+  const playerItemResponse = createResponse('responseItem', 'S_Player_Item', {
+    soul: userSoul,
+    coin: userCoin,
+  });
+
   // 클라이언트에 작성된 데이터 반영
   socket.write(playerUpgradeResponse);
   socket.write(playerItemResponse);

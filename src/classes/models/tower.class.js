@@ -1,4 +1,3 @@
-
 export class Tower {
   constructor(ritualLevel, player, nextInfo, upgradeCost, soul) {
     this.ritualLevel = ritualLevel;
@@ -34,7 +33,6 @@ export class Tower {
   getNextInfo() {
     return this.nextInfo;
   }
-
 }
 
 export class NextInfo {
@@ -51,7 +49,6 @@ export class NextInfo {
     this.atk += 50;
     this.mag += 70;
   }
-
 }
 
 export default { Tower, NextInfo };

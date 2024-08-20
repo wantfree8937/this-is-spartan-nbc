@@ -5,6 +5,7 @@ import { getUserBySocket, getClassStats } from '../../../session/user.session.js
 import { createResponse } from '../../../utils/response/createResponse.js';
 import { getMonstersRedis, getUserStatsRedis } from '../../../db/game/redis.assets.js';
 import { createDungeonSession, getNextStage } from '../../../session/dungeon.session.js';
+import { getTownSession } from './../../../session/town.session.js';
 import { enterNextStage } from './enterHandler.js';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -28,7 +29,7 @@ export const characterUpgradeHandler = async ({ socket, payload }) => {
   const level = currentStatInfo.upgradeLevel();
   await updateSoul(leftSoul, uuid);
   await updateLevel(level, uuid);
-  
+
   // upgradePacket 패킷 payload 준비
   const totalLevel = await getRitualLevel(playerId);
   const playerInfo = user.buildPlayerInfo();
@@ -50,7 +51,7 @@ export const characterUpgradeHandler = async ({ socket, payload }) => {
   socket.write(playerItemResponse);
 };
 
-export const finalBossHandler = async ({socket, payload}) => {
+export const finalBossHandler = async ({ socket, payload }) => {
   const { dungeonCode } = payload;
   const monsterData = await getMonstersRedis();
   const user = getUserBySocket(socket);
@@ -65,4 +66,4 @@ export const finalBossHandler = async ({socket, payload}) => {
   const stage = getNextStage(socket);
   // 스테이지 진입
   enterNextStage(socket, stage);
-}
+};
