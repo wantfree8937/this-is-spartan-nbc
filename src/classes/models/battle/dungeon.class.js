@@ -167,13 +167,6 @@ class Dungeon {
     const tempLog = { msg, typingAnimation, btns };
     const battleLog = new BattleLog(tempLog);
 
-    // (전투) 스테이지 생성 (현재로써는 전투방만이 구현 되어있음)
-    if (this.proceed + 1 == this.lastStage) {
-      // 마지막 방 (보스방) 일 경우 - 현재 구현중 임
-      const bossStatMaker = 2; // 보스몬스터에게 줄 보정 수치 (기본: x3) 정확한 수치는 미정
-      dungeonInfo.monsters[0].setBossStat(bossStatMaker);
-    }
-
     // 스테이지 생성 (count는 0부터 1씩 증가한다.)
     let stageId = this.proceed + 1; // 스테이지 id 설정용 변수. 0은 포로토버프가 null로 인식하므로 1부터 1씩 증가한다.
     const stage = new Stage(stageId, dungeonInfo, this.player, screenText, battleLog);

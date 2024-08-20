@@ -51,6 +51,7 @@ export const selectCheckHandler = async ({ socket, payload }) => {
       endSesssionById(dungeonNow.getId()); // 던전세션 종료(삭제)
       const leaveDungeon = createResponse('responseBattle', 'S_Leave_Dungeon', null);
       socket.write(leaveDungeon); // 던전 나가기
+      return;
     } else if (responseCode == 2) {
       const nextStage = dungeonNow.getNextStage(); // 다음스테이지 로드
       enterNextStage(socket, nextStage); // 다음스테이지 진입
@@ -60,7 +61,7 @@ export const selectCheckHandler = async ({ socket, payload }) => {
 
   // 진행순서 : 플레이어 공격모션 -> 몬스터 HP감소 처리 -> 몬스터 공격모션 -> 플레이어 HP감소
   // 특수공격(MP 사용) 기능 구현예정
-  console.log(`${responseCode + 1}번 버튼을 선택함.`); // 플레이어가 선택한 버튼 로그
+  console.log(`${responseCode}번 버튼을 선택함.`); // 플레이어가 선택한 버튼 로그
 
   // 모든 이벤트 처리전까지 버튼 비활성화
   battleLog.disableBtns();
