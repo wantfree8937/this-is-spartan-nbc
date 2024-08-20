@@ -26,8 +26,11 @@ export const packetParser = (data, packetId) => {
   const actualFields = Object.keys(payload);
   const missingFields = expectedFields.filter((field) => !actualFields.includes(field));
   if (missingFields.length > 0) {
-    if (missingFields.includes('responseCode')) { // responseCode가 0일때 예외처리
-      payload = PayloadType.create({ responseCode: 0 });
+    if (missingFields.includes('responseCode')) {
+      // responseCode가 0일때 예외처리
+      payload = { ...payload, responseCode: 0 };
+    } else if (missingFields.includes('coin')) {
+      payload = { ...payload, coin: 0 };
     } else {
       throw new CustomError(
         ErrorCodes.MISSING_FIELDS,

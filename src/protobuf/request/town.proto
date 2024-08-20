@@ -6,7 +6,7 @@ message C_Login {
   string nickname = 1;
 }
 
-message C_UnlockCharacter{
+message C_UnlockCharacter{ 
   string nickname =1;
   int32 class = 2;
   int32 coin = 3;
