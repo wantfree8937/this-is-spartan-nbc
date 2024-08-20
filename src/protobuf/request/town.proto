@@ -41,5 +41,4 @@ message C_EnterDungeon {
 }
 
 message C_PlayerUpgrade{
-  int32 soul = 1;
 }

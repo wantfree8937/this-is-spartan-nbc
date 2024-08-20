@@ -61,6 +61,11 @@ class User {
     this.transformInfo.rot = Rot;
     this.lastUpdateTime = Date.now();
   }
+
+  minusSoul(cost) {
+    this.soul -= cost;
+  }
+
   addSoul(rewardSoul) {
     this.soul += rewardSoul;
     return this;
