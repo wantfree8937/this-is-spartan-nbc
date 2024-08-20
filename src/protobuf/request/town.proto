@@ -41,9 +41,11 @@ message C_EnterDungeon {
 }
 
 message C_PlayerUpgrade{
-  
 }
 
 message C_EnterFinal {
   int32 dungeonCode = 1;
+}
+
+message C_TownSelect {
 }

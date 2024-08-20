@@ -7,9 +7,6 @@ import { ErrorCodes } from '../error/errorCodes.js';
 
 export const createResponse = (packageType, packetId, data = null) => {
   const protoMessages = getProtoMessages();
-  //console.log('1111, ', packageType);
-  //console.log('2222, ', packetId);
-  //console.log('3333, ', data);
 
   const Response = protoMessages[packageType][packetId];
   const buffer = Response.encode(data).finish();
