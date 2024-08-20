@@ -30,8 +30,9 @@ class Dungeon {
     // 최대 몬스터수 지정 (1~3)
     let maxNumber;
     if (this.proceed + 1 == this.lastStage) {
-      maxNumber = 1;
-    } // 마지막 스테이지는 보스 몬스터 (1개체 / 변경가능)
+      if(this.dungeonCode % 2 == 1) { maxNumber = 1; }      // 던전 1,3 보스몹 수 : 1
+      else { maxNumber = 2; }                               // 던전 2,4 보스몹 수 : 2
+    } // 마지막 스테이지는 보스 몬스터 (1or2 개체 / 변경가능)
     else {
       maxNumber = Math.floor(Math.random() * 3) + 1;
     }
@@ -41,7 +42,7 @@ class Dungeon {
 
     let monsters = []; // 해당 스테이지 몬스터목록
     for (let j = 0; j < maxNumber; j++) {
-      // 스테이지당 1~3 마리의 몬스터 생성
+      // 스테이지당 최대 3마리의 몬스터 생성 (보스방 제외)
       const monsterDatas = this.monsterAssets; // 몬스터스텟 정보
 
       // 몬스터 생성
@@ -134,7 +135,7 @@ class Dungeon {
         if (l == 0) {
           // 일반공격 버튼생성
           if (!monsters[k]) {
-            newBtn = new Btn(`[X]`, false);
+            newBtn = new Btn(`[-]`, false);
           } else {
             newBtn = new Btn(`[공격] ${monsters[k].getName()}`, true);
           }
@@ -147,7 +148,7 @@ class Dungeon {
         } else if (l == 1) {
           // 특수공격 버튼생성
           if (!monsters[k]) {
-            newBtn = new Btn(`[X]`, false);
+            newBtn = new Btn(`[-]`, false);
           } else {
             newBtn = new Btn(`[특수] ${monsters[k].getName()}`, true);
           }

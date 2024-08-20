@@ -1,5 +1,5 @@
-import Stat from './stat.class.js';
-import Transform from './transfrom.class.js';
+import { Tower, NextInfo } from './tower.class.js';
+import { getRitualLevel } from '../../db/user/user.db.js';
 
 class User {
   constructor(uuid, playerId, nickname, userClass, soul, coin, statInfo, transformInfo, socket) {
@@ -11,15 +11,40 @@ class User {
     this.coin = coin;
     this.socket = socket;
     this.transformInfo = transformInfo;
-    this.statInfo = new Stat(statInfo);
+    this.statInfo = statInfo;
     this.lastUpdateTime = Date.now();
+    this.tower;
   }
+
+  async setTower(initStat) {
+    // 유저의 총합레벨
+    const ritualLevel = await getRitualLevel(this.playerId);
+
+    // 플레이어 정보
+    const player = this.buildPlayerInfo();
+
+    // 업그레이드시 반영될 수치
+    const nextLevel = this.statInfo.getLevel() + 1;
+    const nextHp = this.statInfo.getHp() + 200;
+    const nextAttack = this.statInfo.getAttack() + 50;
+    const nextMagic = this.statInfo.getMagic() + 70;
+    const next = new NextInfo(nextLevel, nextHp, nextAttack, nextMagic);
+
+    // 업그레이드 비용
+    const upgradeCost = initStat.upgradeCost;
+
+    // 보유 영혼 수
+    const soul = this.soul;
+
+    const tower = new Tower(ritualLevel, player, next, upgradeCost, soul );
+    this.tower = tower;
+  }
+
   getUUID() {
     const uuid = this.characterUUID;
 
     return uuid;
   }
-
   getPlayerId() {
     const PlayerId = this.playerId;
 
@@ -39,7 +64,6 @@ class User {
     const statInfo = this.statInfo;
     return statInfo;
   }
-
   getHp() {
     return this.statInfo.getHp();
   }
@@ -52,6 +76,9 @@ class User {
   getSoul() {
     return this.soul;
   }
+  getTower() {
+    return this.tower;
+  }
 
   // 위치-좌표 업데이트 메서드
   updatePosition(x, y, z, Rot) {
@@ -62,7 +89,7 @@ class User {
     this.lastUpdateTime = Date.now();
   }
 
-  minusSoul(cost) {
+  offeringSoul(cost) {
     this.soul -= cost;
   }
 

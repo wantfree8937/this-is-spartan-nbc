@@ -30,7 +30,6 @@ class Town {
   getUser(userId) {
     return this.users.find((user) => user.id === userId);
   }
-
   getUsers() {
     return this.users;
   }
@@ -43,12 +42,10 @@ class Town {
       this.state = 'waiting';
     }
   }
-
   addLeaveUsers(socket) {
     const index = this.users.findIndex((user) => user.socket === socket);
     this.leaveUsers.push(this.users[index]);
   }
-
   townOut() {
     if (this.leaveUsers.length > 0) {
       const removedUserIds = [];

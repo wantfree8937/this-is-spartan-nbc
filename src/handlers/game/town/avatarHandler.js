@@ -3,6 +3,7 @@ import { createResponse } from '../../../utils/response/createResponse.js';
 
 export const avatarMoveHandler = async ({ socket, payload }) => {
   const user = getTownUserBySocket(socket);
+  console.log('user:', user);
 
   const { posX, posY, posZ, rot } = payload.transform;
 

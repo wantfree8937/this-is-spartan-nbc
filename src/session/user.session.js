@@ -1,5 +1,6 @@
 import { userSessions } from './sessions.js';
 import User from '../classes/models/user.class.js';
+import Stat from '../classes/models/stat.class.js';
 import { getUserStatsRedis } from '../db/game/redis.assets.js';
 
 export const addUser = async (
@@ -7,14 +8,16 @@ export const addUser = async (
   level, soul, coin, transform, socket,
 ) => {
   const statList = await getUserStatsRedis();
-  const statInfo = getClassStats(userClass, statList);
-  statInfo.level = level;
+  const initStat = getClassStats(userClass, statList);
+  const statInfo = new Stat(initStat);
+  statInfo.setLevel(level);
   const user = new User(
     uuid, playerId, nickname, userClass,
-    soul, coin, statInfo, transform, socket,
+    soul, coin, statInfo, transform, socket
   );
-  userSessions.push(user);
+  await user.setTower(initStat);
 
+  userSessions.push(user);
   return user;
 };
 
