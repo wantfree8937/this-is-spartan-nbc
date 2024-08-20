@@ -223,6 +223,7 @@ export const selectCheckHandler = async ({ socket, payload }) => {
         // 플레이어 HP감소 처리 및 반영
         const monsterIdx = monstersNow[i].getIdx();
         const monsterAtk = monsterStats[monsterIdx].monsterAttack;
+        console.log('monster 공격', monsterAtk, playerStats.def);
         let damageResult = monsterAtk - playerStats.def;
         if (damageResult < 0) {
           damageResult = 0;

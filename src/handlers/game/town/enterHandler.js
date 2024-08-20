@@ -117,7 +117,7 @@ const enterTownHandler = async ({ socket, payload }) => {
   townUser = await addUserTown(user);
 
   const player = townUser.buildPlayerInfo();
-  //next 데이터 후추
+  //next 레벨 데이터 후추
   const next = {
     level: 1,
     hp: 1,
@@ -136,9 +136,10 @@ const enterTownHandler = async ({ socket, payload }) => {
   });
   //ritualLevel 후추
   const upgradePacket = {
-    ritualLevel: 1,
-    player,
+    ritualLevel: 1, //<==이건 통합
+    player, //<==이 안에
     next,
+    upgradeCost: 1,
   };
   const playerUpgradeResponse = createResponse('responseTown', 'S_Player_Upgrade', upgradePacket);
   socket.write(playerUpgradeResponse);
