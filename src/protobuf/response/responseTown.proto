@@ -54,3 +54,8 @@ message S_PlayerUpgrade{
   int32 ritualLevel = 3;
   int32 upgradeCost= 4;
 }
+
+message S_UnlockCharacter{
+  int32 idx = 1;
+  int32 coin = 2;
+}

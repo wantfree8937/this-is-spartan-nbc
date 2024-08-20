@@ -5,7 +5,7 @@ import {
   getFilteredList,
   getTownSession,
 } from '../../../session/town.session.js';
-import { addUser, getUserBySocket } from '../../../session/user.session.js';
+import { addUser, getUserBySocket, removeUser } from '../../../session/user.session.js';
 import { createResponse } from '../../../utils/response/createResponse.js';
 import { v4 as uuidv4 } from 'uuid';
 import { createDungeonSession, getNextStage } from '../../../session/dungeon.session.js';
@@ -64,6 +64,7 @@ const unlockCharacterHandler = async ({ socket, payload }) => {
   const playerNames = ['cerbe', 'uni', 'nix', 'chad', 'miho', 'levi', 'wyv', 'drago', 'kiri'];
   let account;
   let playerId;
+  let resultCoin = coin;
 
   const existUser = await getUserByNicknameDB(nickname);
   if (!existUser) {
@@ -75,13 +76,49 @@ const unlockCharacterHandler = async ({ socket, payload }) => {
 
   const characterName = playerNames[className - 1000];
 
+  switch (characterName) {
+    case 'cerbe':
+      resultCoin;
+      break;
+    case 'uni':
+      resultCoin;
+      break;
+    case 'nix':
+      resultCoin;
+      break;
+    case 'chad':
+      resultCoin -= 100;
+      break;
+    case 'miho':
+      resultCoin -= 100;
+      break;
+    case 'levi':
+      resultCoin -= 300;
+      break;
+    case 'wyv':
+      resultCoin -= 300;
+      break;
+    case 'drago':
+      resultCoin -= 500;
+      break;
+    case 'kiri':
+      resultCoin -= 500;
+      break;
+  }
+
   unlockCharacter(playerId, characterName);
-  updateCoin(playerId, coin);
+  updateCoin(resultCoin, playerId);
+
+  const unlockPacket = createResponse('responseTown', 'S_Unlock_Character', {
+    idx: className - 1000,
+    coin: resultCoin,
+  });
+  socket.write(unlockPacket);
 };
 
 //타운 입장 핸들러
 const enterTownHandler = async ({ socket, payload }) => {
-  console.log('You just activated my enterTownHandler');
+  console.log('You just activated my enterTownHandler', payload);
   /*---------Enter--------*/
   const { nickname } = payload;
   const userClass = payload.class;
@@ -180,6 +217,12 @@ const enterTownHandler = async ({ socket, payload }) => {
   });
 };
 
+const townSelectHandler = ({ socket, payload }) => {
+  const townSession = getTownSession();
+  townSession.addLeaveUsers(socket);
+  removeUser(socket);
+};
+
 const enterDungeonHandler = async ({ socket, payload }) => {
   const { dungeonCode } = payload;
   const monsterData = await getMonstersRedis();
@@ -190,7 +233,7 @@ const enterDungeonHandler = async ({ socket, payload }) => {
 
   const townSession = getTownSession(); // 마을세션 로드
   townSession.addLeaveUsers(socket); // 마을에서 제거
-
+  removeUser(socket);
   // 참가된 던전의 스테이지 추출
   const stage = getNextStage(socket);
   // 스테이지 진입
@@ -222,4 +265,5 @@ export {
   enterNextStage,
   loginHandler,
   unlockCharacterHandler,
+  townSelectHandler,
 };

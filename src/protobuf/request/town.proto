@@ -42,3 +42,6 @@ message C_EnterDungeon {
 
 message C_PlayerUpgrade{
 }
+
+message C_TownSelect {
+}
