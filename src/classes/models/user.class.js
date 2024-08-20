@@ -2,7 +2,8 @@ import Stat from './stat.class.js';
 import Transform from './transfrom.class.js';
 
 class User {
-  constructor(playerId, nickname, userClass, soul, coin, statInfo, transformInfo, socket) {
+  constructor(uuid, playerId, nickname, userClass, soul, coin, statInfo, transformInfo, socket) {
+    this.characterUUID = uuid;
     this.playerId = playerId;
     this.nickname = nickname;
     this.userClass = userClass;
@@ -12,6 +13,11 @@ class User {
     this.transformInfo = transformInfo;
     this.statInfo = new Stat(statInfo);
     this.lastUpdateTime = Date.now();
+  }
+  getUUID() {
+    const uuid = this.characterUUID;
+
+    return uuid;
   }
 
   getPlayerId() {
