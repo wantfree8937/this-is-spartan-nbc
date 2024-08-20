@@ -86,8 +86,16 @@ class Dungeon {
       }
       const monsterName = monster_Name;
       const monsterHp = monsterDatas[monsterIdx].monsterHp;
-
-      const tempInfo = { monsterIdx, monsterModel, monsterName, monsterHp };
+      const monsterSoul = monsterDatas[monsterIdx].soul;
+      const monsterCoin = monsterDatas[monsterIdx].coin;
+      const tempInfo = {
+        monsterIdx,
+        monsterModel,
+        monsterName,
+        monsterHp,
+        monsterSoul,
+        monsterCoin,
+      };
       const monster = new Monster(tempInfo);
       monsters.push(monster);
     }

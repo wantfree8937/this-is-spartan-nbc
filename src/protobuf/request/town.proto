@@ -39,3 +39,7 @@ message C_Chat {
 message C_EnterDungeon {
   int32 dungeonCode = 1;
 }
+
+message C_PlayerUpgrade{
+  int32 soul = 1;
+}

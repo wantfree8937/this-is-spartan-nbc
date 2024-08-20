@@ -2,6 +2,13 @@ syntax = 'proto3';
 
 package info;
 
+message NextInfo{
+  int32 level = 1;
+  int32 hp = 2;
+  int32 atk = 3;
+  int32 mag = 4;
+}
+
 message PlayerInfo {
   int32 playerId = 1;   // 입장할때 서버 내부에서 생성한 관리코드
   string nickname = 2;  // C_EnterGame 에서 지정한 이름

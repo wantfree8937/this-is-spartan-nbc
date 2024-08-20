@@ -18,11 +18,12 @@ import {
   unlockCharacter,
   updateCoin,
   getCoinByPlayerId,
-  getSoulByClass,
+  getSoulByUUID,
 } from './../../../db/user/user.db.js';
 import { getMonstersRedis } from '../../../db/game/redis.assets.js';
 // import { getGameAssets } from './../../../init/assets.js';
 
+//접속 핸들러
 const loginHandler = async ({ socket, payload }) => {
   const { nickname } = payload;
   let account;
@@ -50,11 +51,12 @@ const loginHandler = async ({ socket, payload }) => {
       unlocked[0].drago,
       unlocked[0].kiri,
     ],
-    coin: 500,
+    coin: account.coin,
   });
   socket.write(selectCharacterResponse);
 };
 
+//캐릭터 해금 시, 핸들러
 const unlockCharacterHandler = async ({ socket, payload }) => {
   const { nickname, class: className, coin } = payload;
   const playerNames = ['cerbe', 'uni', 'nix', 'chad', 'miho', 'levi', 'wyv', 'drago', 'kiri'];
@@ -75,73 +77,72 @@ const unlockCharacterHandler = async ({ socket, payload }) => {
   updateCoin(playerId, coin);
 };
 
+//타운 입장 핸들러
 const enterTownHandler = async ({ socket, payload }) => {
+  console.log('You just activated my enterTownHandler');
   /*---------Enter--------*/
   const { nickname } = payload;
   const userClass = payload.class;
 
-  let transform;
+  const account = await getUserByNicknameDB(nickname);
+  const playerId = account.playerId;
+
+  const transform = new Transform();
   let user;
   let townUser;
-  let playerId;
-  let account;
-  //정의할것.
   let level;
   let soul;
+  let coin;
+  let uuid;
 
-  //경우의 수
-  //1. 계정X
-  //2. 계정O 캐릭터 X
-  //3. 계정O 캐릭터 O
-  const existUser = await getUserByNicknameDB(nickname);
-  if (!existUser) {
-    //1. 계정 X
-    account = await registerUser(nickname, userClass);
-    playerId = account.playerId;
-    transform = new Transform();
+  //캐릭터 X / 캐릭터 O
+  let existCharacter = await getCharacterClassByIdsDB(playerId, userClass);
+
+  if (!existCharacter) {
+    // 계정 O 캐릭터 X
+    uuid = await registerUserCharacter(playerId, userClass);
     level = 1;
     soul = 0;
-
-    user = await addUser(playerId, nickname, userClass, level, soul, transform, socket);
   } else {
-    account = existUser;
-    playerId = existUser.playerId;
-
-    let existCharacter = await getCharacterClassByIdsDB(playerId, userClass);
-    if (!existCharacter) {
-      //2. 계정 O 캐릭터 X
-      registerUserCharacter(playerId, userClass);
-      level = 1;
-      soul = 0;
-
-      transform = new Transform(); //lastX lastY 저장? lastX와 lastY 게임 종료 or 던전 입장때 저장
-
-      user = await addUser(playerId, nickname, userClass, level, soul, transform, socket);
-    } else {
-      level = existCharacter.level;
-      soul = existCharacter.soul;
-      transform = new Transform();
-
-      user = await addUser(playerId, nickname, userClass, level, soul, transform, socket);
-    }
+    // 계정 O 캐릭터 O
+    uuid = existCharacter.uuid;
+    level = existCharacter.level;
+    soul = existCharacter.soul;
   }
+
+  coin = account.coin;
+
+  user = await addUser(uuid, playerId, nickname, userClass, level, soul, coin, transform, socket);
 
   townUser = await addUserTown(user);
 
   const player = townUser.buildPlayerInfo();
+  //next 데이터 후추
+  const next = {
+    level: 1,
+    hp: 1,
+    atk: 1,
+    mag: 1,
+  };
 
   const enterTownResponse = createResponse('responseTown', 'S_Enter', { player });
 
-  const userSoul = await getSoulByClass(playerId, userClass);
+  const userSoul = await getSoulByUUID(uuid);
   const userCoin = await getCoinByPlayerId(playerId);
 
   const playerItemResponse = createResponse('responseItem', 'S_Player_Item', {
-    soul: 600,
+    soul: userSoul,
     coin: userCoin,
   });
-
+  //ritualLevel 후추
+  const upgradePacket = {
+    ritualLevel: 1,
+    player,
+    next,
+  };
+  const playerUpgradeResponse = createResponse('responseTown', 'S_Player_Upgrade', upgradePacket);
+  socket.write(playerUpgradeResponse);
   socket.write(playerItemResponse);
-
   socket.write(enterTownResponse);
 
   /*---------Spawn--------*/

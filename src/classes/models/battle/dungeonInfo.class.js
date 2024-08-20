@@ -15,6 +15,14 @@ export class Monster {
     this.monsterModel = monsterInfo.monsterModel;
     this.monsterName = monsterInfo.monsterName;
     this.monsterHp = monsterInfo.monsterHp;
+    this.monsterSoul = monsterInfo.monsterSoul;
+    this.monsterCoin = monsterInfo.monsterCoin;
+  }
+  getSoul() {
+    return this.monsterSoul;
+  }
+  getCoin() {
+    return this.monsterCoin;
   }
 
   getIdx() {
