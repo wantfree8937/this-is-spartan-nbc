@@ -7,18 +7,17 @@ import { BattleLog, Btn } from './battleLog.class.js';
 
 class Dungeon {
   // 던전 생성시 맵은 고정됨
-  constructor(id, user, dungeonCode, monsters) {
+  constructor(id, user, dungeonCode, monsterAssets) {
     this.id = id;
     this.user = user;
     this.player = new Player(user);
     this.mapCode; // 맵 구별 값
-    this.dungeonCode = dungeonCode; // 던전 구분 (1 ~ 4)
+    this.dungeonCode = dungeonCode; // 던전 구분 (1 ~ 5)
     this.stages = []; // 스테이지 목록
     this.proceed = 0; // 던전 진행도 (인덱스 값: 0 ~ lastStage-1)
-    this.lastStage = [4, 5, 6, 7]; // 스테이지 별 길이 차이 - 후위 던전일수록 길이 증가
+    this.lastStage = [4, 5, 6, 7, 1]; // 스테이지 별 길이 차이 - 후위 던전일수록 길이 증가
 
-    this.loadedAssets = getGameAssets(); // 데이터 준비
-    this.monsters = monsters;
+    this.monsterAssets = monsterAssets;
   }
 
   // 던전 초기화 (맵, 스테이지길이)
@@ -43,7 +42,7 @@ class Dungeon {
     let monsters = []; // 해당 스테이지 몬스터목록
     for (let j = 0; j < maxNumber; j++) {
       // 스테이지당 1~3 마리의 몬스터 생성
-      const monsterDatas = this.monsters; // 몬스터스텟 정보
+      const monsterDatas = this.monsterAssets; // 몬스터스텟 정보
 
       // 몬스터 생성
       let monsterIdx = -1;

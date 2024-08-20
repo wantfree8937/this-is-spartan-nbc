@@ -46,6 +46,7 @@ export const selectCheckHandler = async ({ socket, payload }) => {
   const playerStats = dungeonNow.getUser().getStatInfo();
   // 몬스터 스텟 정보
   const monsterStats = await getMonstersRedis();
+  await sleep(50);
   // 배틀로그 정보
   const battleLog = stageNow.getBattleLog();
   // 킬 카운트 (승리 판정)

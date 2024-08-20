@@ -1,17 +1,9 @@
 import { HANDLER_IDS } from '../constants/handlerIds.js';
 import CustomError from '../utils/error/customError.js';
 import { ErrorCodes } from '../utils/error/errorCodes.js';
-import {
-  enterTownHandler,
-  enterDungeonHandler,
-  loginHandler,
-  unlockCharacterHandler,
-} from './game/town/enterHandler.js';
-import {
-  avatarMoveHandler,
-  avatarAnimationHandler,
-  characterUpgradeHandler,
-} from './game/town/avatarHandler.js';
+import { enterTownHandler, enterDungeonHandler, loginHandler, unlockCharacterHandler, } from './game/town/enterHandler.js';
+import { avatarMoveHandler, avatarAnimationHandler, characterUpgradeHandler, } from './game/town/avatarHandler.js';
+import { finalBossHandler } from './game/town/towerHandler';
 import chatHandler from './game/chatHandler.js';
 import { screenDoneHandler, selectCheckHandler } from './game/battle/battleHandler.js';
 
@@ -51,6 +43,10 @@ const handlers = {
   [HANDLER_IDS.C_PLAYER_UPGRADE]: {
     handler: characterUpgradeHandler,
     protoType: 'town.C_Player_Upgrade',
+  },
+  [HANDLER_IDS.C_FINAL_BOSS]: {
+    handler: finalBossHandler,
+    protoType: 'town.C_Final_Boss',
   },
   // 다른 핸들러들을 추가
 };
