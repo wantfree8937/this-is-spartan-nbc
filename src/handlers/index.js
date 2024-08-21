@@ -9,6 +9,7 @@ import {
   unlockCharacterHandler,
   townSelectHandler,
   connectHandler,
+  registerHandler,
 } from './game/town/enterHandler.js';
 import { avatarMoveHandler, avatarAnimationHandler } from './game/town/avatarHandler.js';
 import { characterUpgradeHandler, finalBossHandler } from './game/town/towerHandler.js';
