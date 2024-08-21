@@ -41,6 +41,8 @@ export const selectCheckHandler = async ({ socket, payload }) => {
   const playerNow = stageNow.getPlayer();
   // 4. 현재 스테이지의 몬스터(들) 정보 로드 | 결과: (Monster 객체들이 들어있는) monsters 배열
   const monstersNow = stageNow.getMonsters();
+  // 5. 현재 던전의 유저 정보 | 결과: User 객체
+  const userNow = dungeonNow.getUser();
 
   // 플레이어 스텟 정보
   const playerStats = dungeonNow.getUser().getStatInfo();
@@ -174,7 +176,8 @@ export const selectCheckHandler = async ({ socket, payload }) => {
       monstersNow[attackTarget].setHpZero();
       const rewardCoin = monstersNow[attackTarget].getCoin();
       const rewardSoul = monstersNow[attackTarget].getSoul();
-      dungeonNow.getUser().addSoul(rewardSoul).addCoin(rewardCoin);
+      userNow.addSoul(rewardSoul);
+      userNow.addCoin(rewardCoin);
       const actionMonsterIdx = attackTarget;
       const actionSet = new ActionSet(4, null);   // animCode(death: 4), effectCode:none
       const monsterAnimaion = createResponse('responseBattle', 'S_Monster_Action', {
@@ -260,8 +263,7 @@ export const selectCheckHandler = async ({ socket, payload }) => {
       const targetMonsterIdx = 0;
       const actionSet = new ActionSet(1, null); // animCode(death: 1), effectCode:none
       const playerAnimaion = createResponse('responseBattle', 'S_Player_Action', {
-        targetMonsterIdx,
-        actionSet,
+        targetMonsterIdx, actionSet,
       });
       socket.write(playerAnimaion);
       await sleep(600);
