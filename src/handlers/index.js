@@ -5,6 +5,7 @@ import {
   enterTownHandler,
   enterDungeonHandler,
   loginHandler,
+  registerHandler,
   unlockCharacterHandler,
   townSelectHandler,
   connectHandler,
@@ -62,6 +63,10 @@ const handlers = {
   [HANDLER_IDS.C_CONNECT]: {
     handler: connectHandler,
     protoType: 'town.C_Connect',
+  },
+  [HANDLER_IDS.C_REGISTER]: {
+    handler: registerHandler,
+    protoType: 'town.C_Register',
   },
 
   // 다른 핸들러들을 추가
