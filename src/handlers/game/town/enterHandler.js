@@ -121,22 +121,22 @@ const unlockCharacterHandler = async ({ socket, payload }) => {
       resultCoin;
       break;
     case 'chad':
-      resultCoin -= 100;
+      resultCoin -= 300;
       break;
     case 'miho':
-      resultCoin -= 100;
+      resultCoin -= 300;
       break;
     case 'levi':
-      resultCoin -= 300;
+      resultCoin -= 700;
       break;
     case 'wyv':
-      resultCoin -= 300;
+      resultCoin -= 700;
       break;
     case 'drago':
-      resultCoin -= 500;
+      resultCoin -= 1500;
       break;
     case 'kiri':
-      resultCoin -= 500;
+      resultCoin -= 1500;
       break;
   }
 
