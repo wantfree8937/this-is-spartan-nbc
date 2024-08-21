@@ -31,21 +31,38 @@ const connectHandler = async ({ socket, payload }) => {
 
 const registerHandler = async ({ socket, payload }) => {
   const { nickname, password } = payload;
-  let isSuccess;
+  let isSuccess = false;
   let account;
-  //1. 회원가입 패킷
-  //2. 서버 existUser?
-  const existUser = await getUserByNicknameDB(nickname);
-  if (existUser) {
+
+  // 정규 표현식을 사용한 닉네임과 비밀번호 검증
+  const regExpNickname = /^[a-zA-Z0-9가-힣]{2,10}$/;
+  const regExpPassword = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^+=-]).{6,16}$/;
+
+  if (!regExpNickname.test(nickname)) {
+    console.log('닉네임이 유효하지 않습니다. 2~10자의 영문, 숫자, 한글로 구성되어야 합니다.');
     isSuccess = false;
-    console.log('이미 존재하는 계정입니다.');
+  } else if (!regExpPassword.test(password)) {
+    console.log('비밀번호가 유효하지 않습니다. 6~16자의 영문, 숫자, 특수문자로 구성되어야 합니다.');
+    isSuccess = false;
   } else {
-    account = registerUser(nickname, password);
-    const registerResponse = createResponse('responseTown', 'S_Register', {
-      success: true,
-    });
-    socket.write(registerResponse);
+    // 1. 서버에서 해당 닉네임의 유저가 존재하는지 확인
+    const existUser = await getUserByNicknameDB(nickname);
+
+    if (existUser) {
+      isSuccess = false;
+      console.log('이미 존재하는 계정입니다.');
+    } else {
+      // 2. 유저 등록
+      account = await registerUser(nickname, password);
+      isSuccess = true;
+    }
   }
+
+  // 회원가입 결과를 클라이언트에 전송
+  const registerResponse = createResponse('responseTown', 'S_Register', {
+    success: isSuccess,
+  });
+  socket.write(registerResponse);
 };
 
 //접속 핸들러
