@@ -42,9 +42,6 @@ export class Monster {
     this.monsterHp = 0;
   }
 
-  setBossStat(statBoost) {
-    this.monsterHp = this.monsterHp * statBoost;
-  }
 }
 
 export default { DungeonInfo, Monster };

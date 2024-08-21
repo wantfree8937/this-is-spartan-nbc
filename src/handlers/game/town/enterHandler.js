@@ -19,10 +19,8 @@ import {
   updateCoin,
   getCoinByPlayerId,
   getSoulByUUID,
-  getRitualLevel,
 } from './../../../db/user/user.db.js';
 import { getMonstersRedis } from '../../../db/game/redis.assets.js';
-import NextInfo from '../../../classes/models/nextInfo.class.js';
 // import { getGameAssets } from './../../../init/assets.js';
 
 //접속 핸들러
@@ -120,72 +118,59 @@ const unlockCharacterHandler = async ({ socket, payload }) => {
 const enterTownHandler = async ({ socket, payload }) => {
   console.log('You just activated my enterTownHandler', payload);
   /*---------Enter--------*/
+  // 데이터(상수) 선언 및 정의
   const { nickname } = payload;
   const userClass = payload.class;
-
   const account = await getUserByNicknameDB(nickname);
   const playerId = account.playerId;
-
-  const transform = new Transform();
-  let user;
-  let townUser;
-  let level;
-  let soul;
-  let coin;
-  let uuid;
+  const coin = account.coin;
 
   //캐릭터 X / 캐릭터 O
   let existCharacter = await getCharacterClassByIdsDB(playerId, userClass);
+  let uuid;
+  let level;
+  let leftSoul;
 
   if (!existCharacter) {
     // 계정 O 캐릭터 X
     uuid = await registerUserCharacter(playerId, userClass);
     level = 1;
-    soul = 0;
+    leftSoul = 0;
   } else {
     // 계정 O 캐릭터 O
     uuid = existCharacter.uuid;
     level = existCharacter.level;
-    soul = existCharacter.soul;
+    leftSoul = existCharacter.soul;
   }
 
-  coin = account.coin;
+  // uuid, level, soul 선언 후 정의가능
+  const transform = new Transform();
+  const user = await addUser(uuid, playerId, nickname, userClass, level, leftSoul, coin, transform, socket);
+  const townUser = await addUserTown(user);
 
-  user = await addUser(uuid, playerId, nickname, userClass, level, soul, coin, transform, socket);
+  // 클라이언트에 반영할 타워정보
+  const upgradePacket = user.getTower().makeUpgradePacket();
+  const { ritualLevel, player, next, upgradeCost, soul } = upgradePacket; // player: user의 PlayerInfo
+  const playerUpgradeResponse = createResponse('responseTown', 'S_Player_Upgrade', {
+    ritualLevel,
+    player,
+    next,
+    upgradeCost,
+    soul,
+  });
 
-  townUser = await addUserTown(user);
-
-  const player = townUser.buildPlayerInfo();
-
+  // 클라이언트에 반영할 마을입장
   const enterTownResponse = createResponse('responseTown', 'S_Enter', { player });
 
+  // 클라이언트에 반영할 자원(soul, coin)
   const userSoul = await getSoulByUUID(uuid);
   const userCoin = await getCoinByPlayerId(playerId);
-
   const playerItemResponse = createResponse('responseItem', 'S_Player_Item', {
     soul: userSoul,
     coin: userCoin,
   });
 
-  const currentStatInfo = user.getStatInfo();
-
-  //스탯도 여기서 올려야함 level
-  let nextLevel = currentStatInfo.getLevel() + 1;
-  let nextHp = currentStatInfo.getHp() + 200;
-  let nextAttack = currentStatInfo.getAttack() + 50;
-  let nextMagic = currentStatInfo.getMagic() + 70;
-  let leftSoul = user.getSoul();
-
-  const next = new NextInfo(nextLevel, nextHp, nextAttack, nextMagic);
-  const ritualLevel = await getRitualLevel(playerId);
-  const upgradePacket = {
-    ritualLevel: ritualLevel, //<==이건 통합
-    player, //<==이 안에 현재 레벨
-    next,
-    upgradeCost: 100,
-    soul: leftSoul, //남은 영혼
-  };
-  const playerUpgradeResponse = createResponse('responseTown', 'S_Player_Upgrade', upgradePacket);
+  // 클라이언트에 작성된 데이터 반영
   socket.write(playerUpgradeResponse);
   socket.write(playerItemResponse);
   socket.write(enterTownResponse);

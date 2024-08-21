@@ -1,38 +1,71 @@
-import NextInfo from '../../../classes/models/nextInfo.class.js';
-import { getRitualLevel, updateLevel } from '../../../db/user/user.db.js';
-import { getUserBySocket } from '../../../session/user.session.js';
+import {
+  updateSoul, updateLevel, getRitualLevel, getCoinByPlayerId, getSoulByUUID
+} from '../../../db/user/user.db.js';
+import { getUserBySocket, getClassStats } from '../../../session/user.session.js';
 import { createResponse } from '../../../utils/response/createResponse.js';
+import { getMonstersRedis, getUserStatsRedis } from '../../../db/game/redis.assets.js';
+import { createDungeonSession, getNextStage } from '../../../session/dungeon.session.js';
+import { getTownSession } from './../../../session/town.session.js';
+import { enterNextStage } from './enterHandler.js';
+import { v4 as uuidv4 } from 'uuid';
 
 export const characterUpgradeHandler = async ({ socket, payload }) => {
   console.log('TestCode #47::', payload);
 
+  // 업그레이드 전 데이터 준비
   const user = getUserBySocket(socket);
   const currentStatInfo = user.getStatInfo();
   const uuid = user.getUUID();
-  const level = currentStatInfo.upgradeLevel();
-  //스탯도 여기서 올려야함 level
-  await updateLevel(level, uuid);
-  //upgrade 발생! user에 레벨에 맞는 스탯 부여
-  let nextLevel = currentStatInfo.getLevel() + 1;
-  let nextHp = currentStatInfo.getHp() + 200 * nextLevel;
-  let nextAttack = currentStatInfo.getAttack() + 50 * nextLevel;
-  let nextMagic = currentStatInfo.getMagic() + 70 * nextLevel;
-
   const playerId = user.getPlayerId();
+  const tower = user.getTower();    // 업데이트 대상 타워
+  const cost = tower.getUpgradeCost();    // 강화 비용
+  const statList = await getUserStatsRedis();
+  const userClass = user.getUserClass();
+  const initStat = getClassStats(userClass, statList);
+  
+  // 영혼 지불 & 업그레이드 적용 (스텟 변경) 후 DB 업데이트 (soul, level)
+  console.log('before offering:', user.getSoul());
+  const leftSoul = user.offeringSoul(cost);
+  console.log('leftSoul:', leftSoul, 'getSoul:', user.getSoul());
+  const level = currentStatInfo.upgradeLevel();
+  await updateSoul(leftSoul, uuid);
+  await updateLevel(level, uuid);
 
-  const soul = user.getSoul();
-  const ritualLevel = await getRitualLevel(playerId);
-  const player = user.buildPlayerInfo(); //next 레벨 데이터 후추
+  // upgradePacket 패킷 payload 준비
+  const totalLevel = await getRitualLevel(playerId);
+  const playerInfo = await user.buildPlayerInfo();
+  const nextCost = initStat.upgradeCost * level;
+  await tower.updateTower(totalLevel, playerInfo, nextCost, leftSoul);
+  console.log('soul after updateTower:', tower.getSoul());
 
-  const next = new NextInfo(nextLevel, nextHp, nextAttack, nextMagic);
+  const upgradePacket = await tower.makeUpgradePacket();
+  const { ritualLevel, player, next, upgradeCost, soul } = upgradePacket;
+  console.log('soul from UpgradePacket:', soul);
+  const playerUpgradeResponse = createResponse('responseTown', 'S_Player_Upgrade', { ritualLevel, player, next, upgradeCost, soul, });
 
-  const upgradePacket = {
-    ritualLevel: ritualLevel, //<==이건 통합
-    player,
-    next,
-    upgradeCost: 100,
-    soul: soul, //남은 영혼
-  };
-  const playerUpgradeResponse = createResponse('responseTown', 'S_Player_Upgrade', upgradePacket);
+  // 클라이언트 마을에서 표시되는 자원 업데이트
+  const userSoul = await getSoulByUUID(uuid);
+  const userCoin = await getCoinByPlayerId(playerId);
+  const playerItemResponse = createResponse('responseItem', 'S_Player_Item', { soul: userSoul, coin: userCoin });
+
+  // 타워에 표시될 수치 & 마을에서 보이는 자원 수치 반영
   socket.write(playerUpgradeResponse);
+  socket.write(playerItemResponse);
+};
+
+export const finalBossHandler = async ({ socket, payload }) => {
+  const { dungeonCode } = payload;
+  const monsterData = await getMonstersRedis();
+  const user = getUserBySocket(socket);
+
+  const dungeonId = uuidv4(); // 던전 임시 id
+  createDungeonSession(dungeonId, user, dungeonCode, monsterData); // 던전 세션 생성
+
+  const townSession = getTownSession(); // 마을세션 로드
+  townSession.addLeaveUsers(socket); // 마을에서 제거
+
+  // 참가된 던전의 스테이지 추출
+  const stage = getNextStage(socket);
+  // 스테이지 진입
+  enterNextStage(socket, stage);
 };

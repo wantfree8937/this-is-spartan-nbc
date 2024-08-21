@@ -1,4 +1,4 @@
-import { townSessions, userSessions } from './sessions.js';
+import { townSessions } from './sessions.js';
 import Town from './../classes/models/Town.class.js';
 
 export const initializeTownSession = () => {

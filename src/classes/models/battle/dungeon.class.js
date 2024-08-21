@@ -7,18 +7,17 @@ import { BattleLog, Btn } from './battleLog.class.js';
 
 class Dungeon {
   // 던전 생성시 맵은 고정됨
-  constructor(id, user, dungeonCode, monsters) {
+  constructor(id, user, dungeonCode, monsterAssets) {
     this.id = id;
     this.user = user;
     this.player = new Player(user);
     this.mapCode; // 맵 구별 값
-    this.dungeonCode = dungeonCode; // 던전 구분 (1 ~ 4)
+    this.dungeonCode = dungeonCode; // 던전 구분 (1 ~ 5)
     this.stages = []; // 스테이지 목록
     this.proceed = 0; // 던전 진행도 (인덱스 값: 0 ~ lastStage-1)
-    this.lastStage = [4, 5, 6, 7]; // 스테이지 별 길이 차이 - 후위 던전일수록 길이 증가
+    this.lastStage = [4, 5, 6, 7, 1]; // 스테이지 별 길이 차이 - 후위 던전일수록 길이 증가
 
-    this.loadedAssets = getGameAssets(); // 데이터 준비
-    this.monsters = monsters;
+    this.monsterAssets = monsterAssets;
   }
 
   // 던전 초기화 (맵, 스테이지길이)
@@ -31,8 +30,13 @@ class Dungeon {
     // 최대 몬스터수 지정 (1~3)
     let maxNumber;
     if (this.proceed + 1 == this.lastStage) {
-      maxNumber = 1;
-    } // 마지막 스테이지는 보스 몬스터 (1개체 / 변경가능)
+      if (this.dungeonCode % 2 == 1) {
+        maxNumber = 1;
+      } // 던전 1,3,5 보스몹 수 : 1
+      else {
+        maxNumber = 2;
+      } // 던전 2,4 보스몹 수 : 2
+    } // 마지막 스테이지는 보스 몬스터 (1or2 개체 / 변경가능)
     else {
       maxNumber = Math.floor(Math.random() * 3) + 1;
     }
@@ -42,8 +46,8 @@ class Dungeon {
 
     let monsters = []; // 해당 스테이지 몬스터목록
     for (let j = 0; j < maxNumber; j++) {
-      // 스테이지당 1~3 마리의 몬스터 생성
-      const monsterDatas = this.monsters; // 몬스터스텟 정보
+      // 스테이지당 최대 3마리의 몬스터 생성 (보스방 제외)
+      const monsterDatas = this.monsterAssets; // 몬스터스텟 정보
 
       // 몬스터 생성
       let monsterIdx = -1;
@@ -52,16 +56,22 @@ class Dungeon {
         if (this.dungeonCode <= 2) {
           monsterIdx = Math.floor(Math.random() * 6) + 16;
         } // 1,2 던전은 초급보스 지정 | (16~21)
-        else if (this.dungeonCode >= 3) {
+        else if (3 <= this.dungeonCode && this.dungeonCode < 5) {
           monsterIdx = Math.floor(Math.random() * 6) + 22;
         } // 3,4 던전은 고급보스 지정 | (22~27)
+        else if (this.dungeonCode == 5) {
+          monsterIdx = 28;
+        } // 최종던전은 최종보스 지정 | 28
 
         if (this.dungeonCode <= 2) {
           monsterModel = 2000 + monsterIdx;
         } // 1,2 던전은 초급보스 이미지 | (2016~2021)
-        else if (this.dungeonCode >= 3) {
+        else if (3 <= this.dungeonCode && this.dungeonCode < 5) {
           monsterModel = 2000 + monsterIdx;
         } // 3,4 던전은 고급보스 이미지 | (2022~2027)
+        else if (this.dungeonCode == 5) {
+          monsterModel = 2029;
+        } // 최종던전은 최종보스 이미지 | 2029
       } else {
         if (this.dungeonCode <= 2) {
           monsterIdx = Math.floor(Math.random() * 8);
@@ -135,7 +145,7 @@ class Dungeon {
         if (l == 0) {
           // 일반공격 버튼생성
           if (!monsters[k]) {
-            newBtn = new Btn(`[X]`, false);
+            newBtn = new Btn(`[-]`, false);
           } else {
             newBtn = new Btn(`[공격] ${monsters[k].getName()}`, true);
           }
@@ -148,7 +158,7 @@ class Dungeon {
         } else if (l == 1) {
           // 특수공격 버튼생성
           if (!monsters[k]) {
-            newBtn = new Btn(`[X]`, false);
+            newBtn = new Btn(`[-]`, false);
           } else {
             newBtn = new Btn(`[특수] ${monsters[k].getName()}`, true);
           }
@@ -174,13 +184,6 @@ class Dungeon {
 
     const tempLog = { msg, typingAnimation, btns };
     const battleLog = new BattleLog(tempLog);
-
-    // (전투) 스테이지 생성 (현재로써는 전투방만이 구현 되어있음)
-    if (this.proceed + 1 == this.lastStage) {
-      // 마지막 방 (보스방) 일 경우 - 현재 구현중 임
-      const bossStatMaker = 2; // 보스몬스터에게 줄 보정 수치 (기본: x3) 정확한 수치는 미정
-      dungeonInfo.monsters[0].setBossStat(bossStatMaker);
-    }
 
     // 스테이지 생성 (count는 0부터 1씩 증가한다.)
     let stageId = this.proceed + 1; // 스테이지 id 설정용 변수. 0은 포로토버프가 null로 인식하므로 1부터 1씩 증가한다.

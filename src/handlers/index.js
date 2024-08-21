@@ -9,9 +9,9 @@ import {
   townSelectHandler,
 } from './game/town/enterHandler.js';
 import { avatarMoveHandler, avatarAnimationHandler } from './game/town/avatarHandler.js';
+import { characterUpgradeHandler, finalBossHandler } from './game/town/towerHandler.js';
 import chatHandler from './game/chatHandler.js';
 import { screenDoneHandler, selectCheckHandler } from './game/battle/battleHandler.js';
-import { characterUpgradeHandler } from './game/town/towerHandler.js';
 
 const handlers = {
   [HANDLER_IDS.C_ENTER]: {
@@ -49,6 +49,10 @@ const handlers = {
   [HANDLER_IDS.C_PLAYER_UPGRADE]: {
     handler: characterUpgradeHandler,
     protoType: 'town.C_Player_Upgrade',
+  },
+  [HANDLER_IDS.C_ENTER_FINAL]: {
+    handler: finalBossHandler,
+    protoType: 'town.C_Enter_Final',
   },
   [HANDLER_IDS.C_TOWN_SELECT]: {
     handler: townSelectHandler,

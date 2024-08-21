@@ -27,24 +27,27 @@ class Stat {
     return this.magic;
   }
 
+  setLevel(level) {
+    this.level = level;
+    this.setStatByLevel();
+  }
+  setStatByLevel() {
+    this.maxHp += (200 * (this.level -1));
+    this.hp = this.maxHp;
+    this.atk += (50 * (this.level -1));
+    this.magic += (70 * (this.level -1));
+  }
+
   upgradeLevel() {
     this.level += 1;
+    this.maxHp += 200;
+    this.hp = this.maxHp;
+    this.atk += 50;
+    this.magic += 70;
+
     return this.level;
   }
 
-  makeStatForPayload() {
-    return {
-      level: this.level,
-      hp: this.hp,
-      maxHp: this.maxHp,
-      mp: this.mp,
-      maxMp: this.maxMp,
-      atk: this.atk,
-      def: this.def,
-      magic: this.magic,
-      speed: this.speed,
-    };
-  }
 }
 
 export default Stat;

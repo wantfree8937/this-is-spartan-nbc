@@ -31,7 +31,7 @@ export const selectCheckHandler = async ({ socket, payload }) => {
   // 전투 상황처리를 위해 필요한 데이터들
   // 필요한 것1 : 현재 플레이중인 던전과 현재 진행중인 스테이지 정보
   // 필요한 것2 : 현재 스테이지의 플레이어와 몬스터들 정보
-  // **던전 객체 하나면 가져오면 나머지 메서드들은 각 클래스(객체)에 들어있음**
+  // **던전 객체 하나면 가져오면 나머지 데이터들은 하위 클래스(객체)에 들어있음**
 
   // 1. 던전세션 목록에서 본인이 플레이중인 던전 선택 | 결과: Dungeon 객체
   const dungeonNow = getDungeonBySocket(socket);
@@ -46,6 +46,7 @@ export const selectCheckHandler = async ({ socket, payload }) => {
   const playerStats = dungeonNow.getUser().getStatInfo();
   // 몬스터 스텟 정보
   const monsterStats = await getMonstersRedis();
+  await sleep(50);
   // 배틀로그 정보
   const battleLog = stageNow.getBattleLog();
   // 킬 카운트 (승리 판정)
@@ -57,15 +58,19 @@ export const selectCheckHandler = async ({ socket, payload }) => {
     const playerId = dungeonNow.getUser().getPlayerId();
     const soul = dungeonNow.getUser().getSoul();
     const coin = dungeonNow.getUser().getCoin();
+
+    // soul과 coin 획득 반영(저장)
     await updateSoul(soul, characterUUID);
     await updateCoin(coin, playerId);
     const chunsikCoin = await getCoinByPlayerId(playerId);
     const chunsikSoul = await getSoulByUUID(characterUUID);
     console.log('춘식이DB 코인, 소울', chunsikCoin, chunsikSoul);
+
     if (responseCode == 1) {
       endSesssionById(dungeonNow.getId()); // 던전세션 종료(삭제)
       const leaveDungeon = createResponse('responseBattle', 'S_Leave_Dungeon', null);
       socket.write(leaveDungeon); // 던전 나가기
+      return;
     } else if (responseCode == 2) {
       const nextStage = dungeonNow.getNextStage(); // 다음스테이지 로드
       enterNextStage(socket, nextStage); // 다음스테이지 진입
@@ -73,8 +78,7 @@ export const selectCheckHandler = async ({ socket, payload }) => {
     }
   } else {
     // 진행순서 : 플레이어 공격모션 -> 몬스터 HP감소 처리 -> 몬스터 공격모션 -> 플레이어 HP감소
-    // 특수공격(MP 사용) 기능 구현예정
-    console.log(`${responseCode + 1}번 버튼을 선택함.`); // 플레이어가 선택한 버튼 로그
+    // console.log(`${responseCode + 1}번 버튼을 선택함.`); // 플레이어가 선택한 버튼 로그
 
     // 모든 이벤트 처리전까지 버튼 비활성화
     battleLog.disableBtns();
@@ -111,9 +115,8 @@ export const selectCheckHandler = async ({ socket, payload }) => {
       battleLog.addBtn('!! 에러 !!', false);
       updateBatteLog = createResponse('responseBattle', 'S_Battle_Log', { battleLog });
       socket.write(updateBatteLog);
-      await sleep(200);
-
-      return;
+      
+      await sleep(200); return;
     }
 
     if (special < 0) {
@@ -122,11 +125,12 @@ export const selectCheckHandler = async ({ socket, payload }) => {
 
       let msg = `데이터 오류 발생! 클라이언트 재시작 필요.`;
       battleLog.changeMsg(msg);
+      battleLog.deleteBtns();
+      battleLog.addBtn('!! 에러 !!', false);
       updateBatteLog = createResponse('responseBattle', 'S_Battle_Log', { battleLog });
       socket.write(updateBatteLog);
-      await sleep(200);
-
-      return;
+      
+      await sleep(200); return;
     }
 
     // 공격대상 지정처리 (4~6은 -3 하고 처리함 ) | 결과: (1~3)
@@ -151,7 +155,7 @@ export const selectCheckHandler = async ({ socket, payload }) => {
     // 몬스터 HP 체력감소 연산처리
     const monsterDataIdx = monstersNow[targetMonsterIdx].getIdx();
     const monsterDef = monsterStats[monsterDataIdx].monsterDefense;
-    let resultDamage = playerStats.atk + special - monsterDef; // special = 일반 공격시 0, 특수 공격시 magic 값
+    let resultDamage = playerStats.atk + special - monsterDef;    // special = 일반 공격시 0, 특수 공격시 magic 값
     if (resultDamage < 0) {
       resultDamage = 0;
     }
@@ -172,7 +176,7 @@ export const selectCheckHandler = async ({ socket, payload }) => {
       const rewardSoul = monstersNow[attackTarget].getSoul();
       dungeonNow.getUser().addSoul(rewardSoul).addCoin(rewardCoin);
       const actionMonsterIdx = attackTarget;
-      const actionSet = new ActionSet(4, null); // animCode(death: 4), effectCode:none
+      const actionSet = new ActionSet(4, null);   // animCode(death: 4), effectCode:none
       const monsterAnimaion = createResponse('responseBattle', 'S_Monster_Action', {
         actionMonsterIdx,
         actionSet,
@@ -210,8 +214,8 @@ export const selectCheckHandler = async ({ socket, payload }) => {
       } else {
         // 살아있을시 공격
         // 몬스터 행동처리 및 반영
-        const actionMonsterIdx = i; // 0 에서 최대 2
-        const actionSet = new ActionSet(0, 3004); // animCode(attack: 0), effectCode
+        const actionMonsterIdx = i;   // 0 에서 최대 2
+        const actionSet = new ActionSet(0, 3004);   // animCode(attack: 0), effectCode
 
         const monsterAnimaion = createResponse('responseBattle', 'S_Monster_Action', {
           actionMonsterIdx,

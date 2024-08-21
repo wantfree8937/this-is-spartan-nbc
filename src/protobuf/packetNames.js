@@ -7,6 +7,7 @@ export const packetNames = {
     C_Animation: 'town.C_Animation',
     C_Enter_Dungeon: 'town.C_EnterDungeon',
     C_Player_Upgrade: 'town.C_PlayerUpgrade',
+    C_Enter_Final: 'town.C_EnterFinal',
     C_Town_Select: 'town.C_TownSelect',
   },
   battle: {

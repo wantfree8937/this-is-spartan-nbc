@@ -53,6 +53,7 @@ message S_PlayerUpgrade{
   NextInfo next = 2;
   int32 ritualLevel = 3;
   int32 upgradeCost= 4;
+  int32 soul = 5;
 }
 
 message S_UnlockCharacter{
