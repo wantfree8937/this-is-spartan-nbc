@@ -7,11 +7,18 @@ import { ErrorCodes } from '../error/errorCodes.js';
 
 export const createResponse = (packageType, packetId, data = null) => {
   const protoMessages = getProtoMessages();
-  if(packetId == 'S_Player_Upgrade') { console.log('S_Player_Upgrade data:', data); }
+  if (packetId == 'S_Player_Upgrade') {
+    console.log('S_Player_Upgrade data:', data);
+  }
+
+  console.log(packageType);
+  console.log(packetId);
 
   const Response = protoMessages[packageType][packetId];
   const buffer = Response.encode(data).finish();
-  if(packetId == 'S_Player_Upgrade') { console.log('S_Player_Upgrade buffer:', buffer); }
+  if (packetId == 'S_Player_Upgrade') {
+    console.log('S_Player_Upgrade buffer:', buffer);
+  }
 
   const packetLength = Buffer.alloc(config.packet.totalLength);
   packetLength.writeUInt32BE(

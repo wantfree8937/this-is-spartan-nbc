@@ -7,6 +7,7 @@ import {
   loginHandler,
   unlockCharacterHandler,
   townSelectHandler,
+  connectHandler,
 } from './game/town/enterHandler.js';
 import { avatarMoveHandler, avatarAnimationHandler } from './game/town/avatarHandler.js';
 import { characterUpgradeHandler, finalBossHandler } from './game/town/towerHandler.js';
@@ -58,6 +59,11 @@ const handlers = {
     handler: townSelectHandler,
     protoType: 'town.C_Town_Select',
   },
+  [HANDLER_IDS.C_CONNECT]: {
+    handler: connectHandler,
+    protoType: 'town.C_Connect',
+  },
+
   // 다른 핸들러들을 추가
 };
 

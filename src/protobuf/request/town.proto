@@ -2,8 +2,9 @@ syntax = "proto3";
 
 package town;
 
-message C_Login {
+message C_Login{
   string nickname = 1;
+  string password = 2;
 }
 
 message C_UnlockCharacter{ 
@@ -48,4 +49,11 @@ message C_EnterFinal {
 }
 
 message C_TownSelect {
+}
+
+message C_Connect {}
+
+message C_Register{
+  string nickname = 1;
+  string password = 2;
 }

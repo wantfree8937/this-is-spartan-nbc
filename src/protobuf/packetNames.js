@@ -9,12 +9,14 @@ export const packetNames = {
     C_Player_Upgrade: 'town.C_PlayerUpgrade',
     C_Enter_Final: 'town.C_EnterFinal',
     C_Town_Select: 'town.C_TownSelect',
+    C_Connect: 'town.C_Connect',
+    C_Register: 'town.C_Register',
   },
   battle: {
     C_Player_Response: 'battle.C_PlayerResponse',
   },
   responseTown: {
-    S_Select_Character: 'responseTown.S_SelectCharacter',
+    S_Login: 'responseTown.S_Login',
     S_Enter: 'responseTown.S_Enter',
     S_Spawn: 'responseTown.S_Spawn',
     S_Move: 'responseTown.S_Move',
@@ -23,6 +25,8 @@ export const packetNames = {
     S_Enter_Dungeon: 'responseTown.S_EnterDungeon',
     S_Player_Upgrade: 'responseTown.S_PlayerUpgrade',
     S_Unlock_Character: 'responseTown.S_UnlockCharacter',
+    S_Connect: 'responseTown.S_Connect',
+    S_Register: 'responseTown.S_Register',
   },
   responseBattle: {
     S_Leave_Dungeon: 'responseBattle.S_LeaveDungeon',
