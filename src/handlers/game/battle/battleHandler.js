@@ -188,10 +188,18 @@ export const selectCheckHandler = async ({ socket, payload }) => {
       monstersNow[attackTarget].setHpZero();
       const rewardCoin = monstersNow[attackTarget].getCoin();
       const rewardSoul = monstersNow[attackTarget].getSoul();
+      const targetIDX = monstersNow[attackTarget].getIdx();
+      //보스인지 확인하고 죽는 소리 추가
+      if (targetIDX === 28) {
+        socket.write(buildPlaySoundPacket('boss_Die'));
+      } else {
+        socket.write(buildPlaySoundPacket('monster_Die'));
+      }
       userNow.addSoul(rewardSoul);
       userNow.addCoin(rewardCoin);
       const actionMonsterIdx = attackTarget;
       const actionSet = new ActionSet(4, null); // animCode(death: 4), effectCode:none
+
       const monsterAnimation = createResponse('responseBattle', 'S_Monster_Action', {
         actionMonsterIdx,
         actionSet,

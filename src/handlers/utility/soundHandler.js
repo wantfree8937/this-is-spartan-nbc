@@ -3,7 +3,7 @@ import { createResponse } from '../../utils/response/createResponse.js';
 export const buildPlaySoundPacket = (soundName) => {
   const playSoundResponse = createResponse('responseSound', 'S_Play_Sound', {
     soundName: `${soundName}`,
-    volume: 0.5,
+    volume: 0.3,
   });
   return playSoundResponse;
 };
