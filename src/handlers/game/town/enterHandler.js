@@ -60,36 +60,50 @@ const loginHandler = async ({ socket, payload }) => {
   account = await getUserByNicknameDB(nickname);
   if (!account) {
     console.log('존재하지 않는 계정입니다.');
+    isSuccess = false;
+    const loginResponse = createResponse('responseTown', 'S_Login', {
+      isUnlocked: [false, false, false, false, false, false, false, false, false],
+      coin: 0,
+      success: isSuccess,
+    });
+    socket.write(loginResponse);
   } else {
     if (account.password !== password) {
       console.log('비밀번호가 일치하지 않습니다.');
       isSuccess = false;
+      const loginResponse = createResponse('responseTown', 'S_Login', {
+        isUnlocked: [false, false, false, false, false, false, false, false, false],
+        coin: 0,
+        success: isSuccess,
+      });
+      socket.write(loginResponse);
     } else {
       //계정 존재 + 비밀번호 일치
       playerId = account.playerId;
       unlocked = await getUserUnlockByPlayerId(playerId);
       isSuccess = true;
+
+      unlockedArray = [
+        unlocked[0].cerbe,
+        unlocked[0].uni,
+        unlocked[0].nix,
+        unlocked[0].chad,
+        unlocked[0].miho,
+        unlocked[0].levi,
+        unlocked[0].wyv,
+        unlocked[0].drago,
+        unlocked[0].kiri,
+      ];
+      //혹시 52번 브랜치, 1번던전, 2번던전 보스방 따로?
+      playerId = account.playerId;
+      const loginResponse = createResponse('responseTown', 'S_Login', {
+        isUnlocked: unlockedArray,
+        coin: account.coin,
+        success: isSuccess,
+      });
+      socket.write(loginResponse);
     }
   }
-  unlockedArray = [
-    unlocked[0].cerbe,
-    unlocked[0].uni,
-    unlocked[0].nix,
-    unlocked[0].chad,
-    unlocked[0].miho,
-    unlocked[0].levi,
-    unlocked[0].wyv,
-    unlocked[0].drago,
-    unlocked[0].kiri,
-  ];
-  //혹시 52번 브랜치, 1번던전, 2번던전 보스방 따로?
-  playerId = account.playerId;
-  const loginResponse = createResponse('responseTown', 'S_Login', {
-    isUnlocked: unlockedArray,
-    coin: account.coin,
-    success: isSuccess,
-  });
-  socket.write(loginResponse);
 };
 
 //캐릭터 해금 시, 핸들러
