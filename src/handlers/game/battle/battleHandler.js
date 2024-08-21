@@ -48,6 +48,8 @@ export const selectCheckHandler = async ({ socket, payload }) => {
   const monstersNow = stageNow.getMonsters();
   // 5. 현재 던전의 유저 정보 | 결과: User 객체
   const userNow = dungeonNow.getUser();
+  //특수 공격 소리가 애니메이션과 함께 실행하도록 도와주는 변수
+  let isSpecialAttack = false;
 
   // 플레이어 스텟 정보
   const playerStats = dungeonNow.getUser().getStatInfo();
@@ -69,9 +71,6 @@ export const selectCheckHandler = async ({ socket, payload }) => {
     // soul과 coin 획득 반영(저장)
     await updateSoul(soul, characterUUID);
     await updateCoin(coin, playerId);
-    const chunsikCoin = await getCoinByPlayerId(playerId);
-    const chunsikSoul = await getSoulByUUID(characterUUID);
-    console.log('춘식이DB 코인, 소울', chunsikCoin, chunsikSoul);
 
     if (responseCode == 1) {
       endSesssionById(dungeonNow.getId()); // 던전세션 종료(삭제)
@@ -104,6 +103,7 @@ export const selectCheckHandler = async ({ socket, payload }) => {
     // 특수공격(4~6) 선택시
     else if (3 < responseCode && responseCode <= 6) {
       // 플레이어 특수공격 처리 및 반영
+      isSpecialAttack = true;
       actionSet = new ActionSet(0, 3018); // animCode(attack: 0), effectCode
       special = playerStats.magic; // 추가 데미지 : 플레이어의 마법수치
 
@@ -175,6 +175,10 @@ export const selectCheckHandler = async ({ socket, payload }) => {
       targetMonsterIdx,
       actionSet,
     });
+    if (isSpecialAttack) {
+      socket.write(buildPlaySoundPacket('attackSpecial'));
+      isSpecialAttack = false;
+    }
     socket.write(buildPlayerAttackPacket(userNow.getUserClass()));
     socket.write(playerAnimation);
     await sleep(600);
