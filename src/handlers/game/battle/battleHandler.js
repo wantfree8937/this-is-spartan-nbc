@@ -9,6 +9,11 @@ import {
   updateCoin,
   updateSoul,
 } from '../../../db/user/user.db.js';
+import {
+  buildMonsterAttackSoundPacket,
+  buildPlayerAttackPacket,
+  buildPlaySoundPacket,
+} from '../../utility/soundHandler.js';
 
 export const screenDoneHandler = ({ socket, payload }) => {
   const screenDoneResponse = createResponse('responseBattle', 'S_Screen_Done');
@@ -118,7 +123,8 @@ export const selectCheckHandler = async ({ socket, payload }) => {
       updateBatteLog = createResponse('responseBattle', 'S_Battle_Log', { battleLog });
       socket.write(updateBatteLog);
 
-      await sleep(200); return;
+      await sleep(200);
+      return;
     }
 
     if (special < 0) {
@@ -132,7 +138,8 @@ export const selectCheckHandler = async ({ socket, payload }) => {
       updateBatteLog = createResponse('responseBattle', 'S_Battle_Log', { battleLog });
       socket.write(updateBatteLog);
 
-      await sleep(200); return;
+      await sleep(200);
+      return;
     }
 
     // 공격대상 지정처리 (4~6은 -3 하고 처리함 ) | 결과: (1~3)
@@ -157,18 +164,19 @@ export const selectCheckHandler = async ({ socket, payload }) => {
     // 몬스터 HP 체력감소 연산처리
     const monsterDataIdx = monstersNow[targetMonsterIdx].getIdx();
     const monsterDef = monsterStats[monsterDataIdx].monsterDefense;
-    let resultDamage = playerStats.atk + special - monsterDef;    // special = 일반 공격시 0, 특수 공격시 magic 값
+    let resultDamage = playerStats.atk + special - monsterDef; // special = 일반 공격시 0, 특수 공격시 magic 값
     if (resultDamage < 0) {
       resultDamage = 0;
     }
     monstersNow[attackTarget].damageMonsterHp(resultDamage);
 
     // 플레이어 행동 반영
-    const playerAnimaion = createResponse('responseBattle', 'S_Player_Action', {
+    const playerAnimation = createResponse('responseBattle', 'S_Player_Action', {
       targetMonsterIdx,
       actionSet,
     });
-    socket.write(playerAnimaion);
+    socket.write(buildPlayerAttackPacket(userNow.getUserClass()));
+    socket.write(playerAnimation);
     await sleep(600);
 
     // 몬스터 사망시 이벤트처리
@@ -179,12 +187,12 @@ export const selectCheckHandler = async ({ socket, payload }) => {
       userNow.addSoul(rewardSoul);
       userNow.addCoin(rewardCoin);
       const actionMonsterIdx = attackTarget;
-      const actionSet = new ActionSet(4, null);   // animCode(death: 4), effectCode:none
-      const monsterAnimaion = createResponse('responseBattle', 'S_Monster_Action', {
+      const actionSet = new ActionSet(4, null); // animCode(death: 4), effectCode:none
+      const monsterAnimation = createResponse('responseBattle', 'S_Monster_Action', {
         actionMonsterIdx,
         actionSet,
       });
-      socket.write(monsterAnimaion);
+      socket.write(monsterAnimation);
       await sleep(600);
     }
     const monsterIdx = targetMonsterIdx;
@@ -217,13 +225,18 @@ export const selectCheckHandler = async ({ socket, payload }) => {
       } else {
         // 살아있을시 공격
         // 몬스터 행동처리 및 반영
-        const actionMonsterIdx = i;   // 0 에서 최대 2
-        const actionSet = new ActionSet(0, 3004);   // animCode(attack: 0), effectCode
+        const actionMonsterIdx = i; // 0 에서 최대 2
+        const actionSet = new ActionSet(0, 3004); // animCode(attack: 0), effectCode
 
-        const monsterAnimaion = createResponse('responseBattle', 'S_Monster_Action', {
-          actionMonsterIdx, actionSet,
+        const monsterAttackSoundResponse = buildMonsterAttackSoundPacket(monstersNow[i].getIdx());
+
+        const monsterAnimation = createResponse('responseBattle', 'S_Monster_Action', {
+          actionMonsterIdx,
+          actionSet,
         });
-        socket.write(monsterAnimaion);
+
+        socket.write(monsterAttackSoundResponse);
+        socket.write(monsterAnimation);
         await sleep(600);
 
         // 플레이어 HP감소 처리 및 반영
@@ -256,17 +269,20 @@ export const selectCheckHandler = async ({ socket, payload }) => {
           stageNow.makeDone();
           const targetMonsterIdx = i;
           let actionSet = new ActionSet(1, null); // animCode(death: 1), effectCode:none
-          const playerAnimaion = createResponse('responseBattle', 'S_Player_Action', {
-            targetMonsterIdx, actionSet,
+          const playerAnimation = createResponse('responseBattle', 'S_Player_Action', {
+            targetMonsterIdx,
+            actionSet,
           });
-          socket.write(playerAnimaion);
-          
-          const actionMonsterIdx = i;   // 0 에서 최대 2
+          socket.write(buildPlaySoundPacket('gameOver'));
+          socket.write(playerAnimation);
+
+          const actionMonsterIdx = i; // 0 에서 최대 2
           actionSet = new ActionSet(3, null);
-          const monsterAnimaion = createResponse('responseBattle', 'S_Monster_Action', {
-            actionMonsterIdx, actionSet,
+          const monsterAnimation = createResponse('responseBattle', 'S_Monster_Action', {
+            actionMonsterIdx,
+            actionSet,
           });
-          socket.write(monsterAnimaion);
+          socket.write(monsterAnimation);
 
           const msg = '전투 패배...';
           battleLog.changeMsg(msg);

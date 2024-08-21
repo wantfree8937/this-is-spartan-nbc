@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+package responseSound;
+
+message S_PlaySound{
+    string soundName = 1;
+}

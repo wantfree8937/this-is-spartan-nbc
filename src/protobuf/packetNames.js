@@ -50,6 +50,9 @@ export const packetNames = {
   responseItem: {
     S_Player_Item: 'responseItem.S_PlayerItem',
   },
+  responseSound: {
+    S_Play_Sound: 'responseSound.S_PlaySound',
+  },
 
   gameNotification: {
     S_Despawn: 'gameNotification.S_Despawn',
