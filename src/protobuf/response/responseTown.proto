@@ -43,9 +43,10 @@ message S_EnterDungeon{
   BattleLog battleLog = 4;
 }
 
-message S_SelectCharacter{
-repeated bool isUnlocked = 1;
-int32 coin = 2;
+message S_Login{
+  repeated bool isUnlocked = 1;
+  int32 coin = 2;
+  bool success = 3;
 }
 
 message S_PlayerUpgrade{
@@ -59,4 +60,10 @@ message S_PlayerUpgrade{
 message S_UnlockCharacter{
   int32 idx = 1;
   int32 coin = 2;
+}
+
+message S_Connect {}
+
+message S_Register {
+  bool success = 1;
 }

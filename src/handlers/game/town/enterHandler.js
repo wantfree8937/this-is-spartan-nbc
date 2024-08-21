@@ -24,36 +24,72 @@ import { getMonstersRedis } from '../../../db/game/redis.assets.js';
 // import { getGameAssets } from './../../../init/assets.js';
 
 //접속 핸들러
+const connectHandler = async ({ socket, payload }) => {
+  const connectResponse = createResponse('responseTown', 'S_Connect', {});
+  socket.write(connectResponse);
+};
+
+const registerHandler = async ({ socket, payload }) => {
+  const { nickname, password } = payload;
+  let isSuccess;
+  let account;
+  //1. 회원가입 패킷
+  //2. 서버 existUser?
+  const existUser = await getUserByNicknameDB(nickname);
+  if (existUser) {
+    isSuccess = false;
+    console.log('이미 존재하는 계정입니다.');
+  } else {
+    account = registerUser(nickname, password);
+    const registerResponse = createResponse('responseTown', 'S_Register', {
+      success: true,
+    });
+    socket.write(registerResponse);
+  }
+};
+
+//접속 핸들러
 const loginHandler = async ({ socket, payload }) => {
-  const { nickname } = payload;
+  const { nickname, password } = payload;
   let account;
   let playerId;
+  let isSuccess;
+  let unlocked;
+  let unlockedArray;
 
-  const existUser = await getUserByNicknameDB(nickname);
-  if (!existUser) {
-    account = await registerUser(nickname);
+  account = await getUserByNicknameDB(nickname);
+  if (!account) {
+    console.log('존재하지 않는 계정입니다.');
   } else {
-    account = existUser;
+    if (account.password !== password) {
+      console.log('비밀번호가 일치하지 않습니다.');
+      isSuccess = false;
+    } else {
+      //계정 존재 + 비밀번호 일치
+      playerId = account.playerId;
+      unlocked = await getUserUnlockByPlayerId(playerId);
+      isSuccess = true;
+    }
   }
-  console.log(account);
-
+  unlockedArray = [
+    unlocked[0].cerbe,
+    unlocked[0].uni,
+    unlocked[0].nix,
+    unlocked[0].chad,
+    unlocked[0].miho,
+    unlocked[0].levi,
+    unlocked[0].wyv,
+    unlocked[0].drago,
+    unlocked[0].kiri,
+  ];
+  //혹시 52번 브랜치, 1번던전, 2번던전 보스방 따로?
   playerId = account.playerId;
-  const unlocked = await getUserUnlockByPlayerId(playerId);
-  const selectCharacterResponse = createResponse('responseTown', 'S_Select_Character', {
-    isUnlocked: [
-      unlocked[0].cerbe,
-      unlocked[0].uni,
-      unlocked[0].nix,
-      unlocked[0].chad,
-      unlocked[0].miho,
-      unlocked[0].levi,
-      unlocked[0].wyv,
-      unlocked[0].drago,
-      unlocked[0].kiri,
-    ],
+  const loginResponse = createResponse('responseTown', 'S_Login', {
+    isUnlocked: unlockedArray,
     coin: account.coin,
+    success: isSuccess,
   });
-  socket.write(selectCharacterResponse);
+  socket.write(loginResponse);
 };
 
 //캐릭터 해금 시, 핸들러
@@ -145,7 +181,17 @@ const enterTownHandler = async ({ socket, payload }) => {
 
   // uuid, level, soul 선언 후 정의가능
   const transform = new Transform();
-  const user = await addUser(uuid, playerId, nickname, userClass, level, leftSoul, coin, transform, socket);
+  const user = await addUser(
+    uuid,
+    playerId,
+    nickname,
+    userClass,
+    level,
+    leftSoul,
+    coin,
+    transform,
+    socket,
+  );
   const townUser = await addUserTown(user);
 
   // 클라이언트에 반영할 타워정보
@@ -249,6 +295,8 @@ export {
   enterDungeonHandler,
   enterNextStage,
   loginHandler,
+  registerHandler,
   unlockCharacterHandler,
   townSelectHandler,
+  connectHandler,
 };

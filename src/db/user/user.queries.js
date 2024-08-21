@@ -1,6 +1,6 @@
 export const SQL_QUERIES = {
   FIND_USER_BY_NICKNAME: 'SELECT * FROM user WHERE nickname = ?',
-  ADD_USER: 'INSERT INTO user (nickname) VALUES (?)',
+  ADD_USER: 'INSERT INTO user (nickname, password) VALUES (?, ?)',
   ADD_CHARACTER_CLASS:
     'INSERT INTO user_character (uuid, playerId, character_class) VALUES (?, ?, ?)',
   ADD_CHARACTER_UNLOCK: 'INSERT INTO user_unlock_characters (playerId) VALUES (?)',

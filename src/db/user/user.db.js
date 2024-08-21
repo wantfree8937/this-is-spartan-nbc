@@ -9,8 +9,8 @@ export const getUserByNicknameDB = async (nickname) => {
   return toCamelCase(rows[0]);
 };
 
-export const addUserDB = async (nickname) => {
-  await pools.USER_DB.query(SQL_QUERIES.ADD_USER, [nickname]);
+export const addUserDB = async (nickname, password) => {
+  await pools.USER_DB.query(SQL_QUERIES.ADD_USER, [nickname, password]);
 };
 
 export const addUserCharacterDB = async (uuid, playerId, userClass) => {
@@ -75,8 +75,8 @@ export const getCoinByPlayerId = async (playerId) => {
 
 //편의
 
-export const registerUser = async (nickname) => {
-  await addUserDB(nickname);
+export const registerUser = async (nickname, password) => {
+  await addUserDB(nickname, password);
   const account = await getUserByNicknameDB(nickname);
   await addUserUnlockDB(account.playerId);
   return account;
