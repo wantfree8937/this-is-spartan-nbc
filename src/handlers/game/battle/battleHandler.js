@@ -117,7 +117,7 @@ export const selectCheckHandler = async ({ socket, payload }) => {
       battleLog.addBtn('!! 에러 !!', false);
       updateBatteLog = createResponse('responseBattle', 'S_Battle_Log', { battleLog });
       socket.write(updateBatteLog);
-      
+
       await sleep(200); return;
     }
 
@@ -131,7 +131,7 @@ export const selectCheckHandler = async ({ socket, payload }) => {
       battleLog.addBtn('!! 에러 !!', false);
       updateBatteLog = createResponse('responseBattle', 'S_Battle_Log', { battleLog });
       socket.write(updateBatteLog);
-      
+
       await sleep(200); return;
     }
 
@@ -221,8 +221,7 @@ export const selectCheckHandler = async ({ socket, payload }) => {
         const actionSet = new ActionSet(0, 3004);   // animCode(attack: 0), effectCode
 
         const monsterAnimaion = createResponse('responseBattle', 'S_Monster_Action', {
-          actionMonsterIdx,
-          actionSet,
+          actionMonsterIdx, actionSet,
         });
         socket.write(monsterAnimaion);
         await sleep(600);
@@ -252,33 +251,37 @@ export const selectCheckHandler = async ({ socket, payload }) => {
         socket.write(updateBatteLog);
         await sleep(1000);
 
-        // 플레이어 HP가 0 이하일 경우 전투종료
-        if (playerNow.getHpNow() <= 0) break;
+        // 플레이어 사망시 이벤트처리
+        if (playerNow.getHpNow() <= 0) {
+          stageNow.makeDone();
+          const targetMonsterIdx = i;
+          let actionSet = new ActionSet(1, null); // animCode(death: 1), effectCode:none
+          const playerAnimaion = createResponse('responseBattle', 'S_Player_Action', {
+            targetMonsterIdx, actionSet,
+          });
+          socket.write(playerAnimaion);
+          
+          const actionMonsterIdx = i;   // 0 에서 최대 2
+          actionSet = new ActionSet(3, null);
+          const monsterAnimaion = createResponse('responseBattle', 'S_Monster_Action', {
+            actionMonsterIdx, actionSet,
+          });
+          socket.write(monsterAnimaion);
+
+          const msg = '전투 패배...';
+          battleLog.changeMsg(msg);
+          battleLog.deleteBtns();
+          battleLog.addBtn('던전 나가기', true);
+          const loseBatteLog = createResponse('responseBattle', 'S_Battle_Log', { battleLog });
+          socket.write(loseBatteLog);
+          await sleep(200);
+          return;
+        }
       }
     }
 
-    // 플레이어 사망시 이벤트처리
-    if (playerNow.getHpNow() <= 0) {
-      stageNow.makeDone();
-      const targetMonsterIdx = 0;
-      const actionSet = new ActionSet(1, null); // animCode(death: 1), effectCode:none
-      const playerAnimaion = createResponse('responseBattle', 'S_Player_Action', {
-        targetMonsterIdx, actionSet,
-      });
-      socket.write(playerAnimaion);
-      await sleep(600);
-
-      const msg = '전투 패배...';
-      battleLog.changeMsg(msg);
-      battleLog.deleteBtns();
-      battleLog.addBtn('던전 나가기', true);
-      const loseBatteLog = createResponse('responseBattle', 'S_Battle_Log', { battleLog });
-      socket.write(loseBatteLog);
-      await sleep(200);
-      return;
-    }
     // 전투 승리시 이벤트처리
-    else if (killCount == monstersNow.length) {
+    if (killCount == monstersNow.length) {
       stageNow.makeDone();
       const msg = '전투 승리!';
       battleLog.changeMsg(msg);
