@@ -349,7 +349,7 @@ export const selectCheckHandler = async ({ socket, payload }) => {
       battleLog.changeMsg(msg);
       updateBatteLog = createResponse('responseBattle', 'S_Battle_Log', { battleLog });
       socket.write(updateBatteLog);
-      await sleep(200);
+      await sleep(100);
       return;
     }
   }

@@ -93,3 +93,8 @@ export const getRitualLevel = async (playerId) => {
   const ritualLevel = levelArray.reduce((sum, item) => sum + item.level, 0) - levelArray.length;
   return ritualLevel;
 };
+
+// 최종보스 클리어시 클리어여부 갱신
+export const setFinalCheck = async (uuid) => {
+  await pools.USER_DB.query(SQL_QUERIES.UPDATE_FINAL_CHECK, [true, uuid]);
+}

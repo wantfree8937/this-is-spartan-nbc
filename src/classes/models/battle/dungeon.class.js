@@ -73,10 +73,10 @@ class Dungeon {
 
         if (this.dungeonCode <= 2) {
           monsterModel = 2001 + monsterIdx;
-        } // 1,2 던전은 초급보스 이미지 | (2016~2021)
+        } // 1,2 던전은 초급보스 이미지 | (2017~2022)
         else if (3 <= this.dungeonCode && this.dungeonCode < 5) {
           monsterModel = 2001 + monsterIdx;
-        } // 3,4 던전은 고급보스 이미지 | (2022~2027)
+        } // 3,4 던전은 고급보스 이미지 | (2023~2028)
         else if (this.dungeonCode == 5) {
           monsterModel = 2029;
         } // 최종던전은 최종보스 이미지 | 2029

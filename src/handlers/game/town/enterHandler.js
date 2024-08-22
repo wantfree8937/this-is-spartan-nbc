@@ -325,6 +325,14 @@ const enterNextStage = (socket, nextStage) => {
   }
 };
 
+// 최종보스 클리어시 클리어여부 갱신 (false -> true)
+const finalCheckHandler = async (socket, payload) => {
+  const user = getUserBySocket(socket);
+  const targetUUID = user.getUUID();
+  
+  await setFinalCheck(targetUUID);
+}
+
 export {
   enterTownHandler,
   enterDungeonHandler,
@@ -334,4 +342,5 @@ export {
   unlockCharacterHandler,
   townSelectHandler,
   connectHandler,
+  finalCheckHandler,
 };

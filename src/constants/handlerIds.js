@@ -17,4 +17,5 @@ export const HANDLER_IDS = {
   C_TOWN_SELECT: 35,
   C_CONNECT: 37,
   C_REGISTER: 39,
+  C_FINAL_CHECK: 42,
 };
