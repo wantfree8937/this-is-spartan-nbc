@@ -8,7 +8,11 @@ import {
 import { addUser, getUserBySocket, removeUser } from '../../../session/user.session.js';
 import { createResponse } from '../../../utils/response/createResponse.js';
 import { v4 as uuidv4 } from 'uuid';
-import { createDungeonSession, getNextStage } from '../../../session/dungeon.session.js';
+import {
+  createDungeonSession,
+  getDungeonBySocket,
+  getNextStage,
+} from '../../../session/dungeon.session.js';
 import {
   getUserByNicknameDB,
   getCharacterClassByIdsDB,

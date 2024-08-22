@@ -22,10 +22,13 @@ class Dungeon {
 
   // 던전 초기화 (맵, 스테이지길이)
   initDungeon() {
-    if (this.dungeonCode == 5) { this.mapCode = 5004; }
-    else {
+    if (this.dungeonCode == 5) {
+      this.mapCode = 5004;
+    } else {
       this.mapCode = 5001 + Math.floor(Math.random() * 5); // 맵 랜덤 설정 (5001~5006, 5004 제외) | 5000은 공백 공간 (테스트용 맵?)
-      if (this.mapCode >= 5004) { this.mapCode += 1; }
+      if (this.mapCode >= 5004) {
+        this.mapCode += 1;
+      }
     }
 
     this.lastStage = this.lastStage[this.dungeonCode - 1]; // dungeonCode가 1~4 이니 -1 하면 0~3으로 인덱스값과 같다.
@@ -69,10 +72,10 @@ class Dungeon {
         } // 최종던전은 최종보스 지정 | 28
 
         if (this.dungeonCode <= 2) {
-          monsterModel = 2000 + monsterIdx;
+          monsterModel = 2001 + monsterIdx;
         } // 1,2 던전은 초급보스 이미지 | (2016~2021)
         else if (3 <= this.dungeonCode && this.dungeonCode < 5) {
-          monsterModel = 2000 + monsterIdx;
+          monsterModel = 2001 + monsterIdx;
         } // 3,4 던전은 고급보스 이미지 | (2022~2027)
         else if (this.dungeonCode == 5) {
           monsterModel = 2029;
