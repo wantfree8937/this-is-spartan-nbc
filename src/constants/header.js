@@ -25,4 +25,5 @@ export const PACKET_TYPE = {
   S_UNLOCK_CHARACTER: 36,
   S_CONNECT: 38,
   S_REGISTER: 40,
+  S_PLAY_SOUND: 41,
 };
