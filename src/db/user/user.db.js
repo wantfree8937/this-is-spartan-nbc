@@ -95,6 +95,6 @@ export const getRitualLevel = async (playerId) => {
 };
 
 // 최종보스 클리어시 클리어여부 갱신
-export const setFinalCheck = async (uuid) => {
-  await pools.USER_DB.query(SQL_QUERIES.UPDATE_FINAL_CHECK, [true, uuid]);
+export const setFinalCheck = async (playerId) => {
+  await pools.USER_DB.query(SQL_QUERIES.UPDATE_FINAL_CHECK, [true, playerId]);
 }

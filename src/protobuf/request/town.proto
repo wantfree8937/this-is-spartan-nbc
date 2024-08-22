@@ -57,3 +57,5 @@ message C_Register{
   string nickname = 1;
   string password = 2;
 }
+
+message C_FinalCheck {}
