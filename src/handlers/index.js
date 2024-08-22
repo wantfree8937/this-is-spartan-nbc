@@ -9,6 +9,7 @@ import {
   unlockCharacterHandler,
   townSelectHandler,
   connectHandler,
+  finalCheckHandler,
 } from './game/town/enterHandler.js';
 import { avatarMoveHandler, avatarAnimationHandler } from './game/town/avatarHandler.js';
 import { characterUpgradeHandler, finalBossHandler } from './game/town/towerHandler.js';
@@ -67,6 +68,10 @@ const handlers = {
   [HANDLER_IDS.C_REGISTER]: {
     handler: registerHandler,
     protoType: 'town.C_Register',
+  },
+  [HANDLER_IDS.C_FINAL_CHECK]: {
+    handler: finalCheckHandler,
+    protoType: 'town.C_FinalCheck',
   },
 
   // 다른 핸들러들을 추가

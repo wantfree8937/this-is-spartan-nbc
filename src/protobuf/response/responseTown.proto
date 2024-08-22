@@ -5,6 +5,7 @@ package responseTown;
 // 자신
 message S_Enter {
   PlayerInfo player = 1;
+  bool finalCheck = 2;
 }
 
 // 다른 사람들

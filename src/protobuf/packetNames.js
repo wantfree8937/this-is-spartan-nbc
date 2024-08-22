@@ -11,6 +11,7 @@ export const packetNames = {
     C_Town_Select: 'town.C_TownSelect',
     C_Connect: 'town.C_Connect',
     C_Register: 'town.C_Register',
+    C_Final_Check: 'town.C_FinalCheck',
   },
   battle: {
     C_Player_Response: 'battle.C_PlayerResponse',
