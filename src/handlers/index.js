@@ -71,7 +71,7 @@ const handlers = {
   },
   [HANDLER_IDS.C_FINAL_CHECK]: {
     handler: finalCheckHandler,
-    protoType: 'town.C_FinalCheck',
+    protoType: 'town.C_Final_Check',
   },
 
   // 다른 핸들러들을 추가

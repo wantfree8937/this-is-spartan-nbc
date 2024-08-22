@@ -328,8 +328,8 @@ const enterNextStage = (socket, nextStage) => {
 };
 
 // 최종보스 클리어시 클리어여부 갱신 (false -> true)
-const finalCheckHandler = async (socket, payload) => {
-  const user = getUserBySocket(socket);
+const finalCheckHandler = async ({ socket, payload }) => {
+  const user = await getUserBySocket(socket);
   const targetPlayerId = user.getPlayerId();
   
   await setFinalCheck(targetPlayerId);
