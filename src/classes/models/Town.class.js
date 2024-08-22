@@ -47,23 +47,27 @@ class Town {
     this.leaveUsers.push(this.users[index]);
   }
   townOut() {
-    if (this.leaveUsers.length > 0) {
-      const removedUserIds = [];
-      this.leaveUsers.forEach((leaveUser) => {
-        const index = this.users.findIndex((user) => user.playerId === leaveUser.playerId);
-        if (index !== -1) {
-          this.users.splice(index, 1);
-          removedUserIds.push(leaveUser.playerId);
-        }
-      });
+    try {
+      if (this.leaveUsers.length > 0) {
+        const removedUserIds = [];
+        this.leaveUsers.forEach((leaveUser) => {
+          const index = this.users.findIndex((user) => user.playerId === leaveUser.playerId);
+          if (index !== -1) {
+            this.users.splice(index, 1);
+            removedUserIds.push(leaveUser.playerId);
+          }
+        });
 
-      this.leaveUsers = [];
+        this.leaveUsers = [];
 
-      const despawnPacket = townOutNotification(removedUserIds);
+        const despawnPacket = townOutNotification(removedUserIds);
 
-      this.users.forEach((user) => {
-        user.socket.write(despawnPacket);
-      });
+        this.users.forEach((user) => {
+          user.socket.write(despawnPacket);
+        });
+      }
+    } catch (e) {
+      console.error('타운 아웃 중 에러 발생', e);
     }
   }
 
