@@ -164,11 +164,11 @@ export const selectCheckHandler = async ({ socket, payload }) => {
     monstersNow[attackTarget].damageMonsterHp(resultDamage);
 
     // 플레이어 행동 반영
-    const playerAnimaion = createResponse('responseBattle', 'S_Player_Action', {
+    const playerAnimation = createResponse('responseBattle', 'S_Player_Action', {
       targetMonsterIdx,
       actionSet,
     });
-    socket.write(playerAnimaion);
+    socket.write(playerAnimation);
     await sleep(600);
 
     // 몬스터 사망시 이벤트처리
@@ -263,10 +263,10 @@ export const selectCheckHandler = async ({ socket, payload }) => {
           
           const actionMonsterIdx = i;   // 0 에서 최대 2
           actionSet = new ActionSet(3, null);
-          const monsterAnimaion = createResponse('responseBattle', 'S_Monster_Action', {
+          const monsterAnimation = createResponse('responseBattle', 'S_Monster_Action', {
             actionMonsterIdx, actionSet,
           });
-          socket.write(monsterAnimaion);
+          socket.write(monsterAnimation);
 
           const msg = '전투 패배...';
           battleLog.changeMsg(msg);
@@ -321,7 +321,7 @@ export const selectCheckHandler = async ({ socket, payload }) => {
       battleLog.changeMsg(msg);
       updateBatteLog = createResponse('responseBattle', 'S_Battle_Log', { battleLog });
       socket.write(updateBatteLog);
-      await sleep(200);
+      await sleep(100);
       return;
     }
   }
