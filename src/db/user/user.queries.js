@@ -17,5 +17,5 @@ export const SQL_QUERIES = {
   GET_LEVEL_BY_CLASS: 'SELECT level FROM user_character WHERE uuid = ?',
   GET_COIN_BY_PLAYER_ID: 'SELECT coin FROM user WHERE playerId = ?',
   GET_RITUAL_LEVEL: 'SELECT level FROM user_character WHERE playerId = ?',
-  UPDATE_FINAL_CHECK: 'UPDATE user SET finalCheck = ? WHERE uuid = ?',
+  UPDATE_FINAL_CHECK: 'UPDATE user SET finalCheck = ? WHERE playerId = ?',
 };

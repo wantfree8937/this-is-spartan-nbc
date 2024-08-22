@@ -23,6 +23,7 @@ import {
   updateCoin,
   getCoinByPlayerId,
   getSoulByUUID,
+  setFinalCheck,
 } from './../../../db/user/user.db.js';
 import { getMonstersRedis } from '../../../db/game/redis.assets.js';
 // import { getGameAssets } from './../../../init/assets.js';
@@ -195,6 +196,7 @@ const enterTownHandler = async ({ socket, payload }) => {
   const account = await getUserByNicknameDB(nickname);
   const playerId = account.playerId;
   const coin = account.coin;
+  const finalCheck = account.finalCheck;    // 최종보스 클리어 여부
 
   //캐릭터 X / 캐릭터 O
   let existCharacter = await getCharacterClassByIdsDB(playerId, userClass);
@@ -241,7 +243,7 @@ const enterTownHandler = async ({ socket, payload }) => {
   });
 
   // 클라이언트에 반영할 마을입장
-  const enterTownResponse = createResponse('responseTown', 'S_Enter', { player });
+  const enterTownResponse = createResponse('responseTown', 'S_Enter', { player, finalCheck });
 
   // 클라이언트에 반영할 자원(soul, coin)
   const userSoul = await getSoulByUUID(uuid);
@@ -328,9 +330,9 @@ const enterNextStage = (socket, nextStage) => {
 // 최종보스 클리어시 클리어여부 갱신 (false -> true)
 const finalCheckHandler = async (socket, payload) => {
   const user = getUserBySocket(socket);
-  const targetUUID = user.getUUID();
+  const targetPlayerId = user.getPlayerId();
   
-  await setFinalCheck(targetUUID);
+  await setFinalCheck(targetPlayerId);
 }
 
 export {
