@@ -26,6 +26,7 @@ import {
   setFinalCheck,
 } from './../../../db/user/user.db.js';
 import { getMonstersRedis } from '../../../db/game/redis.assets.js';
+import { userSessions } from '../../../session/sessions.js';
 // import { getGameAssets } from './../../../init/assets.js';
 
 //접속 핸들러
@@ -196,7 +197,7 @@ const enterTownHandler = async ({ socket, payload }) => {
   const account = await getUserByNicknameDB(nickname);
   const playerId = account.playerId;
   const coin = account.coin;
-  const finalCheck = account.finalCheck;    // 최종보스 클리어 여부
+  const finalCheck = account.finalCheck; // 최종보스 클리어 여부
 
   //캐릭터 X / 캐릭터 O
   let existCharacter = await getCharacterClassByIdsDB(playerId, userClass);
@@ -329,11 +330,14 @@ const enterNextStage = (socket, nextStage) => {
 
 // 최종보스 클리어시 클리어여부 갱신 (false -> true)
 const finalCheckHandler = async (socket, payload) => {
+  console.log(socket);
   const user = getUserBySocket(socket);
+  console.log(user);
+
   const targetPlayerId = user.getPlayerId();
-  
+
   await setFinalCheck(targetPlayerId);
-}
+};
 
 export {
   enterTownHandler,
